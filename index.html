@@ -109,7 +109,7 @@ const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const iSt=(x={})=>({width:"100%",padding:"11px 15px",borderRadius:10,border:`1.5px solid ${C.b}`,fontSize:14,background:C.cream,color:C.t,fontFamily:"'Jost',sans-serif",...x});
 function Lbl({c}){return <label style={{fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:".09em",color:C.tm,display:"block",marginBottom:5}}>{c}</label>;}
 function Chip({ch,bg,col}){return <span style={{background:bg||C.yl,color:col||C.tm,borderRadius:50,padding:"3px 10px",fontSize:11,fontWeight:500}}>{ch}</span>;}
-function Toast({m}){return <div className="mi" style={{position:"fixed",bottom:22,left:"50%",transform:"translateX(-50%)",background:C.t,color:C.white,padding:"10px 24px",borderRadius:50,zIndex:9999,fontSize:13,whiteSpace:"nowrap",boxShadow:"0 6px 20px rgba(0,0,0,.2)",pointerEvents:"none"}}>{m}</div>;}
+function Toast({m}){return <div className="mi" style={{position:"fixed",bottom:22,left:"50%",transform:"translateX(-50%)",background:C.t,color:C.white,padding:"11px 20px",borderRadius:20,zIndex:9999,fontSize:13,whiteSpace:"normal",textAlign:"center",boxShadow:"0 6px 20px rgba(0,0,0,.2)",pointerEvents:"none",width:"calc(100vw - 40px)",maxWidth:380}}>{m}</div>;}
 
 /* ══════════════ APP ══════════════ */
 function App(){
