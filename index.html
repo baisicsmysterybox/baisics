@@ -67,8 +67,8 @@ const DCFG={
   discPct:10,
   promoCode:"",
   promoPct:0,
-  jbKey:"",
-  jbId:"",
+  jbKey:"$2a$10$BXkVan9Db9eFVS1ghQjrpuq39DtVmn5Y2JEf7MXpf0UGyY4HngBG6",
+  jbId:"69afda2eff3f7076473e2c11",
   aboutText:"We are Mystère — a small, passion-driven mystery box brand. Every box is carefully curated with love, bringing you delightful surprises that make ordinary days feel magical. ✦\n\nEach box is packed with handpicked items chosen to bring joy, beauty, and a little magic into your life.",
   contactWa:"60123456789",
   contactEmail:"hello@mystere.com",
@@ -130,24 +130,18 @@ function App(){
   const logoTaps=useRef(0);
   const logoTimer=useRef(null);
 
-  /* ── LOAD DATA ── */
+  /* ── LOAD DATA ── always pull from cloud ── */
   useEffect(()=>{(async()=>{
-    // Load config first (needs jbKey/jbId)
-    const lCfg=LS.get("mx:cfg")||DCFG;
-    setCfgS(lCfg);
-    // Try cloud sync
-    if(lCfg.jbKey&&lCfg.jbId){
-      const cloud=await JB.pull(lCfg.jbKey,lCfg.jbId);
-      if(cloud){
-        if(cloud.items){setItemsS(cloud.items);LS.set("mx:items",cloud.items);}
-        if(cloud.users){setUsersS(cloud.users);LS.set("mx:users",cloud.users);}
-        if(cloud.cfg){const merged={...DCFG,...cloud.cfg};setCfgS(merged);LS.set("mx:cfg",merged);}
-        setLoading(false);return;
-      }
+    const cloud=await JB.pull(DCFG.jbKey,DCFG.jbId);
+    if(cloud){
+      setItemsS(cloud.items||[]);LS.set("mx:items",cloud.items||[]);
+      setUsersS(cloud.users||[]);LS.set("mx:users",cloud.users||[]);
+      const merged={...DCFG,...(cloud.cfg||{})};setCfgS(merged);LS.set("mx:cfg",merged);
+      setLoading(false);return;
     }
-    // Fallback: localStorage
     setItemsS(LS.get("mx:items")||[]);
     setUsersS(LS.get("mx:users")||[]);
+    setCfgS(LS.get("mx:cfg")||DCFG);
     setLoading(false);
   })();},[]);
 
