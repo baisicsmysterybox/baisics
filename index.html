@@ -62,17 +62,17 @@ const C={
 const DCFG={
   whatsapp:"60123456789",
   adminPass:"admin123",
-  siteName:"Mystère",
+  siteName:"Baisics",
   tagline:"curated mystery boxes ✦",
   discPct:10,
   promoCode:"",
   promoPct:0,
   jbKey:"$2a$10$BXkVan9Db9eFVS1ghQjrpuq39DtVmn5Y2JEf7MXpf0UGyY4HngBG6",
   jbId:"69afda2eff3f7076473e2c11",
-  aboutText:"We are Mystère — a small, passion-driven mystery box brand. Every box is carefully curated with love, bringing you delightful surprises that make ordinary days feel magical. ✦\n\nEach box is packed with handpicked items chosen to bring joy, beauty, and a little magic into your life.",
+  aboutText:"We are Baisics — a small, passion-driven mystery box brand. Every box is carefully curated with love, bringing you delightful surprises that make ordinary days feel magical. ✦\n\nEach box is packed with handpicked items chosen to bring joy, beauty, and a little magic into your life.",
   contactWa:"60123456789",
-  contactEmail:"hello@mystere.com",
-  contactIG:"@mystere"
+  contactEmail:"hello@baisics.com",
+  contactIG:"@baisics"
 };
 
 /* ── LOCAL STORAGE ── */
@@ -109,7 +109,7 @@ const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const iSt=(x={})=>({width:"100%",padding:"11px 15px",borderRadius:10,border:`1.5px solid ${C.b}`,fontSize:14,background:C.cream,color:C.t,fontFamily:"'Jost',sans-serif",...x});
 function Lbl({c}){return <label style={{fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:".09em",color:C.tm,display:"block",marginBottom:5}}>{c}</label>;}
 function Chip({ch,bg,col}){return <span style={{background:bg||C.yl,color:col||C.tm,borderRadius:50,padding:"3px 10px",fontSize:11,fontWeight:500}}>{ch}</span>;}
-function Toast({m}){return <div className="mi" style={{position:"fixed",bottom:22,left:"50%",transform:"translateX(-50%)",background:C.t,color:C.white,padding:"11px 20px",borderRadius:20,zIndex:9999,fontSize:13,whiteSpace:"normal",textAlign:"center",boxShadow:"0 6px 20px rgba(0,0,0,.2)",pointerEvents:"none",width:"calc(100vw - 40px)",maxWidth:380}}>{m}</div>;}
+function Toast({m}){return <div className="mi" style={{position:"fixed",bottom:30,left:"10px",right:"10px",background:C.t,color:C.white,padding:"13px 18px",borderRadius:16,zIndex:9999,fontSize:13,whiteSpace:"normal",textAlign:"center",boxShadow:"0 6px 20px rgba(0,0,0,.25)",pointerEvents:"none",lineHeight:1.5}}>{m}</div>;}
 
 /* ══════════════ APP ══════════════ */
 function App(){
