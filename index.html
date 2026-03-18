@@ -54,9 +54,29 @@ input:focus,textarea:focus,select:focus{border-color:#9C150B!important;box-shado
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script type="text/babel">
+const {useState,useEffect,useRef}=React;
 
-const {useState,useEffect,useRef,useMemo}=React;
+/* ── COLOURS: Maroon + Cream + White + Brown ── */
+function buildC(cfg){
+const p=cfg&&cfg.clrPrimary||”#E8192C”;
+const bg=cfg&&cfg.clrBg||”#FAF6EE”;
+const cd=cfg&&cfg.clrCard||”#FFFFFF”;
+const tx=cfg&&cfg.clrText||”#1A0808”;
+const r=parseInt(p.slice(1,3),16),g=parseInt(p.slice(3,5),16),b2=parseInt(p.slice(5,7),16);
+return{
+cream:bg,white:cd,
+pl:`rgba(${r},${g},${b2},.1)`,pm:p,pd:p,
+yl:”#FFF6E0”,ym:”#E8C84A”,yd:”#A67C00”,
+t:tx,tm:tx+“bb”,tl:tx+“77”,
+b:`rgba(${r},${g},${b2},.18)`,
+sh:`0 4px 20px rgba(${r},${g},${b2},.07)`,
+sh2:`0 14px 40px rgba(${r},${g},${b2},.13)`,
+footer:cfg&&cfg.clrFooter||”#1A0808”
+};
+}
+let C=buildC(null);
 
+/* ── CONFIG ── */
 const DCFG={
 whatsapp:“60123456789”,adminPass:“admin123”,
 siteName:“Baisics”,tagline:“curated mystery boxes ✦”,
@@ -65,33 +85,13 @@ jbKey:”$2a$10$BXkVan9Db9eFVS1ghQjrpuq39DtVmn5Y2JEf7MXpf0UGyY4HngBG6”,
 jbId:“69afda2eff3f7076473e2c11”,
 aboutText:“We are Baisics — a small, passion-driven mystery box brand. Every box is carefully curated with love, bringing you delightful surprises that make ordinary days feel magical. ✦\n\nEach box is packed with handpicked items chosen to bring joy, beauty, and a little magic into your life.”,
 contactWa:“60123456789”,contactEmail:“hello@baisics.com”,
-contactIG:”@baisics”,contactIGLink:“https://instagram.com/baisics”,
-contactTT:”@baisics”,contactTTLink:“https://tiktok.com/@baisics”,
+contactIG:”@baisics”,contactIGLink:””,
+contactTK:”@baisics”,contactTKLink:””,
 heroTags:[“✦ mystery inside”,“✦ curated with love”,“✦ free surprise”],
-heroImage:””,heroBg:””,
-accentColor:”#E8192C”,accentLight:”#FDEAEA”,accentMid:”#C94060”,
-bgColor:”#FAF6EE”,cardColor:”#FFFFFF”,footerColor:”#1A0808”,
-borderColor:”#EAD9D0”,textDark:”#1A0808”,textMid:”#5C2A1A”,textLight:”#9E7060”,
+heroImage:””,
+clrPrimary:”#E8192C”,clrBg:”#FAF6EE”,clrCard:”#FFFFFF”,
+clrText:”#1A0808”,clrFooter:”#1A0808”,clrButtonText:”#FFFFFF”
 };
-
-function buildTheme(cfg){
-const a=cfg.accentColor||”#E8192C”;
-const al=cfg.accentLight||”#FDEAEA”;
-const am=cfg.accentMid||”#C94060”;
-const bg=cfg.bgColor||”#FAF6EE”;
-const card=cfg.cardColor||”#FFFFFF”;
-const footer=cfg.footerColor||”#1A0808”;
-const border=cfg.borderColor||”#EAD9D0”;
-const td=cfg.textDark||”#1A0808”;
-const tm=cfg.textMid||”#5C2A1A”;
-const tl=cfg.textLight||”#9E7060”;
-let s=document.getElementById(“baisics-theme”);
-if(!s){s=document.createElement(“style”);s.id=“baisics-theme”;document.head.appendChild(s);}
-s.textContent=`:root{--accent:${a};--bg:${bg};}`;
-return{cream:bg,white:card,pl:al,pm:am,pd:a,yl:”#FFF6E0”,ym:”#E8C84A”,yd:”#A67C00”,t:td,tm,tl,b:border,footer,sh:“0 4px 20px rgba(0,0,0,.07)”,sh2:“0 14px 40px rgba(0,0,0,.13)”};
-}
-
-let C=buildTheme(DCFG);
 
 /* ── STORAGE ── */
 const LS={
@@ -109,7 +109,7 @@ try{const r=await fetch(`https://api.jsonbin.io/v3/b/${id}`,{method:‘PUT’,he
 }
 };
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-const iSt=(C,x={})=>({width:“100%”,padding:“11px 15px”,borderRadius:10,border:`1.5px solid ${C.b}`,fontSize:14,background:C.cream,color:C.t,fontFamily:”‘Jost’,sans-serif”,…x});
+const iSt=(x={})=>({width:“100%”,padding:“11px 15px”,borderRadius:10,border:`1.5px solid ${C.b}`,fontSize:14,background:C.cream,color:C.t,fontFamily:”‘Jost’,sans-serif”,…x});
 function Lbl({c}){return <label style={{fontSize:11,fontWeight:600,textTransform:“uppercase”,letterSpacing:”.09em”,color:C.tm,display:“block”,marginBottom:5}}>{c}</label>;}
 function Chip({ch,bg,col}){return <span style={{background:bg||C.yl,color:col||C.tm,borderRadius:50,padding:“3px 10px”,fontSize:11,fontWeight:500}}>{ch}</span>;}
 function Toast({m}){return <div className=“mi” style={{position:“fixed”,bottom:30,left:10,right:10,background:C.t,color:C.white,padding:“13px 18px”,borderRadius:16,zIndex:9999,fontSize:13,textAlign:“center”,boxShadow:“0 6px 20px rgba(0,0,0,.25)”,pointerEvents:“none”,lineHeight:1.5}}>{m}</div>;}
@@ -118,8 +118,7 @@ function Toast({m}){return <div className=“mi” style={{position:“fixed”,
 function App(){
 const[pg,setPg]=useState(“shop”);
 const[cur,setCur]=useState(null);
-const[formFlow,setFormFlow]=useState(null);
-const C=useMemo(()=>buildTheme(cfg),[cfg]); // {item,form,mode:“cart”|“order”}
+const[formFlow,setFormFlow]=useState(null); // {item,form,mode:“cart”|“order”}
 const[orderModal,setOrderModal]=useState(null); // {item,answers,mode}
 const[items,setItemsS]=useState([]);
 const[forms,setFormsS]=useState([]);
@@ -142,13 +141,13 @@ if(cloud){
 setItemsS(cloud.items||[]);LS.set(“mx:items”,cloud.items||[]);
 setFormsS(cloud.forms||[]);LS.set(“mx:forms”,cloud.forms||[]);
 setUsersS(cloud.users||[]);LS.set(“mx:users”,cloud.users||[]);
-const merged={…DCFG,…(cloud.cfg||{})};C=buildTheme(merged);setCfgS(merged);LS.set(“mx:cfg”,merged);
+const merged={…DCFG,…(cloud.cfg||{})};C=buildC(merged);setCfgS(merged);LS.set(“mx:cfg”,merged);
 setLoading(false);return;
 }
 setItemsS(LS.get(“mx:items”)||[]);
 setFormsS(LS.get(“mx:forms”)||[]);
 setUsersS(LS.get(“mx:users”)||[]);
-const lc=LS.get(“mx:cfg”)||DCFG;C=buildTheme(lc);setCfgS(lc);
+setCfgS(LS.get(“mx:cfg”)||DCFG);
 setLoading(false);
 })();},[]);
 
@@ -159,7 +158,7 @@ await JB.push(c.jbKey,c.jbId,{items:ni||items,forms:nf||forms,users:nu||users,cf
 const saveItems=async v=>{setItemsS(v);LS.set(“mx:items”,v);await syncCloud(v,null,null,null);};
 const saveForms=async v=>{setFormsS(v);LS.set(“mx:forms”,v);await syncCloud(null,v,null,null);};
 const saveUsers=async v=>{setUsersS(v);LS.set(“mx:users”,v);await syncCloud(null,null,v,null);};
-const saveCfg=async v=>{C=buildTheme(v);setCfgS(v);LS.set(“mx:cfg”,v);await syncCloud(null,null,null,v);};
+const saveCfg=async v=>{C=buildC(v);setCfgS(v);LS.set(“mx:cfg”,v);await syncCloud(null,null,null,v);};
 
 const toast=m=>{setNotif(m);setTimeout(()=>setNotif(null),3000)};
 const handleLogoTap=()=>{
@@ -266,18 +265,18 @@ return(
 
   {/* PAGES */}
   <div style={{flex:1}}>
-    {pg==="shop"&&<ShopPage C={C} items={items} onItem={goItem} onAdd={addCart} cfg={cfg} forms={forms}/>}
-    {pg==="item"&&cur&&<ItemPage C={C} item={cur} items={items} forms={forms} onBack={goShop} onAdd={addCart} onItem={goItem} onDirectOrder={openDirectOrder} onStartForm={startFormFlow} cfg={cfg}/>}
-    {pg==="orderform"&&formFlow&&<CustomOrderForm C={C} item={formFlow.item} form={formFlow.form} mode={formFlow.mode} onBack={()=>{setCur(formFlow.item);setPg("item");window.scrollTo(0,0)}} onFinish={finishFormFlow}/>}
-    {pg==="about"&&<AboutPage C={C} cfg={cfg} onBack={goShop}/>}
-    {pg==="contact"&&<ContactPage C={C} cfg={cfg} onBack={goShop}/>}
-    {pg==="privacy"&&<PrivacyPage C={C} onBack={goShop}/>}
-    {pg==="admin"&&<AdminPage ok={adminOk} onAuth={p=>{if(p===cfg.adminPass){setAdminOk(true);return true}return false}} C={C} items={items} saveItems={saveItems} forms={forms} saveForms={saveForms} users={users} saveUsers={saveUsers} cfg={cfg} saveCfg={saveCfg} onBack={goShop} toast={toast}/>}
+    {pg==="shop"&&<ShopPage items={items} onItem={goItem} onAdd={addCart} cfg={cfg}/>}
+    {pg==="item"&&cur&&<ItemPage item={cur} items={items} forms={forms} onBack={goShop} onAdd={addCart} onItem={goItem} onDirectOrder={openDirectOrder} onStartForm={startFormFlow} cfg={cfg}/>}
+    {pg==="orderform"&&formFlow&&<CustomOrderForm item={formFlow.item} form={formFlow.form} mode={formFlow.mode} onBack={()=>{setCur(formFlow.item);setPg("item");window.scrollTo(0,0)}} onFinish={finishFormFlow}/>}
+    {pg==="about"&&<AboutPage cfg={cfg} onBack={goShop}/>}
+    {pg==="contact"&&<ContactPage cfg={cfg} onBack={goShop}/>}
+    {pg==="privacy"&&<PrivacyPage onBack={goShop}/>}
+    {pg==="admin"&&<AdminPage ok={adminOk} onAuth={p=>{if(p===cfg.adminPass){setAdminOk(true);return true}return false}} items={items} saveItems={saveItems} forms={forms} saveForms={saveForms} users={users} saveUsers={saveUsers} cfg={cfg} saveCfg={saveCfg} onBack={goShop} toast={toast}/>}
   </div>
 
   {/* FOOTER */}
   {pg!=="admin"&&(
-    <footer style={{background:C.t,color:"rgba(255,255,255,.55)",padding:"40px 20px 24px",marginTop:"auto"}}>
+    <footer style={{background:cfg.clrFooter||C.t,color:"rgba(255,255,255,.55)",padding:"40px 20px 24px",marginTop:"auto"}}>
       <div style={{maxWidth:1200,margin:"0 auto"}}>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:32,marginBottom:32}}>
           <div>
@@ -302,10 +301,10 @@ return(
           <div>
             <p style={{color:C.white,fontWeight:600,fontSize:12,textTransform:"uppercase",letterSpacing:".1em",marginBottom:12}}>Contact</p>
             <p style={{fontSize:13,lineHeight:1.9}}>
-              <a href={`https://wa.me/${cfg.contactWa||cfg.whatsapp}`} target="_blank" style={{color:"rgba(255,255,255,.45)",textDecoration:"none",display:"block",marginBottom:5}}>💬 {cfg.contactWa||cfg.whatsapp}</a>
-              {cfg.contactIGLink&&<a href={cfg.contactIGLink} target="_blank" style={{color:"rgba(255,255,255,.45)",textDecoration:"none",display:"block",marginBottom:5}}>📸 {cfg.contactIG}</a>}
-              {cfg.contactTTLink&&<a href={cfg.contactTTLink} target="_blank" style={{color:"rgba(255,255,255,.45)",textDecoration:"none",display:"block",marginBottom:5}}>🎵 {cfg.contactTT}</a>}
-              {cfg.contactEmail&&<a href={`mailto:${cfg.contactEmail}`} style={{color:"rgba(255,255,255,.45)",textDecoration:"none",display:"block"}}>✉️ {cfg.contactEmail}</a>}
+              📱 <a href={`https://wa.me/${cfg.contactWa||cfg.whatsapp}`} target="_blank" style={{color:"rgba(255,255,255,.55)",textDecoration:"none"}}>{cfg.contactWa||cfg.whatsapp}</a><br/>
+              {cfg.contactIG&&<>📸 <a href={cfg.contactIGLink||`https://instagram.com/${(cfg.contactIG||"").replace("@","")}`} target="_blank" style={{color:"rgba(255,255,255,.7)",textDecoration:"none"}}>{cfg.contactIG}</a><br/></>}
+              {cfg.contactTK&&<>🎵 <a href={cfg.contactTKLink||`https://tiktok.com/@${(cfg.contactTK||"").replace("@","")}`} target="_blank" style={{color:"rgba(255,255,255,.7)",textDecoration:"none"}}>{cfg.contactTK}</a><br/></>}
+              {cfg.contactEmail&&<>✉️ {cfg.contactEmail}</>}
             </p>
           </div>
         </div>
@@ -319,9 +318,9 @@ return(
   )}
 
   {/* OVERLAYS */}
-  {cOpen&&<CartDrawer C={C} cart={cart} onClose={()=>setCOpen(false)} onRem={remCart} onQty={updQty} onCheckout={cartCheckout} sub={sub} hasSignupDisc={hasSignupDisc} discPct={cfg.discPct} cfg={cfg} user={user} onSignup={()=>{setCOpen(false);setAMode("signup");setAOpen(true)}}/>}
-  {aOpen&&<AuthModal C={C} mode={aMode} setMode={setAMode} onClose={()=>setAOpen(false)} users={users} saveUsers={saveUsers} onLogin={u=>{setUser(u);setAOpen(false);toast(`Welcome back, ${u.name}! 💕`)}} onSignup={u=>{setUser(u);setAOpen(false);toast(`Welcome ${u.name}! 🎉 You've got ${cfg.discPct}% off your first order!`)}} cfg={cfg}/>}
-  {orderModal&&<OrderSummaryModal C={C} item={orderModal.item} answers={orderModal.answers} onClose={()=>setOrderModal(null)} cfg={cfg} user={user} hasSignupDisc={hasSignupDisc} saveUsers={saveUsers} users={users} setUser={setUser} onSignup={()=>{setOrderModal(null);setAMode("signup");setAOpen(true)}}/>}
+  {cOpen&&<CartDrawer cart={cart} onClose={()=>setCOpen(false)} onRem={remCart} onQty={updQty} onCheckout={cartCheckout} sub={sub} hasSignupDisc={hasSignupDisc} discPct={cfg.discPct} cfg={cfg} user={user} onSignup={()=>{setCOpen(false);setAMode("signup");setAOpen(true)}}/>}
+  {aOpen&&<AuthModal mode={aMode} setMode={setAMode} onClose={()=>setAOpen(false)} users={users} saveUsers={saveUsers} onLogin={u=>{setUser(u);setAOpen(false);toast(`Welcome back, ${u.name}! 💕`)}} onSignup={u=>{setUser(u);setAOpen(false);toast(`Welcome ${u.name}! 🎉 You've got ${cfg.discPct}% off your first order!`)}} cfg={cfg}/>}
+  {orderModal&&<OrderSummaryModal item={orderModal.item} answers={orderModal.answers} onClose={()=>setOrderModal(null)} cfg={cfg} user={user} hasSignupDisc={hasSignupDisc} saveUsers={saveUsers} users={users} setUser={setUser} onSignup={()=>{setOrderModal(null);setAMode("signup");setAOpen(true)}}/>}
 </div>
 ```
 
@@ -329,27 +328,28 @@ return(
 }
 
 /* ══════════════ SHOP PAGE ══════════════ */
-function ShopPage({C,items,onItem,onAdd,cfg,forms}){
+function ShopPage({items,onItem,onAdd,cfg}){
 const[q,setQ]=useState(””);
 const list=items.filter(i=>i.name.toLowerCase().includes(q.toLowerCase()));
 return(
 <div>
 {/* Hero */}
-<div style={{…(cfg.heroImage?{backgroundImage:`url(${cfg.heroImage})`,backgroundSize:“cover”,backgroundPosition:“center”}:{background:cfg.heroBg||“linear-gradient(160deg,#1A0A06 0%,#3D1010 40%,#6B1A10 100%)”}),padding:“76px 24px 56px”,textAlign:“center”,position:“relative”,overflow:“hidden”}}>
-{cfg.heroImage&&<div style={{position:“absolute”,inset:0,background:“rgba(20,5,5,.52)”,zIndex:0}}/>}
-{!cfg.heroImage&&<div style={{position:“absolute”,inset:0,backgroundImage:“radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px)”,backgroundSize:“28px 28px”,pointerEvents:“none”}}/>}
-{/* Floating stars */}
-{[{top:“12%”,left:“6%”,s:28,d:0},{top:“22%”,right:“8%”,s:16,d:1.1},{bottom:“14%”,right:“11%”,s:20,d:.5},{bottom:“22%”,left:“13%”,s:11,d:1.7},{top:“50%”,left:“2%”,s:10,d:2.2}].map((p,i)=>(
-<span key={i} className=“fl” style={{position:“absolute”,fontSize:p.s,opacity:.25,color:”#E8A090”,top:p.top,left:p.left,right:p.right,bottom:p.bottom,animationDelay:`${p.d}s`}}>✦</span>
+<div style={{background:cfg.heroImage?`url(${cfg.heroImage}) center/cover no-repeat`:“linear-gradient(160deg,#1A0606 0%,#4A0E0E 45%,#8B1010 100%)”,padding:“76px 24px 56px”,textAlign:“center”,position:“relative”,overflow:“hidden”,minHeight:320}}>
+{cfg.heroImage&&<div style={{position:“absolute”,inset:0,background:“rgba(10,0,0,.5)”}}/>}
+<div style={{position:“absolute”,inset:0,backgroundImage:“radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px)”,backgroundSize:“28px 28px”,pointerEvents:“none”}}/>
+{[{top:“12%”,left:“6%”,s:28,d:0},{top:“22%”,right:“8%”,s:16,d:1.1},{bottom:“14%”,right:“11%”,s:20,d:.5},{bottom:“22%”,left:“13%”,s:11,d:1.7}].map((p,i)=>(
+<span key={i} className=“fl” style={{position:“absolute”,fontSize:p.s,opacity:.28,color:”#F0A0A0”,top:p.top,left:p.left,right:p.right,bottom:p.bottom,animationDelay:`${p.d}s`,zIndex:1}}>✦</span>
 ))}
-<p style={{fontSize:11,letterSpacing:”.35em”,textTransform:“uppercase”,color:”#E8A090”,marginBottom:10,fontWeight:500}}>welcome to</p>
+<div style={{position:“relative”,zIndex:2}}>
+<p style={{fontSize:11,letterSpacing:”.35em”,textTransform:“uppercase”,color:”#F0A0A0”,marginBottom:10,fontWeight:500}}>welcome to</p>
 <h1 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:“clamp(52px,9vw,96px)”,fontWeight:300,color:”#FAF6EE”,lineHeight:.95,marginBottom:12,letterSpacing:”-.01em”}}>{cfg.siteName}</h1>
-<div style={{width:60,height:2,background:“linear-gradient(90deg,transparent,#9C150B,transparent)”,margin:“0 auto 14px”,borderRadius:2}}/>
-<p style={{color:“rgba(250,246,238,.6)”,fontSize:14,marginBottom:32,letterSpacing:”.05em”}}>{cfg.tagline}</p>
+<div style={{width:60,height:2,background:`linear-gradient(90deg,transparent,${cfg.clrPrimary||"#E8192C"},transparent)`,margin:“0 auto 14px”,borderRadius:2}}/>
+<p style={{color:“rgba(250,246,238,.65)”,fontSize:14,marginBottom:32,letterSpacing:”.05em”}}>{cfg.tagline}</p>
 <div style={{display:“flex”,gap:8,justifyContent:“center”,flexWrap:“wrap”}}>
 {(cfg.heroTags||[]).map(t=>(
-<span key={t} className=“badge-pill” style={{background:“rgba(255,255,255,.08)”,border:“1px solid rgba(255,255,255,.15)”,borderRadius:50,padding:“7px 18px”,fontSize:12,color:“rgba(250,246,238,.85)”,backdropFilter:“blur(4px)”}}>{t}</span>
+<span key={t} className=“badge-pill” style={{background:“rgba(255,255,255,.1)”,border:“1px solid rgba(255,255,255,.22)”,borderRadius:50,padding:“7px 18px”,fontSize:12,color:“rgba(250,246,238,.9)”,backdropFilter:“blur(6px)”}}>{t}</span>
 ))}
+</div>
 </div>
 </div>
 {/* Wave divider */}
@@ -380,7 +380,7 @@ return(
 }
 
 /* ══════════════ ITEM CARD ══════════════ */
-function ItemCard({C,item,forms,onItem,onAdd,delay=0}){  const hasForm=!!(item.formId&&forms&&forms.find(f=>f.id===item.formId));
+function ItemCard({item,onItem,onAdd,delay=0}){
 const[h,setH]=useState(false);
 return(
 <div className=“card fu” onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
@@ -404,12 +404,11 @@ style={{position:“absolute”,inset:0,width:“100%”,height:“100%”,objec
 {item.originalPrice&&<span style={{fontSize:11,color:C.tl,textDecoration:“line-through”}}>RM {item.originalPrice.toFixed(2)}</span>}
 </div>
 <div className=“card-btns” style={{display:“flex”,gap:5}}>
-<button onClick={()=>onItem(item)} className=“btn” style={{flex:1,padding:“7px”,borderRadius:9,background:C.cream,border:`1.5px solid ${C.b}`,color:C.tm,fontSize:12}}>View</button>
-{hasForm?(
-<button onClick={e=>{e.stopPropagation();onItem(item)}} className=“btn” style={{flex:2,padding:“7px”,borderRadius:9,background:C.pd,color:”#fff”,fontSize:12,fontWeight:600}}>✦ Customise</button>
-):(
-<button onClick={e=>{e.stopPropagation();onAdd(item)}} className=“btn” style={{flex:2,padding:“7px”,borderRadius:9,background:C.t,color:”#FAF6EE”,fontSize:12}}>Add to Cart</button>
-)}
+<button onClick={()=>onItem(item)} className=“btn” style={{flex:1,padding:“7px”,borderRadius:9,background:“rgba(255,255,255,.6)”,border:`1.5px solid ${C.b}`,color:C.tm,fontSize:12}}>View</button>
+{item.formId
+?<button onClick={()=>onItem(item)} className=“btn” style={{flex:2,padding:“7px”,borderRadius:9,background:C.pd,color:”#fff”,fontSize:12,fontWeight:600}}>✦ Customise</button>
+:<button onClick={e=>{e.stopPropagation();onAdd(item)}} className=“btn” style={{flex:2,padding:“7px”,borderRadius:9,background:C.t,color:”#fff”,fontSize:12}}>Add to Cart</button>
+}
 </div>
 </div>
 </div>
@@ -417,7 +416,7 @@ style={{position:“absolute”,inset:0,width:“100%”,height:“100%”,objec
 }
 
 /* ══════════════ ITEM PAGE ══════════════ */
-function ItemPage({C,item,items,forms,onBack,onAdd,onItem,onDirectOrder,onStartForm,cfg}){
+function ItemPage({item,items,forms,onBack,onAdd,onItem,onDirectOrder,onStartForm,cfg}){
 const[si,setSi]=useState(0);
 const[qty,setQty]=useState(1);
 const recs=items.filter(i=>i.id!==item.id).slice(0,4);
@@ -524,7 +523,7 @@ return(
   {recs.length>0&&(
     <div>
       <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:30,fontWeight:400,color:C.t,marginBottom:20,textAlign:"center"}}>you might also love ✦</h2>
-      <div className="items-grid">{recs.map(r=><ItemCard key={r.id} C={C} item={r} forms={[]} onItem={onItem} onAdd={onAdd}/>)}</div>
+      <div className="items-grid">{recs.map(r=><ItemCard key={r.id} item={r} onItem={onItem} onAdd={onAdd}/>)}</div>
     </div>
   )}
 </div>
@@ -534,7 +533,7 @@ return(
 }
 
 /* ══════════════ CUSTOM ORDER FORM ══════════════ */
-function CustomOrderForm({C,item,form,mode,onBack,onFinish}){
+function CustomOrderForm({item,form,mode,onBack,onFinish}){
 const[step,setStep]=useState(0);
 const[answers,setAnswers]=useState({});
 const questions=form.questions||[];
@@ -647,7 +646,7 @@ style={{background:“none”,color:C.tm,fontSize:14,marginBottom:16,display:“
       {curQ.type==="text"&&(
         <textarea value={getAns(curQ.id)||""} onChange={e=>setAns(curQ.id,e.target.value)}
           placeholder={curQ.placeholder||"Type your answer here…"} rows={4}
-          style={{...iSt(C),resize:"vertical",borderRadius:12,fontSize:14,lineHeight:1.7}}/>
+          style={{...iSt(),resize:"vertical",borderRadius:12,fontSize:14,lineHeight:1.7}}/>
       )}
 
       <button onClick={next} className="btn"
@@ -664,7 +663,7 @@ style={{background:“none”,color:C.tm,fontSize:14,marginBottom:16,display:“
 }
 
 /* ══════════════ ORDER SUMMARY MODAL ══════════════ */
-function OrderSummaryModal({C,item,answers,onClose,cfg,user,hasSignupDisc,saveUsers,users,setUser,onSignup}){
+function OrderSummaryModal({item,answers,onClose,cfg,user,hasSignupDisc,saveUsers,users,setUser,onSignup}){
 const[name,setName]=useState(user?user.name:””);
 const[phone,setPhone]=useState(””);
 const[promoInput,setPromoInput]=useState(””);
@@ -748,12 +747,12 @@ return(
       <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:14}}>
         <div>
           <Lbl c="Your Name *"/>
-          <input value={name} onChange={e=>{setName(e.target.value);setNameErr("")}} placeholder="Full name" style={iSt(C)}/>
+          <input value={name} onChange={e=>{setName(e.target.value);setNameErr("")}} placeholder="Full name" style={iSt()}/>
           {nameErr&&<p style={{fontSize:12,color:"#C04040",marginTop:4}}>{nameErr}</p>}
         </div>
         <div>
           <Lbl c="Phone Number *"/>
-          <input value={phone} onChange={e=>setPhone(e.target.value)} placeholder="e.g. 0123456789" style={iSt(C)}/>
+          <input value={phone} onChange={e=>setPhone(e.target.value)} placeholder="e.g. 0123456789" style={iSt()}/>
         </div>
       </div>
 
@@ -803,7 +802,7 @@ return(
 }
 
 /* ══════════════ CART DRAWER ══════════════ */
-function CartDrawer({C,cart,onClose,onRem,onQty,onCheckout,sub,hasSignupDisc,discPct,cfg,user,onSignup}){
+function CartDrawer({cart,onClose,onRem,onQty,onCheckout,sub,hasSignupDisc,discPct,cfg,user,onSignup}){
 const[promoInput,setPromoInput]=useState(””);
 const[promoApplied,setPromoApplied]=useState(null);
 const[promoErr,setPromoErr]=useState(””);
@@ -878,8 +877,8 @@ return val?<p key={k} style={{fontSize:11,color:C.tm,lineHeight:1.5}}>✦ {val}<
 <div style={{padding:“14px 18px”,borderTop:`1px solid ${C.b}`,flexShrink:0}}>
 {/* Name + Phone */}
 <div style={{display:“grid”,gridTemplateColumns:“1fr 1fr”,gap:8,marginBottom:10}}>
-<div><Lbl c="Name"/><input value={name} onChange={e=>setName(e.target.value)} placeholder=“Your name” style={{…iSt(C),padding:“9px 13px”,fontSize:13}}/></div>
-<div><Lbl c="Phone"/><input value={phone} onChange={e=>setPhone(e.target.value)} placeholder=“01X-XXXXXXX” style={{…iSt(C),padding:“9px 13px”,fontSize:13}}/></div>
+<div><Lbl c="Name"/><input value={name} onChange={e=>setName(e.target.value)} placeholder=“Your name” style={{…iSt(),padding:“9px 13px”,fontSize:13}}/></div>
+<div><Lbl c="Phone"/><input value={phone} onChange={e=>setPhone(e.target.value)} placeholder=“01X-XXXXXXX” style={{…iSt(),padding:“9px 13px”,fontSize:13}}/></div>
 </div>
 {/* Signup upsell */}
 {!user&&!promoApplied&&(
@@ -923,7 +922,7 @@ style={{flex:1,padding:“8px 13px”,borderRadius:9,border:`1.5px solid ${C.b}`
 }
 
 /* ══════════════ AUTH MODAL ══════════════ */
-function AuthModal({C,mode,setMode,onClose,users,saveUsers,onLogin,onSignup,cfg}){
+function AuthModal({mode,setMode,onClose,users,saveUsers,onLogin,onSignup,cfg}){
 const[f,setF]=useState({name:””,email:””,password:””});
 const[err,setErr]=useState(””);
 const[busy,setBusy]=useState(false);
@@ -957,9 +956,9 @@ return(
 {mode===“signup”&&<p style={{fontSize:13,color:C.pd}}>🎁 Get {cfg.discPct}% off your first order!</p>}
 </div>
 <div style={{display:“flex”,flexDirection:“column”,gap:10}}>
-{mode===“signup”&&<input placeholder=“Your name” value={f.name} onChange={e=>setF({…f,name:e.target.value})} style={iSt(C)}/>}
-<input type=“email” placeholder=“Email address” value={f.email} onChange={e=>setF({…f,email:e.target.value})} style={iSt(C)}/>
-<input type=“password” placeholder=“Password” value={f.password} onChange={e=>setF({…f,password:e.target.value})} onKeyDown={e=>e.key===“Enter”&&go()} style={iSt(C)}/>
+{mode===“signup”&&<input placeholder=“Your name” value={f.name} onChange={e=>setF({…f,name:e.target.value})} style={iSt()}/>}
+<input type=“email” placeholder=“Email address” value={f.email} onChange={e=>setF({…f,email:e.target.value})} style={iSt()}/>
+<input type=“password” placeholder=“Password” value={f.password} onChange={e=>setF({…f,password:e.target.value})} onKeyDown={e=>e.key===“Enter”&&go()} style={iSt()}/>
 {err&&<p style={{fontSize:13,color:”#C04040”,textAlign:“center”}}>{err}</p>}
 <button onClick={go} disabled={busy} className="btn" style={{padding:13,background:C.t,color:C.white,borderRadius:11,fontSize:14,fontWeight:500,marginTop:2}}>
 {busy?”…”:mode===“login”?“Log In”:“Create Account”}
@@ -978,7 +977,7 @@ return(
 }
 
 /* ══════════════ ABOUT PAGE ══════════════ */
-function AboutPage({C,cfg,onBack}){
+function AboutPage({cfg,onBack}){
 return(
 <div style={{maxWidth:760,margin:“0 auto”,padding:“44px 20px 64px”}}>
 <button onClick={onBack} className=“btn” style={{background:“none”,color:C.tm,fontSize:14,marginBottom:28,display:“flex”,alignItems:“center”,gap:5}}>← back to shop</button>
@@ -1004,37 +1003,52 @@ return(
 }
 
 /* ══════════════ CONTACT PAGE ══════════════ */
-function ContactPage({C,cfg,onBack}){
-const links=[
-{icon:“💬”,label:“WhatsApp”,val:cfg.contactWa||cfg.whatsapp,href:`https://wa.me/${cfg.contactWa||cfg.whatsapp}`,bg:”#E7F8EE”},
-cfg.contactIG&&{icon:“📸”,label:“Instagram”,val:cfg.contactIG,href:cfg.contactIGLink||`https://instagram.com/${(cfg.contactIG||"").replace("@","")}`,bg:C.pl},
-cfg.contactTT&&{icon:“🎵”,label:“TikTok”,val:cfg.contactTT,href:cfg.contactTTLink||`https://tiktok.com/@${(cfg.contactTT||"").replace("@","")}`,bg:”#F0EEFF”},
-cfg.contactEmail&&{icon:“✉️”,label:“Email”,val:cfg.contactEmail,href:`mailto:${cfg.contactEmail}`,bg:C.yl},
-].filter(Boolean);
+function ContactPage({cfg,onBack}){
 return(
 <div style={{maxWidth:640,margin:“0 auto”,padding:“44px 20px 64px”}}>
 <button onClick={onBack} className=“btn” style={{background:“none”,color:C.tm,fontSize:14,marginBottom:28,display:“flex”,alignItems:“center”,gap:5}}>← back to shop</button>
 <div style={{textAlign:“center”,marginBottom:36}}>
-<h1 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:“clamp(32px,6vw,54px)”,fontWeight:300,color:C.t,marginBottom:8}}>Contact Us</h1>
+<h1 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:“clamp(32px,6vw,54px)”,fontWeight:400,color:C.t,marginBottom:8}}>Contact Us</h1>
 <p style={{color:C.tl,fontSize:14}}>We’d love to hear from you ✦</p>
 </div>
 <div style={{display:“flex”,flexDirection:“column”,gap:14}}>
-{links.map(({icon,label,val,href,bg})=>(
-<a key={label} href={href} target=”_blank” style={{textDecoration:“none”}}>
-<div className=“card” style={{background:C.white,borderRadius:18,padding:“20px 22px”,boxShadow:C.sh,display:“flex”,alignItems:“center”,gap:16,border:`1px solid ${C.b}`}}>
-<div style={{width:48,height:48,borderRadius:14,background:bg,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:22,flexShrink:0}}>{icon}</div>
-<div style={{flex:1}}><p style={{fontWeight:600,color:C.t,marginBottom:3}}>{label}</p><p style={{fontSize:13,color:C.tm}}>{val}</p></div>
-<div style={{color:C.tl,fontSize:16}}>→</div>
+<a href={`https://wa.me/${cfg.contactWa||cfg.whatsapp}`} target=”_blank” style={{textDecoration:“none”}}>
+<div className=“card” style={{background:C.white,borderRadius:16,padding:“20px 22px”,boxShadow:C.sh,display:“flex”,alignItems:“center”,gap:16}}>
+<div style={{width:46,height:46,borderRadius:14,background:”#E7F8EE”,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:22,flexShrink:0}}>💬</div>
+<div><p style={{fontWeight:600,color:C.t,marginBottom:3}}>WhatsApp</p><p style={{fontSize:13,color:C.tm}}>{cfg.contactWa||cfg.whatsapp}</p></div>
 </div>
 </a>
-))}
+{cfg.contactEmail&&(
+<a href={`mailto:${cfg.contactEmail}`} style={{textDecoration:“none”}}>
+<div className=“card” style={{background:C.white,borderRadius:16,padding:“20px 22px”,boxShadow:C.sh,display:“flex”,alignItems:“center”,gap:16}}>
+<div style={{width:46,height:46,borderRadius:14,background:C.pl,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:22,flexShrink:0}}>✉️</div>
+<div><p style={{fontWeight:600,color:C.t,marginBottom:3}}>Email</p><p style={{fontSize:13,color:C.tm}}>{cfg.contactEmail}</p></div>
+</div>
+</a>
+)}
+{cfg.contactIG&&(
+<a href={cfg.contactIGLink||`https://instagram.com/${(cfg.contactIG||"").replace("@","")}`} target=”_blank” style={{textDecoration:“none”}}>
+<div className=“card” style={{background:C.white,borderRadius:16,padding:“20px 22px”,boxShadow:C.sh,display:“flex”,alignItems:“center”,gap:16}}>
+<div style={{width:46,height:46,borderRadius:14,background:”#FCE8F8”,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:22,flexShrink:0}}>📸</div>
+<div><p style={{fontWeight:600,color:C.t,marginBottom:3}}>Instagram</p><p style={{fontSize:13,color:C.tm}}>{cfg.contactIG}</p></div>
+</div>
+</a>
+)}
+{cfg.contactTK&&(
+<a href={cfg.contactTKLink||`https://tiktok.com/@${(cfg.contactTK||"").replace("@","")}`} target=”_blank” style={{textDecoration:“none”}}>
+<div className=“card” style={{background:C.white,borderRadius:16,padding:“20px 22px”,boxShadow:C.sh,display:“flex”,alignItems:“center”,gap:16}}>
+<div style={{width:46,height:46,borderRadius:14,background:”#E8F8F8”,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:22,flexShrink:0}}>🎵</div>
+<div><p style={{fontWeight:600,color:C.t,marginBottom:3}}>TikTok</p><p style={{fontSize:13,color:C.tm}}>{cfg.contactTK}</p></div>
+</div>
+</a>
+)}
 </div>
 </div>
 );
 }
 
 /* ══════════════ PRIVACY PAGE ══════════════ */
-function PrivacyPage({C,onBack}){
+function PrivacyPage({onBack}){
 const sections=[
 [“What we collect”,“We collect your name, email, and phone number when you place an order or create an account. We do not store payment information.”],
 [“How we use it”,“Your information is used only to process orders and provide customer support. We will never sell your data.”],
@@ -1060,7 +1074,7 @@ return(
 }
 
 /* ══════════════ ADMIN PAGE ══════════════ */
-function AdminPage({C,ok,onAuth,items,saveItems,forms,saveForms,users,saveUsers,cfg,saveCfg,onBack,toast}){
+function AdminPage({ok,onAuth,items,saveItems,forms,saveForms,users,saveUsers,cfg,saveCfg,onBack,toast}){
 const[pw,setPw]=useState(””);
 const[err,setErr]=useState(””);
 const[tab,setTab]=useState(“items”);
@@ -1082,7 +1096,7 @@ if(!ok)return(
 <p style={{fontSize:13,color:C.tl,marginBottom:20}}>Enter your password to continue</p>
 <input type=“password” placeholder=“Admin password” value={pw} onChange={e=>setPw(e.target.value)}
 onKeyDown={e=>{if(e.key===“Enter”&&!onAuth(pw))setErr(“Wrong password”);}}
-style={{…iSt(C),marginBottom:9}}/>
+style={{…iSt(),marginBottom:9}}/>
 {err&&<p style={{fontSize:13,color:”#C04040”,marginBottom:9}}>{err}</p>}
 <button onClick={()=>{if(!onAuth(pw))setErr(“Wrong password”);}} className=“btn” style={{width:“100%”,padding:12,background:C.t,color:C.white,borderRadius:11,fontSize:14,marginBottom:12}}>Enter</button>
 <button onClick={onBack} className=“btn” style={{background:“none”,color:C.tl,fontSize:13}}>← Back to shop</button>
@@ -1102,7 +1116,7 @@ return(
 
 ```
   <div style={{display:"flex",gap:2,marginBottom:22,borderBottom:`1px solid ${C.b}`,overflowX:"auto"}}>
-    {[["items","📦 Items"],["forms","📋 Forms"],["users","👥 Customers"],["design","🎨 Design"],["settings","⚙️ Settings"]].map(([t,l])=>(
+    {[["items","📦 Items"],["forms","📋 Forms"],["users","👥 Customers"],["settings","⚙️ Settings"]].map(([t,l])=>(
       <button key={t} onClick={()=>setTab(t)} className="btn"
         style={{padding:"9px 16px",background:"none",borderBottom:`2.5px solid ${tab===t?C.pd:"transparent"}`,color:tab===t?C.t:C.tl,fontSize:13,borderRadius:0,marginBottom:-1,whiteSpace:"nowrap"}}>
         {l}
@@ -1117,7 +1131,7 @@ return(
         <p style={{fontSize:13,color:C.tm}}>{items.length} item{items.length!==1?"s":""}</p>
         <button onClick={()=>setItemForm({})} className="btn" style={{background:C.t,color:C.white,borderRadius:50,padding:"9px 20px",fontSize:13}}>+ Add New Item</button>
       </div>
-      {itemForm!==null&&<ItemForm C={C} item={itemForm.id?itemForm:null} forms={forms} onSave={d=>{if(d.id){saveItems(items.map(i=>i.id===d.id?d:i));toast("Updated ✓")}else{saveItems([...items,{id:uid(),...d}]);toast("Added ✓")}setItemForm(null);}} onClose={()=>setItemForm(null)}/>}
+      {itemForm!==null&&<ItemForm item={itemForm.id?itemForm:null} forms={forms} onSave={d=>{if(d.id){saveItems(items.map(i=>i.id===d.id?d:i));toast("Updated ✓")}else{saveItems([...items,{id:uid(),...d}]);toast("Added ✓")}setItemForm(null);}} onClose={()=>setItemForm(null)}/>}
       {items.length===0&&!itemForm&&<div style={{textAlign:"center",padding:"48px 0",color:C.tl}}><div style={{fontSize:44,marginBottom:12}}>📦</div><p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20}}>No items yet</p></div>}
       <div style={{display:"flex",flexDirection:"column",gap:9}}>
         {items.map(it=>{
@@ -1153,7 +1167,7 @@ return(
         <p style={{fontSize:13,color:C.tm}}>{forms.length} form{forms.length!==1?"s":""}</p>
         <button onClick={()=>setFormBuilder({name:"",questions:[]})} className="btn" style={{background:C.t,color:C.white,borderRadius:50,padding:"9px 20px",fontSize:13}}>+ Create Form</button>
       </div>
-      {formBuilder!==null&&<FormBuilder C={C} form={formBuilder.id?formBuilder:null} onSave={d=>{if(d.id){saveForms(forms.map(f=>f.id===d.id?d:f));toast("Updated ✓")}else{saveForms([...forms,{id:uid(),...d}]);toast("Created ✓")}setFormBuilder(null);}} onClose={()=>setFormBuilder(null)}/>}
+      {formBuilder!==null&&<FormBuilder form={formBuilder.id?formBuilder:null} onSave={d=>{if(d.id){saveForms(forms.map(f=>f.id===d.id?d:f));toast("Updated ✓")}else{saveForms([...forms,{id:uid(),...d}]);toast("Created ✓")}setFormBuilder(null);}} onClose={()=>setFormBuilder(null)}/>}
       {forms.length===0&&!formBuilder&&<div style={{textAlign:"center",padding:"48px 0",color:C.tl}}><div style={{fontSize:44,marginBottom:12}}>📋</div><p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20}}>No forms yet</p></div>}
       <div style={{display:"flex",flexDirection:"column",gap:9}}>
         {forms.map(f=>{
@@ -1185,54 +1199,10 @@ return(
       {users.length===0?<div style={{textAlign:"center",padding:48,color:C.tl}}><div style={{fontSize:40,marginBottom:10}}>👥</div><p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20}}>No customers yet</p></div>:(
         <div style={{display:"flex",flexDirection:"column",gap:9}}>
           {users.map(u=>(
-            <EditableUser key={u.id} C={C} u={u} onSave={updated=>{saveUsers(users.map(x=>x.id===u.id?updated:x));toast("Name updated ✓");}}/>
+            <EditableUser key={u.id} u={u} onSave={updated=>{saveUsers(users.map(x=>x.id===u.id?updated:x));toast("Name updated ✓");}}/>
           ))}
         </div>
       )}
-    </div>
-  )}
-
-  {/* DESIGN */}
-  {tab==="design"&&(
-    <div style={{maxWidth:560,display:"flex",flexDirection:"column",gap:18}}>
-      <div style={{background:"#FFF6E0",borderRadius:12,padding:"12px 16px",fontSize:13,color:C.tm,lineHeight:1.7}}>
-        🎨 Customise every colour on your website. Changes apply when you save!
-      </div>
-      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh,border:`1px solid ${C.b}`}}>
-        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:14}}>🔴 Brand Color</p>
-        <div style={{display:"flex",flexDirection:"column",gap:11}}>
-          {[["Main Color (buttons, accents)","accentColor"],["Light Tint","accentLight"],["Mid Tone","accentMid"]].map(([l,k])=>(
-            <div key={k}><Lbl c={l}/><div style={{display:"flex",gap:8,alignItems:"center"}}><input type="color" value={ec[k]||"#000"} onChange={e=>setEc({...ec,[k]:e.target.value})} style={{width:44,height:38,borderRadius:8,border:`1.5px solid ${C.b}`,cursor:"pointer",padding:2}}/><input type="text" value={ec[k]||""} onChange={e=>setEc({...ec,[k]:e.target.value})} placeholder="#RRGGBB" style={{...iSt(C),flex:1}}/></div></div>
-          ))}
-        </div>
-      </div>
-      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh,border:`1px solid ${C.b}`}}>
-        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:14}}>🖼️ Hero Section Background</p>
-        <div style={{display:"flex",flexDirection:"column",gap:11}}>
-          <div><Lbl c="Hero Image URL (leave empty for gradient)"/><input value={ec.heroImage||""} onChange={e=>setEc({...ec,heroImage:e.target.value})} placeholder="https://your-image.jpg" style={iSt(C)}/><p style={{fontSize:11,color:C.tl,marginTop:5}}>📐 Best size: <strong>1920 × 700px</strong> (wide banner). Image will be darkened automatically.</p></div>
-          <div><Lbl c="Custom Gradient (if no image)"/><input value={ec.heroBg||""} onChange={e=>setEc({...ec,heroBg:e.target.value})} placeholder="e.g. linear-gradient(135deg,#1A0808,#8B1520)" style={iSt(C)}/><p style={{fontSize:11,color:C.tl,marginTop:4}}>Leave empty to use default dark red gradient.</p></div>
-        </div>
-      </div>
-      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh,border:`1px solid ${C.b}`}}>
-        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:14}}>📄 Page & Card Colors</p>
-        <div style={{display:"flex",flexDirection:"column",gap:11}}>
-          {[["Page Background","bgColor"],["Cards / White Boxes","cardColor"],["Border Color","borderColor"],["Footer Background","footerColor"]].map(([l,k])=>(
-            <div key={k}><Lbl c={l}/><div style={{display:"flex",gap:8,alignItems:"center"}}><input type="color" value={ec[k]||"#000"} onChange={e=>setEc({...ec,[k]:e.target.value})} style={{width:44,height:38,borderRadius:8,border:`1.5px solid ${C.b}`,cursor:"pointer",padding:2}}/><input type="text" value={ec[k]||""} onChange={e=>setEc({...ec,[k]:e.target.value})} placeholder="#RRGGBB" style={{...iSt(C),flex:1}}/></div></div>
-          ))}
-        </div>
-      </div>
-      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh,border:`1px solid ${C.b}`}}>
-        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:14}}>🏷️ Hero Badges</p>
-        <p style={{fontSize:12,color:C.tl,marginBottom:10}}>The little tags shown on your homepage (e.g. "mystery inside").</p>
-        {(ec.heroTags||[]).map((tag,i)=>(
-          <div key={i} style={{display:"flex",gap:7,marginBottom:7}}>
-            <input value={tag} onChange={e=>{const t=[...(ec.heroTags||[])];t[i]=e.target.value;setEc({...ec,heroTags:t});}} style={{...iSt(C),flex:1}}/>
-            <button onClick={()=>{const t=(ec.heroTags||[]).filter((_,j)=>j!==i);setEc({...ec,heroTags:t});}} className="btn" style={{background:"#FFE0E0",borderRadius:8,padding:"0 12px",color:"#C04040",fontSize:16,flexShrink:0}}>×</button>
-          </div>
-        ))}
-        <button onClick={()=>setEc({...ec,heroTags:[...(ec.heroTags||[]),"✦ new badge"]})} className="btn" style={{width:"100%",background:C.cream,border:`1px dashed ${C.b}`,borderRadius:8,padding:"8px",fontSize:12,color:C.tm}}>+ Add Badge</button>
-      </div>
-      <button onClick={async()=>{await saveCfg(ec);toast("Design saved ✓");}} className="btn" style={{alignSelf:"flex-start",background:C.t,color:"#FAF6EE",borderRadius:50,padding:"13px 30px",fontSize:14}}>Save Design</button>
     </div>
   )}
 
@@ -1241,7 +1211,7 @@ return(
     <div style={{maxWidth:560,display:"flex",flexDirection:"column",gap:18}}>
       {[
         {title:"Site Details",fields:[["Site Name","siteName","text"],["Tagline","tagline","text"]]},
-        {title:"Contact Info",fields:[["WhatsApp (orders)","whatsapp","text"],["WhatsApp (contact page)","contactWa","text"],["Instagram handle","contactIG","text"],["Instagram URL","contactIGLink","text"],["TikTok handle","contactTT","text"],["TikTok URL","contactTTLink","text"],["Email","contactEmail","email"]]},
+        {title:"Contact Info",fields:[["WhatsApp (orders)","whatsapp","text"],["WhatsApp (contact page)","contactWa","text"],["Instagram handle","contactIG","text"],["Instagram URL","contactIGLink","text"],["TikTok handle","contactTK","text"],["TikTok URL","contactTKLink","text"],["Email","contactEmail","email"]]},
         {title:"Discounts",fields:[["Welcome Discount % (new signups)","discPct","number"],["Promo Code","promoCode","text"],["Promo Code Discount %","promoPct","number"]]},
         {title:"Security",fields:[["Admin Password","adminPass","password"]]},
       ].map(({title,fields})=>(
@@ -1249,7 +1219,7 @@ return(
           <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:14}}>{title}</p>
           <div style={{display:"flex",flexDirection:"column",gap:11}}>
             {fields.map(([l,k,t])=>(
-              <div key={k}><Lbl c={l}/><input type={t} value={ec[k]!==undefined?ec[k]:""} onChange={e=>setEc({...ec,[k]:t==="number"?Number(e.target.value):e.target.value})} style={iSt(C)}/></div>
+              <div key={k}><Lbl c={l}/><input type={t} value={ec[k]!==undefined?ec[k]:""} onChange={e=>setEc({...ec,[k]:t==="number"?Number(e.target.value):e.target.value})} style={iSt()}/></div>
             ))}
           </div>
         </div>
@@ -1259,7 +1229,7 @@ return(
         <p style={{fontSize:12,color:C.tl,marginBottom:12}}>These are the little tags shown on the homepage (e.g. "mystery inside"). Add, remove or change them.</p>
         {(ec.heroTags||[]).map((tag,i)=>(
           <div key={i} style={{display:"flex",gap:7,marginBottom:7}}>
-            <input value={tag} onChange={e=>{const t=[...(ec.heroTags||[])];t[i]=e.target.value;setEc({...ec,heroTags:t});}} style={{...iSt(C),flex:1}}/>
+            <input value={tag} onChange={e=>{const t=[...(ec.heroTags||[])];t[i]=e.target.value;setEc({...ec,heroTags:t});}} style={{...iSt(),flex:1}}/>
             <button onClick={()=>{const t=(ec.heroTags||[]).filter((_,j)=>j!==i);setEc({...ec,heroTags:t});}} className="btn" style={{background:"#FFE0E0",borderRadius:8,padding:"0 11px",color:"#C04040",fontSize:16,flexShrink:0}}>×</button>
           </div>
         ))}
@@ -1270,13 +1240,35 @@ return(
       </div>
       <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
         <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:8}}>About Page Text</p>
-        <textarea value={ec.aboutText||""} onChange={e=>setEc({...ec,aboutText:e.target.value})} rows={5} style={{...iSt(C),resize:"vertical",borderRadius:10}}/>
+        <textarea value={ec.aboutText||""} onChange={e=>setEc({...ec,aboutText:e.target.value})} rows={5} style={{...iSt(),resize:"vertical",borderRadius:10}}/>
+      </div>
+      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
+        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:4}}>🎨 Colour Customiser</p>
+        <p style={{fontSize:12,color:C.tl,marginBottom:14}}>Change any colour. Click the colour box or type a HEX code. Save when done!</p>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+          {[["Main Colour (buttons, highlights)","clrPrimary"],["Background Colour","clrBg"],["Card Colour","clrCard"],["Text Colour","clrText"],["Footer Colour","clrFooter"],["Button Text Colour","clrButtonText"]].map(([lbl,k])=>(
+            <div key={k}>
+              <Lbl c={lbl}/>
+              <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                <input type="color" value={ec[k]||"#E8192C"} onChange={e=>setEc({...ec,[k]:e.target.value})}
+                  style={{width:42,height:36,borderRadius:8,border:`1.5px solid ${C.b}`,cursor:"pointer",padding:2,flexShrink:0}}/>
+                <input value={ec[k]||""} onChange={e=>setEc({...ec,[k]:e.target.value})} placeholder="#000000" style={{...iSt(),flex:1,padding:"8px 10px",fontSize:12}}/>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
+        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:4}}>🖼️ Hero Section</p>
+        <p style={{fontSize:12,color:C.tl,marginBottom:12}}>Paste an image URL to use as your hero background. Recommended size: <strong>1920 × 700px</strong>. Leave empty for the default dark gradient.</p>
+        <div><Lbl c="Hero Image URL"/><input value={ec.heroImage||""} onChange={e=>setEc({...ec,heroImage:e.target.value})} placeholder="https://your-image.jpg (leave empty for gradient)" style={iSt()}/></div>
+        {ec.heroImage&&<div style={{marginTop:10,borderRadius:10,overflow:"hidden"}}><img src={ec.heroImage} alt="preview" onError={e=>e.target.style.display="none"} style={{width:"100%",height:100,objectFit:"cover",display:"block"}}/></div>}
       </div>
       <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
         <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:6}}>☁️ Cloud Sync</p>
         <div style={{display:"flex",flexDirection:"column",gap:11}}>
-          <div><Lbl c="JSONBin Master Key"/><input type="password" value={ec.jbKey||""} onChange={e=>setEc({...ec,jbKey:e.target.value})} style={iSt(C)}/></div>
-          <div><Lbl c="JSONBin Bin ID"/><input value={ec.jbId||""} onChange={e=>setEc({...ec,jbId:e.target.value})} style={iSt(C)}/></div>
+          <div><Lbl c="JSONBin Master Key"/><input type="password" value={ec.jbKey||""} onChange={e=>setEc({...ec,jbKey:e.target.value})} style={iSt()}/></div>
+          <div><Lbl c="JSONBin Bin ID"/><input value={ec.jbId||""} onChange={e=>setEc({...ec,jbId:e.target.value})} style={iSt()}/></div>
           <button onClick={testCloud} className="btn" style={{alignSelf:"flex-start",background:C.cream,border:`1.5px solid ${C.b}`,borderRadius:50,padding:"8px 18px",fontSize:13,color:C.t}}>Test Connection</button>
           {testStatus&&<p style={{fontSize:13,color:testStatus.includes("✅")?C.pd:"#C04040"}}>{testStatus}</p>}
         </div>
@@ -1294,7 +1286,7 @@ return(
 }
 
 /* ══════════════ FORM BUILDER ══════════════ */
-function FormBuilder({C,form,onSave,onClose}){
+function FormBuilder({form,onSave,onClose}){
 const[name,setName]=useState(form?form.name:””);
 const[questions,setQuestions]=useState(form?form.questions:[]);
 const[err,setErr]=useState(””);
@@ -1322,7 +1314,7 @@ return(
 <h2 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:23,color:C.t}}>{form?“Edit Form”:“Create Form”}</h2>
 <button onClick={onClose} className=“btn” style={{width:30,height:30,borderRadius:“50%”,background:C.cream,fontSize:18,color:C.t,display:“flex”,alignItems:“center”,justifyContent:“center”}}>×</button>
 </div>
-<div style={{marginBottom:16}}><Lbl c="Form Name"/><input value={name} onChange={e=>setName(e.target.value)} placeholder=“e.g. Vintage Box Preferences” style={iSt(C)}/></div>
+<div style={{marginBottom:16}}><Lbl c="Form Name"/><input value={name} onChange={e=>setName(e.target.value)} placeholder=“e.g. Vintage Box Preferences” style={iSt()}/></div>
 <div style={{display:“flex”,flexDirection:“column”,gap:12,marginBottom:12}}>
 {questions.map((q,qi)=>(
 <div key={q.id} style={{background:C.cream,borderRadius:14,padding:“14px”}}>
@@ -1331,13 +1323,13 @@ return(
 <button onClick={()=>delQ(q.id)} className=“btn” style={{background:”#FFE0E0”,borderRadius:50,padding:“3px 10px”,fontSize:12,color:”#C04040”}}>Remove</button>
 </div>
 <div style={{display:“flex”,flexDirection:“column”,gap:8}}>
-<div><Lbl c="Question"/><input value={q.question} onChange={e=>updQ(q.id,“question”,e.target.value)} placeholder=“e.g. What type of box?” style={iSt(C)}/></div>
-<div><Lbl c="Subtitle (optional)"/><input value={q.subtitle||””} onChange={e=>updQ(q.id,“subtitle”,e.target.value)} placeholder=“e.g. Pick your vibe” style={iSt(C)}/></div>
-<div><Lbl c="Question Image URL (optional)"/><input value={q.image||””} onChange={e=>updQ(q.id,“image”,e.target.value)} placeholder=“https://…” style={iSt(C)}/></div>
+<div><Lbl c="Question"/><input value={q.question} onChange={e=>updQ(q.id,“question”,e.target.value)} placeholder=“e.g. What type of box?” style={iSt()}/></div>
+<div><Lbl c="Subtitle (optional)"/><input value={q.subtitle||””} onChange={e=>updQ(q.id,“subtitle”,e.target.value)} placeholder=“e.g. Pick your vibe” style={iSt()}/></div>
+<div><Lbl c="Question Image URL (optional)"/><input value={q.image||””} onChange={e=>updQ(q.id,“image”,e.target.value)} placeholder=“https://…” style={iSt()}/></div>
 <div style={{display:“flex”,gap:10,flexWrap:“wrap”}}>
 <div style={{flex:1,minWidth:140}}>
 <Lbl c="Answer Type"/>
-<select value={q.type||“single”} onChange={e=>updQ(q.id,“type”,e.target.value)} style={{…iSt(C),cursor:“pointer”}}>
+<select value={q.type||“single”} onChange={e=>updQ(q.id,“type”,e.target.value)} style={{…iSt(),cursor:“pointer”}}>
 <option value="single">Choose one</option>
 <option value="multi">Choose multiple</option>
 <option value="text">Type an answer</option>
@@ -1358,17 +1350,17 @@ Required
 {(q.options||[]).map((opt,oi)=>(
 <div key={opt.id} style={{background:C.white,borderRadius:10,padding:“10px 12px”,marginBottom:7}}>
 <div style={{display:“flex”,gap:6,marginBottom:5}}>
-<input value={opt.label} onChange={e=>updOpt(q.id,opt.id,“label”,e.target.value)} placeholder={`Option ${oi+1}`} style={{…iSt(C),flex:1}}/>
+<input value={opt.label} onChange={e=>updOpt(q.id,opt.id,“label”,e.target.value)} placeholder={`Option ${oi+1}`} style={{…iSt(),flex:1}}/>
 {(q.options||[]).length>1&&<button onClick={()=>delOpt(q.id,opt.id)} className=“btn” style={{background:”#FFE0E0”,borderRadius:8,padding:“0 10px”,color:”#C04040”,fontSize:15,flexShrink:0}}>×</button>}
 </div>
-<input value={opt.image||””} onChange={e=>updOpt(q.id,opt.id,“image”,e.target.value)} placeholder=“Image URL (optional)” style={{…iSt(C),fontSize:12,marginBottom:5}}/>
-<input value={opt.desc||””} onChange={e=>updOpt(q.id,opt.id,“desc”,e.target.value)} placeholder=“Short description (optional)” style={{…iSt(C),fontSize:12}}/>
+<input value={opt.image||””} onChange={e=>updOpt(q.id,opt.id,“image”,e.target.value)} placeholder=“Image URL (optional)” style={{…iSt(),fontSize:12,marginBottom:5}}/>
+<input value={opt.desc||””} onChange={e=>updOpt(q.id,opt.id,“desc”,e.target.value)} placeholder=“Short description (optional)” style={{…iSt(),fontSize:12}}/>
 </div>
 ))}
 <button onClick={()=>addOpt(q.id)} className=“btn” style={{width:“100%”,background:C.white,border:`1px dashed ${C.b}`,borderRadius:9,padding:“7px”,fontSize:12,color:C.tm}}>+ Add Option</button>
 </div>
 )}
-{q.type===“text”&&<div><Lbl c="Placeholder hint"/><input value={q.placeholder||””} onChange={e=>updQ(q.id,“placeholder”,e.target.value)} placeholder=“e.g. Tell us your colour preferences…” style={iSt(C)}/></div>}
+{q.type===“text”&&<div><Lbl c="Placeholder hint"/><input value={q.placeholder||””} onChange={e=>updQ(q.id,“placeholder”,e.target.value)} placeholder=“e.g. Tell us your colour preferences…” style={iSt()}/></div>}
 </div>
 </div>
 ))}
@@ -1386,7 +1378,7 @@ Required
 }
 
 /* ══════════════ ITEM FORM ══════════════ */
-function ItemForm({C,item,onSave,onClose,forms}){
+function ItemForm({item,onSave,onClose,forms}){
 const[f,setF]=useState({
 name:item?item.name:””,price:item?item.price:””,originalPrice:item?(item.originalPrice||””):””,
 images:item&&item.images&&item.images.length?item.images:[””],description:item?item.description:””,
@@ -1413,30 +1405,30 @@ return(
 <button onClick={onClose} className=“btn” style={{width:30,height:30,borderRadius:“50%”,background:C.cream,fontSize:18,color:C.t,display:“flex”,alignItems:“center”,justifyContent:“center”}}>×</button>
 </div>
 <div style={{display:“flex”,flexDirection:“column”,gap:11}}>
-<div><Lbl c="Item Name *"/><input value={f.name} onChange={e=>setF({…f,name:e.target.value})} placeholder=“e.g. Vintage Music Box” style={iSt(C)}/></div>
+<div><Lbl c="Item Name *"/><input value={f.name} onChange={e=>setF({…f,name:e.target.value})} placeholder=“e.g. Vintage Music Box” style={iSt()}/></div>
 <div style={{display:“grid”,gridTemplateColumns:“1fr 1fr”,gap:10}}>
-<div><Lbl c="Price (RM) *"/><input type=“number” step=”.01” value={f.price} onChange={e=>setF({…f,price:e.target.value})} placeholder=“0.00” style={iSt(C)}/></div>
-<div><Lbl c="Original (sale)"/><input type=“number” step=”.01” value={f.originalPrice} onChange={e=>setF({…f,originalPrice:e.target.value})} placeholder=“Optional” style={iSt(C)}/></div>
+<div><Lbl c="Price (RM) *"/><input type=“number” step=”.01” value={f.price} onChange={e=>setF({…f,price:e.target.value})} placeholder=“0.00” style={iSt()}/></div>
+<div><Lbl c="Original (sale)"/><input type=“number” step=”.01” value={f.originalPrice} onChange={e=>setF({…f,originalPrice:e.target.value})} placeholder=“Optional” style={iSt()}/></div>
 </div>
 <div style={{display:“grid”,gridTemplateColumns:“1fr 1fr”,gap:10}}>
-<div><Lbl c="Category"/><input value={f.category} onChange={e=>setF({…f,category:e.target.value})} placeholder=“e.g. Vintage” style={iSt(C)}/></div>
-<div><Lbl c="Stock"/><input type=“number” value={f.stock} onChange={e=>setF({…f,stock:e.target.value})} style={iSt(C)}/></div>
+<div><Lbl c="Category"/><input value={f.category} onChange={e=>setF({…f,category:e.target.value})} placeholder=“e.g. Vintage” style={iSt()}/></div>
+<div><Lbl c="Stock"/><input type=“number” value={f.stock} onChange={e=>setF({…f,stock:e.target.value})} style={iSt()}/></div>
 </div>
 <div>
 <Lbl c="Image URLs"/>
 {f.images.map((img,i)=>(
 <div key={i} style={{display:“flex”,gap:6,marginBottom:6}}>
-<input value={img} onChange={e=>setImg(i,e.target.value)} placeholder={`Image URL ${i+1}`} style={{…iSt(C),flex:1}}/>
+<input value={img} onChange={e=>setImg(i,e.target.value)} placeholder={`Image URL ${i+1}`} style={{…iSt(),flex:1}}/>
 {f.images.length>1&&<button onClick={()=>rmImg(i)} className=“btn” style={{background:”#FFE0E0”,borderRadius:8,padding:“0 11px”,color:”#C04040”,fontSize:16,flexShrink:0}}>×</button>}
 </div>
 ))}
 <button onClick={()=>setF({…f,images:[…f.images,””]})} className=“btn” style={{width:“100%”,background:C.cream,border:`1px dashed ${C.b}`,borderRadius:8,padding:“7px”,fontSize:12,color:C.tm}}>+ Add another image</button>
 </div>
-<div><Lbl c="Description"/><textarea value={f.description} onChange={e=>setF({…f,description:e.target.value})} rows={3} placeholder=“What’s inside this mystery box…” style={{…iSt(C),resize:“vertical”,borderRadius:10}}/></div>
-<div><Lbl c="Tags (comma separated)"/><input value={f.tags} onChange={e=>setF({…f,tags:e.target.value})} placeholder=“new, bestseller, limited, popular” style={iSt(C)}/></div>
+<div><Lbl c="Description"/><textarea value={f.description} onChange={e=>setF({…f,description:e.target.value})} rows={3} placeholder=“What’s inside this mystery box…” style={{…iSt(),resize:“vertical”,borderRadius:10}}/></div>
+<div><Lbl c="Tags (comma separated)"/><input value={f.tags} onChange={e=>setF({…f,tags:e.target.value})} placeholder=“new, bestseller, limited, popular” style={iSt()}/></div>
 <div>
 <Lbl c="Attach Order Form (optional)"/>
-<select value={f.formId||””} onChange={e=>setF({…f,formId:e.target.value})} style={{…iSt(C),cursor:“pointer”}}>
+<select value={f.formId||””} onChange={e=>setF({…f,formId:e.target.value})} style={{…iSt(),cursor:“pointer”}}>
 <option value="">— No form, use Add to Cart + Order Now —</option>
 {(forms||[]).map(frm=><option key={frm.id} value={frm.id}>📋 {frm.name}</option>)}
 </select>
@@ -1461,7 +1453,7 @@ return(
 }
 
 /* ══════════════ EDITABLE USER (Admin) ══════════════ */
-function EditableUser({C,u,onSave}){
+function EditableUser({u,onSave}){
 const[editing,setEditing]=useState(false);
 const[name,setName]=useState(u.name);
 return(
@@ -1470,7 +1462,7 @@ return(
 <div style={{flex:1,minWidth:120}}>
 {editing?(
 <div style={{display:“flex”,gap:7,alignItems:“center”}}>
-<input value={name} onChange={e=>setName(e.target.value)} style={{…iSt(C),padding:“6px 10px”,fontSize:13,flex:1}} onKeyDown={e=>{if(e.key===“Enter”){onSave({…u,name});setEditing(false);}}}/>
+<input value={name} onChange={e=>setName(e.target.value)} style={{…iSt(),padding:“6px 10px”,fontSize:13,flex:1}} onKeyDown={e=>{if(e.key===“Enter”){onSave({…u,name});setEditing(false);}}}/>
 <button onClick={()=>{onSave({…u,name});setEditing(false);}} className=“btn” style={{background:C.pd,color:C.white,borderRadius:8,padding:“6px 12px”,fontSize:12,flexShrink:0}}>Save</button>
 <button onClick={()=>{setName(u.name);setEditing(false);}} className=“btn” style={{background:C.cream,border:`1px solid ${C.b}`,borderRadius:8,padding:“6px 10px”,fontSize:12,flexShrink:0}}>×</button>
 </div>
