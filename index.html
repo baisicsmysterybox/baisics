@@ -20,7 +20,25 @@ body{font-family:'Jost',sans-serif}
 input,textarea,select{outline:none;font-family:'Jost',sans-serif}
 input:focus,textarea:focus,select:focus{border-color:var(--pd,#E8003D)!important;box-shadow:0 0 0 3px rgba(232,0,61,.15)!important}
 .items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px;padding-bottom:64px}
-@media(max-width:560px){.items-grid{grid-template-columns:1fr 1fr!important;gap:10px!important}.card-btns{flex-direction:column!important;gap:5px!important}.hide-sm{display:none!important}}
+/* ── DESKTOP ── */
+@media(min-width:1024px){
+  .items-grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))!important;gap:26px!important}
+  .nav-inner{height:70px!important}
+  .hero-title{font-size:96px!important}
+  .page-wrap{padding:40px 40px 80px!important}
+}
+/* ── TABLET ── */
+@media(min-width:640px) and (max-width:1023px){
+  .items-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))!important;gap:18px!important}
+}
+/* ── MOBILE ── */
+@media(max-width:639px){
+  .items-grid{grid-template-columns:1fr 1fr!important;gap:10px!important}
+  .card-btns{flex-direction:column!important;gap:5px!important}
+  .hide-sm{display:none!important}
+  .item-page-grid{grid-template-columns:1fr!important}
+  .footer-grid{grid-template-columns:1fr 1fr!important;gap:20px!important}
+}
 </style>
 </head>
 <body><div id="root"></div>
@@ -37,6 +55,7 @@ const DCFG={
   contactWa:"60123456789",contactEmail:"hello@baisics.com",contactIG:"@baisics",contactIGUrl:"https://instagram.com/baisics",contactTT:"@baisics",contactTTUrl:"https://tiktok.com/@baisics",
   heroImage:"",heroBgColor:"",heroTags:["✦ mystery inside","✦ curated with love","✦ free surprise"],
   colorPrimary:"#E8003D",colorBg:"#FAF6EE",colorCard:"#FFFFFF",colorFooter:"#1A0A06",colorText:"#1A0A06",
+  loadingBg:"#2D0010",loadingSubtext:"curating your magic…",loadingImage:"",
 };
 let C={};
 function buildC(cfg){
@@ -129,11 +148,22 @@ function App(){
   // Rebuild C on every render so child components get fresh colors
   buildC(cfg);
 
+  const lsCfg=LS.get("mx:cfg")||DCFG;
+  const lBg=lsCfg.loadingBg||"#2D0010";
+  const lImg=lsCfg.loadingImage||"";
+  const lSub=lsCfg.loadingSubtext||"curating your magic…";
+  const lName=lsCfg.siteName||DCFG.siteName;
+  const lStyle=lImg
+    ?{backgroundImage:`url(${lImg})`,backgroundSize:"cover",backgroundPosition:"center"}
+    :{background:lBg};
   if(loading)return(
-    <div style={{height:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"linear-gradient(160deg,#1A0A06 0%,#3D0010 50%,#6B0015 100%)",gap:14}}>
-      <div className="fl" style={{fontSize:52,color:"#FF6680"}}>✦</div>
-      <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:40,color:"#FAF6EE",fontWeight:300,letterSpacing:".02em"}}>{DCFG.siteName}</p>
-      <p style={{color:"rgba(250,246,238,.45)",fontSize:12,letterSpacing:".22em",textTransform:"uppercase"}}>curating your magic…</p>
+    <div style={{height:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",...lStyle,gap:14,position:"relative"}}>
+      {lImg&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.5)"}}/>}
+      <div style={{position:"relative",zIndex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:14}}>
+        <div className="fl" style={{fontSize:52,color:"#FF6680"}}>✦</div>
+        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:40,color:"#FAF6EE",fontWeight:300,letterSpacing:".02em"}}>{lName}</p>
+        <p style={{color:"rgba(250,246,238,.45)",fontSize:12,letterSpacing:".22em",textTransform:"uppercase"}}>{lSub}</p>
+      </div>
     </div>
   );
 
@@ -148,7 +178,7 @@ function App(){
       {notif&&<Toast m={notif}/>}
       {/* NAV */}
       <nav style={{position:"sticky",top:0,zIndex:100,background:`${cfg.colorBg||"#FAF6EE"}F5`,backdropFilter:"blur(14px)",borderBottom:`1px solid ${C.b}`,padding:"0 20px",flexShrink:0}}>
-        <div style={{maxWidth:1200,margin:"0 auto",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
+        <div className="nav-inner" style={{maxWidth:1200,margin:"0 auto",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
           <button onClick={()=>{handleLogoTap();goShop()}} className="btn" style={{background:"none",display:"flex",alignItems:"center",gap:8,padding:0}}>
             <span style={{color:C.pd,fontSize:18}}>✦</span>
             <span style={{fontFamily:"'Cormorant Garamond',serif",fontSize:26,fontWeight:500,color:C.t}}>{cfg.siteName}</span>
@@ -182,7 +212,7 @@ function App(){
       {pg!=="admin"&&(
         <footer style={{background:cfg.colorFooter||"#1A0A06",color:"rgba(255,255,255,.5)",padding:"44px 20px 24px",marginTop:"auto"}}>
           <div style={{maxWidth:1200,margin:"0 auto"}}>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:32,marginBottom:32}}>
+            <div className="footer-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:32,marginBottom:32}}>
               <div>
                 <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:10}}>
                   <span style={{color:C.pd,fontSize:16}}>✦</span>
@@ -262,7 +292,7 @@ function ShopPage({items,forms,onItem,onAdd,onDirectOrder,onStartForm,cfg}){
         </svg>
       </div>
       {/* Grid */}
-      <div style={{maxWidth:1200,margin:"0 auto",padding:"16px 16px 0"}}>
+      <div className="page-wrap" style={{maxWidth:1200,margin:"0 auto",padding:"16px 16px 0"}}>
         <div style={{marginBottom:24}}>
           <input placeholder="🔍  search mystery boxes…" value={q} onChange={e=>setQ(e.target.value)}
             style={{width:"100%",maxWidth:500,padding:"11px 20px",borderRadius:50,border:`1.5px solid ${C.b}`,background:C.white,fontSize:14,color:C.t,display:"block",margin:"0 auto",boxShadow:C.sh}}/>
@@ -344,9 +374,9 @@ function ItemPage({item,items,forms,onBack,onAdd,onItem,onDirectOrder,onStartFor
   const attachedForm=forms&&item.formId?forms.find(f=>f.id===item.formId):null;
   const outOfStock=item.stock===0;
   return(
-    <div style={{maxWidth:1200,margin:"0 auto",padding:"26px 16px 60px"}}>
+    <div className="page-wrap" style={{maxWidth:1200,margin:"0 auto",padding:"26px 16px 60px"}}>
       <button onClick={onBack} className="btn" style={{background:"none",padding:"5px 0",color:C.tm,fontSize:14,marginBottom:20,display:"flex",alignItems:"center",gap:5}}>← back to shop</button>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:40,marginBottom:60}}>
+      <div className="item-page-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:40,marginBottom:60}}>
         <div>
           <div style={{borderRadius:22,overflow:"hidden",background:C.pl,paddingTop:"100%",position:"relative",marginBottom:10,boxShadow:C.sh}}>
             <img src={(item.images&&item.images[si])||""} alt={item.name} onError={e=>e.target.style.display="none"} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
@@ -930,6 +960,27 @@ function AdminPage({ok,onAuth,items,saveItems,forms,saveForms,users,saveUsers,cf
                 <input type="text" value={ec.heroBgColor||""} onChange={e=>setEc({...ec,heroBgColor:e.target.value})} placeholder="#1A0A06 (leave empty for gradient)" style={{...iSt(),flex:1,padding:"9px 13px"}}/>
                 {ec.heroBgColor&&<button onClick={()=>setEc({...ec,heroBgColor:""})} className="btn" style={{background:"#FFE0E0",borderRadius:8,padding:"6px 11px",fontSize:12,color:"#C04040",flexShrink:0}}>Clear</button>}
               </div>
+            </div>
+          </div>
+        )}
+        {React.createElement(sBox,{title:"⏳ Loading Screen"},
+          <div style={{display:"flex",flexDirection:"column",gap:12}}>
+            <div>
+              <Lbl c="Loading Screen Image URL (optional)"/>
+              <input value={ec.loadingImage||""} onChange={e=>setEc({...ec,loadingImage:e.target.value})} placeholder="https://... paste any image link" style={iSt()}/>
+              <p style={{fontSize:11,color:C.tl,marginTop:5}}>If set, this image will be the loading screen background. Leave empty to use color below.</p>
+            </div>
+            <div>
+              <Lbl c="Loading Screen Background Color (if no image)"/>
+              <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                <input type="color" value={ec.loadingBg||"#2D0010"} onChange={e=>setEc({...ec,loadingBg:e.target.value})} style={{width:44,height:36,borderRadius:9,border:`1.5px solid ${C.b}`,padding:2,cursor:"pointer",background:"none"}}/>
+                <input type="text" value={ec.loadingBg||""} onChange={e=>setEc({...ec,loadingBg:e.target.value})} placeholder="#2D0010" style={{...iSt(),flex:1,padding:"9px 13px"}}/>
+              </div>
+            </div>
+            <div>
+              <Lbl c="Loading Screen Subtext"/>
+              <input value={ec.loadingSubtext||""} onChange={e=>setEc({...ec,loadingSubtext:e.target.value})} placeholder="curating your magic…" style={iSt()}/>
+              <p style={{fontSize:11,color:C.tl,marginTop:5}}>The small text shown below your brand name while loading.</p>
             </div>
           </div>
         )}
