@@ -96,6 +96,9 @@ try{const r=await fetch(`https://api.jsonbin.io/v3/b/${id}`,{method:‘PUT’,he
 }
 };
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const noAt=s=>(s||””).replace(”@”,””);
+const igUrl=cfg=>cfg.contactIGLink||(cfg.contactIG?“https://instagram.com/”+noAt(cfg.contactIG):””);
+const tkUrl=cfg=>cfg.contactTKLink||(cfg.contactTK?“https://tiktok.com/@”+noAt(cfg.contactTK):””);
 const iSt=(x={})=>({width:“100%”,padding:“11px 15px”,borderRadius:10,border:`1.5px solid ${C.b}`,fontSize:14,background:C.cream,color:C.t,fontFamily:”‘Jost’,sans-serif”,…x});
 function Lbl({c}){return <label style={{fontSize:11,fontWeight:600,textTransform:“uppercase”,letterSpacing:”.09em”,color:C.tm,display:“block”,marginBottom:5}}>{c}</label>;}
 function Chip({ch,bg,col}){return <span style={{background:bg||C.yl,color:col||C.tm,borderRadius:50,padding:“3px 10px”,fontSize:11,fontWeight:500}}>{ch}</span>;}
@@ -282,8 +285,8 @@ return(
             <p style={{color:C.white,fontWeight:600,fontSize:12,textTransform:"uppercase",letterSpacing:".1em",marginBottom:12}}>Contact</p>
             <p style={{fontSize:13,lineHeight:1.9}}>
               📱 <a href={`https://wa.me/${cfg.contactWa||cfg.whatsapp}`} target="_blank" style={{color:"rgba(255,255,255,.55)",textDecoration:"none"}}>{cfg.contactWa||cfg.whatsapp}</a><br/>
-              {cfg.contactIG&&<>📸 <a href={cfg.contactIGLink||`https://instagram.com/${(cfg.contactIG||"").replace("@","")}`} target="_blank" style={{color:"rgba(255,255,255,.7)",textDecoration:"none"}}>{cfg.contactIG}</a><br/></>}
-              {cfg.contactTK&&<>🎵 <a href={cfg.contactTKLink||`https://tiktok.com/@${(cfg.contactTK||"").replace("@","")}`} target="_blank" style={{color:"rgba(255,255,255,.7)",textDecoration:"none"}}>{cfg.contactTK}</a><br/></>}
+              {cfg.contactIG&&<>📸 <a href={igUrl(cfg)} target="_blank" style={{color:"rgba(255,255,255,.7)",textDecoration:"none"}}>{cfg.contactIG}</a><br/></>}
+              {cfg.contactTK&&<>🎵 <a href={tkUrl(cfg)} target="_blank" style={{color:"rgba(255,255,255,.7)",textDecoration:"none"}}>{cfg.contactTK}</a><br/></>}
               {cfg.contactEmail&&<>✉️ {cfg.contactEmail}</>}
             </p>
           </div>
@@ -997,7 +1000,7 @@ return(
 </a>
 )}
 {cfg.contactIG&&(
-<a href={cfg.contactIGLink||`https://instagram.com/${(cfg.contactIG||"").replace("@","")}`} target=”_blank” style={{textDecoration:“none”}}>
+<a href={igUrl(cfg)} target=”_blank” style={{textDecoration:“none”}}>
 <div className=“card” style={{background:C.white,borderRadius:16,padding:“20px 22px”,boxShadow:C.sh,display:“flex”,alignItems:“center”,gap:16}}>
 <div style={{width:46,height:46,borderRadius:14,background:”#FCE8F8”,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:22,flexShrink:0}}>📸</div>
 <div><p style={{fontWeight:600,color:C.t,marginBottom:3}}>Instagram</p><p style={{fontSize:13,color:C.tm}}>{cfg.contactIG}</p></div>
@@ -1005,7 +1008,7 @@ return(
 </a>
 )}
 {cfg.contactTK&&(
-<a href={cfg.contactTKLink||`https://tiktok.com/@${(cfg.contactTK||"").replace("@","")}`} target=”_blank” style={{textDecoration:“none”}}>
+<a href={tkUrl(cfg)} target=”_blank” style={{textDecoration:“none”}}>
 <div className=“card” style={{background:C.white,borderRadius:16,padding:“20px 22px”,boxShadow:C.sh,display:“flex”,alignItems:“center”,gap:16}}>
 <div style={{width:46,height:46,borderRadius:14,background:”#E8F8F8”,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:22,flexShrink:0}}>🎵</div>
 <div><p style={{fontWeight:600,color:C.t,marginBottom:3}}>TikTok</p><p style={{fontSize:13,color:C.tm}}>{cfg.contactTK}</p></div>
