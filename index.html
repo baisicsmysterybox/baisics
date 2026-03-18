@@ -19,17 +19,20 @@ body{font-family:'Jost',sans-serif}
 .btn{transition:all .18s ease;cursor:pointer;outline:none;border:none;font-family:'Jost',sans-serif}.btn:hover{transform:translateY(-1px)}.btn:active{transform:scale(.97)}
 input,textarea,select{outline:none;font-family:'Jost',sans-serif}
 input:focus,textarea:focus,select:focus{border-color:var(--pd,#E8003D)!important;box-shadow:0 0 0 3px rgba(232,0,61,.15)!important}
-.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px;padding-bottom:64px}
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:22px;padding-bottom:64px}
 /* ── DESKTOP ── */
-@media(min-width:1024px){
-  .items-grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))!important;gap:26px!important}
-  .nav-inner{height:70px!important}
-  .hero-title{font-size:96px!important}
-  .page-wrap{padding:40px 40px 80px!important}
+@media(min-width:900px){
+  .items-grid{grid-template-columns:repeat(4,1fr)!important;gap:24px!important}
+  .nav-inner{height:68px!important}
+  .page-wrap{padding:36px 40px 80px!important}
+  .item-page-grid{grid-template-columns:1fr 1fr!important;gap:48px!important}
+}
+@media(min-width:1200px){
+  .items-grid{grid-template-columns:repeat(4,1fr)!important}
 }
 /* ── TABLET ── */
-@media(min-width:640px) and (max-width:1023px){
-  .items-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))!important;gap:18px!important}
+@media(min-width:640px) and (max-width:899px){
+  .items-grid{grid-template-columns:repeat(3,1fr)!important;gap:18px!important}
 }
 /* ── MOBILE ── */
 @media(max-width:639px){
@@ -37,7 +40,9 @@ input:focus,textarea:focus,select:focus{border-color:var(--pd,#E8003D)!important
   .card-btns{flex-direction:column!important;gap:5px!important}
   .hide-sm{display:none!important}
   .item-page-grid{grid-template-columns:1fr!important}
-  .footer-grid{grid-template-columns:1fr 1fr!important;gap:20px!important}
+  .footer-grid{grid-template-columns:1fr 1fr!important;gap:16px!important}
+  .footer-wrap{padding:28px 16px 18px!important}
+  .footer-bottom{padding-top:12px!important;font-size:11px!important}
 }
 </style>
 </head>
@@ -211,8 +216,8 @@ function App(){
       {/* FOOTER */}
       {pg!=="admin"&&(
         <footer style={{background:cfg.colorFooter||"#1A0A06",color:"rgba(255,255,255,.5)",padding:"44px 20px 24px",marginTop:"auto"}}>
-          <div style={{maxWidth:1200,margin:"0 auto"}}>
-            <div className="footer-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:32,marginBottom:32}}>
+          <div className="footer-wrap" style={{maxWidth:1200,margin:"0 auto"}}>
+            <div className="footer-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:32,marginBottom:28}}>
               <div>
                 <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:10}}>
                   <span style={{color:C.pd,fontSize:16}}>✦</span>
@@ -244,7 +249,7 @@ function App(){
                 </p>
               </div>
             </div>
-            <div style={{borderTop:"1px solid rgba(255,255,255,.08)",paddingTop:18,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}>
+            <div className="footer-bottom" style={{borderTop:"1px solid rgba(255,255,255,.08)",paddingTop:18,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}>
               <p style={{fontSize:12}}>© {new Date().getFullYear()} {cfg.siteName}. All rights reserved.</p>
               <button onClick={()=>{setPg("admin");window.scrollTo(0,0)}} className="btn" style={{background:"none",color:"rgba(255,255,255,.07)",fontSize:11,padding:0}} onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,.25)"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.07)"}>manage</button>
             </div>
