@@ -91,6 +91,8 @@ s.textContent=`:root{--accent:${a};--bg:${bg};}`;
 return{cream:bg,white:card,pl:al,pm:am,pd:a,yl:”#FFF6E0”,ym:”#E8C84A”,yd:”#A67C00”,t:td,tm,tl,b:border,footer,sh:“0 4px 20px rgba(0,0,0,.07)”,sh2:“0 14px 40px rgba(0,0,0,.13)”};
 }
 
+let C=buildTheme(DCFG);
+
 /* ── STORAGE ── */
 const LS={
 get:k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch{return null}},
@@ -140,13 +142,13 @@ if(cloud){
 setItemsS(cloud.items||[]);LS.set(“mx:items”,cloud.items||[]);
 setFormsS(cloud.forms||[]);LS.set(“mx:forms”,cloud.forms||[]);
 setUsersS(cloud.users||[]);LS.set(“mx:users”,cloud.users||[]);
-const merged={…DCFG,…(cloud.cfg||{})};setCfgS(merged);LS.set(“mx:cfg”,merged);
+const merged={…DCFG,…(cloud.cfg||{})};C=buildTheme(merged);setCfgS(merged);LS.set(“mx:cfg”,merged);
 setLoading(false);return;
 }
 setItemsS(LS.get(“mx:items”)||[]);
 setFormsS(LS.get(“mx:forms”)||[]);
 setUsersS(LS.get(“mx:users”)||[]);
-setCfgS(LS.get(“mx:cfg”)||DCFG);
+const lc=LS.get(“mx:cfg”)||DCFG;C=buildTheme(lc);setCfgS(lc);
 setLoading(false);
 })();},[]);
 
@@ -157,7 +159,7 @@ await JB.push(c.jbKey,c.jbId,{items:ni||items,forms:nf||forms,users:nu||users,cf
 const saveItems=async v=>{setItemsS(v);LS.set(“mx:items”,v);await syncCloud(v,null,null,null);};
 const saveForms=async v=>{setFormsS(v);LS.set(“mx:forms”,v);await syncCloud(null,v,null,null);};
 const saveUsers=async v=>{setUsersS(v);LS.set(“mx:users”,v);await syncCloud(null,null,v,null);};
-const saveCfg=async v=>{setCfgS(v);LS.set(“mx:cfg”,v);await syncCloud(null,null,null,v);};
+const saveCfg=async v=>{C=buildTheme(v);setCfgS(v);LS.set(“mx:cfg”,v);await syncCloud(null,null,null,v);};
 
 const toast=m=>{setNotif(m);setTimeout(()=>setNotif(null),3000)};
 const handleLogoTap=()=>{
