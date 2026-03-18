@@ -12,33 +12,24 @@ html,body{scroll-behavior:smooth;height:100%}
 body{font-family:'Jost',sans-serif;background:#FAF6EE}
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:#FAF6EE}
-::-webkit-scrollbar-thumb{background:#C4503A;border-radius:3px}
+::-webkit-scrollbar-thumb{background:#B5607A;border-radius:3px}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideIn{from{transform:translateX(110%)}to{transform:translateX(0)}}
 @keyframes fadeInBg{from{opacity:0}to{opacity:1}}
 @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .fu{animation:fadeUp .4s ease both}
 .oi{animation:fadeInBg .22s ease both}
 .si{animation:slideIn .35s cubic-bezier(.34,1.1,.64,1) both}
 .mi{animation:fadeUp .32s cubic-bezier(.34,1.1,.64,1) both}
 .fl{animation:floatY 3.5s ease-in-out infinite}
 .card{transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s}
-.card:hover{transform:translateY(-6px) scale(1.014);box-shadow:0 18px 40px rgba(156,21,11,.13)!important}
+.card:hover{transform:translateY(-5px) scale(1.012)}
 .btn{transition:all .18s ease;cursor:pointer;outline:none;border:none;font-family:'Jost',sans-serif}
 .btn:hover{transform:translateY(-1px)}
 .btn:active{transform:scale(.97)}
 input,textarea,select{outline:none;font-family:'Jost',sans-serif}
-input:focus,textarea:focus,select:focus{border-color:#9C150B!important;box-shadow:0 0 0 3px rgba(156,21,11,.15)!important}
-.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px;padding-bottom:64px}
-/* Hero divider wave */
-.hero-wave{width:100%;overflow:hidden;line-height:0;margin-top:-2px}
-/* Badge pill hover */
-.badge-pill{transition:background .2s,transform .2s;display:inline-block}
-.badge-pill:hover{transform:translateY(-2px)}
-/* Section heading underline */
-.sec-title{position:relative;display:inline-block}
-.sec-title::after{content:"";position:absolute;bottom:-6px;left:0;right:0;height:2px;background:linear-gradient(90deg,#9C150B,transparent);border-radius:2px}
+input:focus,textarea:focus,select:focus{border-color:#B5607A!important;box-shadow:0 0 0 3px rgba(181,96,122,.18)!important}
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;padding-bottom:64px}
 @media(max-width:560px){
   .items-grid{grid-template-columns:1fr 1fr!important;gap:11px!important}
   .card-btns{flex-direction:column!important;gap:5px!important}
@@ -57,40 +48,36 @@ input:focus,textarea:focus,select:focus{border-color:#9C150B!important;box-shado
 const {useState,useEffect,useRef}=React;
 
 /* ── COLOURS: Maroon + Cream + White + Brown ── */
-function buildC(cfg){
-const p=cfg&&cfg.clrPrimary||”#E8192C”;
-const bg=cfg&&cfg.clrBg||”#FAF6EE”;
-const cd=cfg&&cfg.clrCard||”#FFFFFF”;
-const tx=cfg&&cfg.clrText||”#1A0808”;
-const r=parseInt(p.slice(1,3),16),g=parseInt(p.slice(3,5),16),b2=parseInt(p.slice(5,7),16);
-return{
-cream:bg,white:cd,
-pl:`rgba(${r},${g},${b2},.1)`,pm:p,pd:p,
-yl:”#FFF6E0”,ym:”#E8C84A”,yd:”#A67C00”,
-t:tx,tm:tx+“bb”,tl:tx+“77”,
-b:`rgba(${r},${g},${b2},.18)`,
-sh:`0 4px 20px rgba(${r},${g},${b2},.07)`,
-sh2:`0 14px 40px rgba(${r},${g},${b2},.13)`,
-footer:cfg&&cfg.clrFooter||”#1A0808”
+const C={
+cream:”#FAF6EE”,white:”#FFFFFF”,
+pl:”#F3E6EA”,pm:”#B5607A”,pd:”#7D2A42”,
+yl:”#FDF3E0”,ym:”#D4A843”,yd:”#A67C00”,
+t:”#2E1A22”,tm:”#6B3A4A”,tl:”#9E7A84”,
+b:”#E8D5C8”,
+sh:“0 4px 20px rgba(125,42,66,.08)”,
+sh2:“0 12px 36px rgba(125,42,66,.14)”
 };
-}
-let C=buildC(null);
 
 /* ── CONFIG ── */
 const DCFG={
-whatsapp:“60123456789”,adminPass:“admin123”,
-siteName:“Baisics”,tagline:“curated mystery boxes ✦”,
-discPct:10,promoCode:””,promoPct:0,
+whatsapp:“60123456789”,
+adminPass:“admin123”,
+siteName:“Baisics”,
+tagline:“curated mystery boxes ✦”,
+discPct:10,
+promoCode:””,
+promoPct:0,
 jbKey:”$2a$10$BXkVan9Db9eFVS1ghQjrpuq39DtVmn5Y2JEf7MXpf0UGyY4HngBG6”,
 jbId:“69afda2eff3f7076473e2c11”,
 aboutText:“We are Baisics — a small, passion-driven mystery box brand. Every box is carefully curated with love, bringing you delightful surprises that make ordinary days feel magical. ✦\n\nEach box is packed with handpicked items chosen to bring joy, beauty, and a little magic into your life.”,
-contactWa:“60123456789”,contactEmail:“hello@baisics.com”,
-contactIG:”@baisics”,contactIGLink:””,
-contactTK:”@baisics”,contactTKLink:””,
+contactWa:“60123456789”,
+contactEmail:“hello@baisics.com”,
+contactIG:”@baisics”,
+contactIGLink:””,
+contactTK:”@baisics”,
+contactTKLink:””,
 heroTags:[“✦ mystery inside”,“✦ curated with love”,“✦ free surprise”],
-heroImage:””,
-clrPrimary:”#E8192C”,clrBg:”#FAF6EE”,clrCard:”#FFFFFF”,
-clrText:”#1A0808”,clrFooter:”#1A0808”,clrButtonText:”#FFFFFF”
+heroImage:””
 };
 
 /* ── STORAGE ── */
@@ -141,13 +128,13 @@ if(cloud){
 setItemsS(cloud.items||[]);LS.set(“mx:items”,cloud.items||[]);
 setFormsS(cloud.forms||[]);LS.set(“mx:forms”,cloud.forms||[]);
 setUsersS(cloud.users||[]);LS.set(“mx:users”,cloud.users||[]);
-const merged={…DCFG,…(cloud.cfg||{})};C=buildC(merged);setCfgS(merged);LS.set(“mx:cfg”,merged);
+const merged={…DCFG,…(cloud.cfg||{})};setCfgS(merged);LS.set(“mx:cfg”,merged);
 setLoading(false);return;
 }
 setItemsS(LS.get(“mx:items”)||[]);
 setFormsS(LS.get(“mx:forms”)||[]);
 setUsersS(LS.get(“mx:users”)||[]);
-setCfgS(LS.get(“mx:cfg”)||DCFG);
+const lc=LS.get(“mx:cfg”)||DCFG;setCfgS(lc);if(lc.clrBg)document.body.style.background=lc.clrBg;
 setLoading(false);
 })();},[]);
 
@@ -158,7 +145,7 @@ await JB.push(c.jbKey,c.jbId,{items:ni||items,forms:nf||forms,users:nu||users,cf
 const saveItems=async v=>{setItemsS(v);LS.set(“mx:items”,v);await syncCloud(v,null,null,null);};
 const saveForms=async v=>{setFormsS(v);LS.set(“mx:forms”,v);await syncCloud(null,v,null,null);};
 const saveUsers=async v=>{setUsersS(v);LS.set(“mx:users”,v);await syncCloud(null,null,v,null);};
-const saveCfg=async v=>{C=buildC(v);setCfgS(v);LS.set(“mx:cfg”,v);await syncCloud(null,null,null,v);};
+const saveCfg=async v=>{setCfgS(v);LS.set(“mx:cfg”,v);if(v.clrBg)document.body.style.background=v.clrBg;await syncCloud(null,null,null,v);};
 
 const toast=m=>{setNotif(m);setTimeout(()=>setNotif(null),3000)};
 const handleLogoTap=()=>{
@@ -201,17 +188,10 @@ else{setOrderModal({item,answers,mode:“custom”});setPg(“item”);setCur(it
 };
 
 /* ── CART CHECKOUT ── */
-const cartCheckout=(promoApplied,discAmt,phone,cartName)=>{
+const cartCheckout=(promoApplied,discAmt,phone)=>{
 if(!cart.length)return;
-const n=cartName||user?.name||“Customer”;
-const lines=cart.map(c=>{
-let line=`• ${c.name} x${c.qty} — RM${(c.price*c.qty).toFixed(2)}`;
-if(c.answers&&Object.keys(c.answers).length>0){
-const choices=Object.entries(c.answers).map(([,v])=>Array.isArray(v)?v.join(”, “):v).filter(Boolean).join(”, “);
-if(choices)line+=`\n  (${choices})`;
-}
-return line;
-}).join(”\n”);
+const n=user?user.name:“Customer”;
+const lines=cart.map(c=>`• ${c.name} x${c.qty} — RM${(c.price*c.qty).toFixed(2)}`).join(”\n”);
 let msg=`Hello! I'd like to place an order 🛍️\n\n*Order Details:*\n${lines}\n\n`;
 if(discAmt>0)msg+=`Discount: -RM${discAmt.toFixed(2)}\n`;
 msg+=`*Total: RM${(sub-discAmt).toFixed(2)}*\n\nName: ${n}`;
@@ -224,10 +204,10 @@ const u2={…user,discUsed:true};setUser(u2);saveUsers(users.map(u=>u.email===us
 };
 
 if(loading)return(
-<div style={{height:“100vh”,display:“flex”,flexDirection:“column”,alignItems:“center”,justifyContent:“center”,background:“linear-gradient(160deg,#1A0A06 0%,#3D1010 40%,#6B1A10 100%)”,gap:14}}>
-<div className=“fl” style={{fontSize:52,color:”#E8A090”}}>✦</div>
-<p style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:40,color:”#FAF6EE”,fontWeight:300,letterSpacing:”.02em”}}>{DCFG.siteName}</p>
-<p style={{color:“rgba(250,246,238,.5)”,fontSize:12,letterSpacing:”.2em”,textTransform:“uppercase”}}>preparing your magic…</p>
+<div style={{height:“100vh”,display:“flex”,flexDirection:“column”,alignItems:“center”,justifyContent:“center”,background:`linear-gradient(135deg,${C.pl},${C.yl})`,gap:12}}>
+<div className="fl" style={{fontSize:48,color:C.pd}}>✦</div>
+<p style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:36,color:C.t}}>{DCFG.siteName}</p>
+<p style={{color:C.tl,fontSize:13,letterSpacing:”.12em”}}>preparing your magic…</p>
 </div>
 );
 
@@ -276,7 +256,7 @@ return(
 
   {/* FOOTER */}
   {pg!=="admin"&&(
-    <footer style={{background:cfg.clrFooter||C.t,color:"rgba(255,255,255,.55)",padding:"40px 20px 24px",marginTop:"auto"}}>
+    <footer style={{background:C.t,color:"rgba(255,255,255,.55)",padding:"40px 20px 24px",marginTop:"auto"}}>
       <div style={{maxWidth:1200,margin:"0 auto"}}>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:32,marginBottom:32}}>
           <div>
@@ -333,49 +313,37 @@ const[q,setQ]=useState(””);
 const list=items.filter(i=>i.name.toLowerCase().includes(q.toLowerCase()));
 return(
 <div>
-{/* Hero */}
-<div style={{background:cfg.heroImage?`url(${cfg.heroImage}) center/cover no-repeat`:“linear-gradient(160deg,#1A0606 0%,#4A0E0E 45%,#8B1010 100%)”,padding:“76px 24px 56px”,textAlign:“center”,position:“relative”,overflow:“hidden”,minHeight:320}}>
-{cfg.heroImage&&<div style={{position:“absolute”,inset:0,background:“rgba(10,0,0,.5)”}}/>}
-<div style={{position:“absolute”,inset:0,backgroundImage:“radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px)”,backgroundSize:“28px 28px”,pointerEvents:“none”}}/>
-{[{top:“12%”,left:“6%”,s:28,d:0},{top:“22%”,right:“8%”,s:16,d:1.1},{bottom:“14%”,right:“11%”,s:20,d:.5},{bottom:“22%”,left:“13%”,s:11,d:1.7}].map((p,i)=>(
-<span key={i} className=“fl” style={{position:“absolute”,fontSize:p.s,opacity:.28,color:”#F0A0A0”,top:p.top,left:p.left,right:p.right,bottom:p.bottom,animationDelay:`${p.d}s`,zIndex:1}}>✦</span>
+<div style={{background:cfg.heroImage?`url(${cfg.heroImage}) center/cover no-repeat`:`linear-gradient(160deg,#1A0606 0%,#4A0E0E 45%,#8B1010 100%)`,padding:“76px 24px 56px”,textAlign:“center”,position:“relative”,overflow:“hidden”}}>
+{[{top:“10%”,left:“5%”,s:26,d:0},{top:“20%”,right:“7%”,s:15,d:1.1},{bottom:“12%”,right:“10%”,s:20,d:.5},{bottom:“20%”,left:“12%”,s:10,d:1.7}].map((p,i)=>(
+<span key={i} className=“fl” style={{position:“absolute”,fontSize:p.s,opacity:.2,color:C.pd,top:p.top,left:p.left,right:p.right,bottom:p.bottom,animationDelay:`${p.d}s`}}>✦</span>
 ))}
-<div style={{position:“relative”,zIndex:2}}>
-<p style={{fontSize:11,letterSpacing:”.35em”,textTransform:“uppercase”,color:”#F0A0A0”,marginBottom:10,fontWeight:500}}>welcome to</p>
-<h1 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:“clamp(52px,9vw,96px)”,fontWeight:300,color:”#FAF6EE”,lineHeight:.95,marginBottom:12,letterSpacing:”-.01em”}}>{cfg.siteName}</h1>
-<div style={{width:60,height:2,background:`linear-gradient(90deg,transparent,${cfg.clrPrimary||"#E8192C"},transparent)`,margin:“0 auto 14px”,borderRadius:2}}/>
-<p style={{color:“rgba(250,246,238,.65)”,fontSize:14,marginBottom:32,letterSpacing:”.05em”}}>{cfg.tagline}</p>
+<p style={{fontSize:11,letterSpacing:”.3em”,textTransform:“uppercase”,color:C.pd,marginBottom:8,fontWeight:500}}>welcome to</p>
+<h1 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:“clamp(46px,8vw,84px)”,fontWeight:400,color:C.t,lineHeight:1,marginBottom:8}}>{cfg.siteName}</h1>
+<p style={{color:C.tm,fontSize:14,marginBottom:30}}>{cfg.tagline}</p>
 <div style={{display:“flex”,gap:8,justifyContent:“center”,flexWrap:“wrap”}}>
-{(cfg.heroTags||[]).map(t=>(
-<span key={t} className=“badge-pill” style={{background:“rgba(255,255,255,.1)”,border:“1px solid rgba(255,255,255,.22)”,borderRadius:50,padding:“7px 18px”,fontSize:12,color:“rgba(250,246,238,.9)”,backdropFilter:“blur(6px)”}}>{t}</span>
+{(cfg.heroTags||[“✦ mystery inside”,“✦ curated with love”,“✦ free surprise”]).map(t=>(
+<span key={t} style={{background:C.white,border:`1px solid ${C.b}`,borderRadius:50,padding:“6px 16px”,fontSize:12,color:C.tm}}>{t}</span>
 ))}
 </div>
 </div>
+<div style={{maxWidth:1200,margin:“0 auto”,padding:“28px 16px 0”}}>
+<div style={{marginBottom:22}}>
+<input placeholder=“🔍  search mystery boxes…” value={q} onChange={e=>setQ(e.target.value)}
+style={{width:“100%”,maxWidth:500,padding:“10px 18px”,borderRadius:50,border:`1.5px solid ${C.b}`,background:C.white,fontSize:14,color:C.t,display:“block”,margin:“0 auto”}}/>
 </div>
-{/* Wave divider */}
-<div style={{background:`linear-gradient(160deg,#1A0A06,#6B1A10)`,height:32,clipPath:“ellipse(55% 100% at 50% 0%)”,marginTop:-1}}/>
-
-```
-  <div style={{maxWidth:1200,margin:"0 auto",padding:"28px 16px 0"}}>
-    <div style={{marginBottom:22}}>
-      <input placeholder="🔍  search mystery boxes…" value={q} onChange={e=>setQ(e.target.value)}
-        style={{width:"100%",maxWidth:500,padding:"10px 18px",borderRadius:50,border:`1.5px solid ${C.b}`,background:C.white,fontSize:14,color:C.t,display:"block",margin:"0 auto"}}/>
-    </div>
-    {list.length===0?(
-      <div style={{textAlign:"center",padding:"72px 0",color:C.tl}}>
-        <div style={{fontSize:44,marginBottom:14,color:C.pd}}>✦</div>
-        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:22}}>{q?"No boxes found":"Shop coming soon ✦"}</p>
-        {!q&&<p style={{fontSize:13,marginTop:8}}>Items will appear here once added from the admin panel.</p>}
-      </div>
-    ):(
-      <div className="items-grid">
-        {list.map((it,i)=><ItemCard key={it.id} item={it} onItem={onItem} onAdd={onAdd} delay={i*50}/>)}
-      </div>
-    )}
-  </div>
+{list.length===0?(
+<div style={{textAlign:“center”,padding:“72px 0”,color:C.tl}}>
+<div style={{fontSize:44,marginBottom:14,color:C.pd}}>✦</div>
+<p style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:22}}>{q?“No boxes found”:“Shop coming soon ✦”}</p>
+{!q&&<p style={{fontSize:13,marginTop:8}}>Items will appear here once added from the admin panel.</p>}
 </div>
-```
-
+):(
+<div className="items-grid">
+{list.map((it,i)=><ItemCard key={it.id} item={it} onItem={onItem} onAdd={onAdd} delay={i*50}/>)}
+</div>
+)}
+</div>
+</div>
 );
 }
 
@@ -404,7 +372,7 @@ style={{position:“absolute”,inset:0,width:“100%”,height:“100%”,objec
 {item.originalPrice&&<span style={{fontSize:11,color:C.tl,textDecoration:“line-through”}}>RM {item.originalPrice.toFixed(2)}</span>}
 </div>
 <div className=“card-btns” style={{display:“flex”,gap:5}}>
-<button onClick={()=>onItem(item)} className=“btn” style={{flex:1,padding:“7px”,borderRadius:9,background:“rgba(255,255,255,.6)”,border:`1.5px solid ${C.b}`,color:C.tm,fontSize:12}}>View</button>
+<button onClick={()=>onItem(item)} className=“btn” style={{flex:1,padding:“7px”,borderRadius:9,background:C.cream,border:`1.5px solid ${C.b}`,color:C.tm,fontSize:12}}>View</button>
 {item.formId
 ?<button onClick={()=>onItem(item)} className=“btn” style={{flex:2,padding:“7px”,borderRadius:9,background:C.pd,color:”#fff”,fontSize:12,fontWeight:600}}>✦ Customise</button>
 :<button onClick={e=>{e.stopPropagation();onAdd(item)}} className=“btn” style={{flex:2,padding:“7px”,borderRadius:9,background:C.t,color:”#fff”,fontSize:12}}>Add to Cart</button>
@@ -486,7 +454,7 @@ return(
           </button>
           {/* Customise & Order */}
           <button onClick={()=>onStartForm(item,attachedForm,"order")} disabled={item.stock===0} className="btn"
-            style={{width:"100%",padding:"12px 20px",background:item.stock===0?C.b:`linear-gradient(135deg,${C.pd},#7A0F08)`,color:item.stock===0?C.tl:C.white,borderRadius:13,fontSize:14,fontWeight:600,cursor:item.stock===0?"not-allowed":"pointer",boxShadow:item.stock===0?"none":"0 4px 16px rgba(156,21,11,.3)"}}>
+            style={{width:"100%",padding:"12px 20px",background:item.stock===0?C.b:`linear-gradient(135deg,${C.pd},#6B0F22)`,color:item.stock===0?C.tl:C.white,borderRadius:13,fontSize:14,fontWeight:600,cursor:item.stock===0?"not-allowed":"pointer",boxShadow:item.stock===0?"none":"0 4px 16px rgba(139,26,47,.3)"}}>
             {item.stock===0?"Out of Stock":"✦ Customise & Order"}
           </button>
         </div>
@@ -507,7 +475,7 @@ return(
           </div>
           {/* Direct Order */}
           <button onClick={()=>onDirectOrder(item)} disabled={item.stock===0} className="btn"
-            style={{width:"100%",padding:"12px 20px",background:item.stock===0?C.b:`linear-gradient(135deg,${C.pd},#7A0F08)`,color:item.stock===0?C.tl:C.white,borderRadius:13,fontSize:14,fontWeight:600,cursor:item.stock===0?"not-allowed":"pointer",boxShadow:item.stock===0?"none":"0 4px 16px rgba(156,21,11,.3)"}}>
+            style={{width:"100%",padding:"12px 20px",background:item.stock===0?C.b:`linear-gradient(135deg,${C.pd},#6B0F22)`,color:item.stock===0?C.tl:C.white,borderRadius:13,fontSize:14,fontWeight:600,cursor:item.stock===0?"not-allowed":"pointer",boxShadow:item.stock===0?"none":"0 4px 16px rgba(139,26,47,.3)"}}>
             {item.stock===0?"Out of Stock":"⚡ Order Now"}
           </button>
         </div>
@@ -650,7 +618,7 @@ style={{background:“none”,color:C.tm,fontSize:14,marginBottom:16,display:“
       )}
 
       <button onClick={next} className="btn"
-        style={{width:"100%",marginTop:24,padding:14,background:canNext()?`linear-gradient(135deg,${C.pd},#7A0F08)`:C.b,color:canNext()?C.white:C.tl,borderRadius:14,fontSize:15,fontWeight:600,cursor:canNext()?"pointer":"not-allowed",boxShadow:canNext()?"0 4px 16px rgba(156,21,11,.25)":"none"}}>
+        style={{width:"100%",marginTop:24,padding:14,background:canNext()?`linear-gradient(135deg,${C.pd},#6B0F22)`:C.b,color:canNext()?C.white:C.tl,borderRadius:14,fontSize:15,fontWeight:600,cursor:canNext()?"pointer":"not-allowed",boxShadow:canNext()?"0 4px 16px rgba(139,26,47,.25)":"none"}}>
         {step===questions.length-1?(mode==="cart"?"Add to Cart →":"Review Order →"):"Next →"}
       </button>
       {curQ.required===false&&<p style={{fontSize:12,color:C.tl,textAlign:"center",marginTop:8}}>Optional — you can skip this</p>}
@@ -711,10 +679,13 @@ onClose();
 return(
 <>
 <div className=“oi” onClick={onClose} style={{position:“fixed”,inset:0,background:“rgba(0,0,0,.5)”,zIndex:400}}/>
-<div style={{position:“fixed”,inset:0,zIndex:401,display:“flex”,alignItems:“center”,justifyContent:“center”,padding:“16px”,overflowY:“auto”}} onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
-<div className=“mi” style={{background:C.white,borderRadius:24,width:“100%”,maxWidth:480,maxHeight:“92vh”,overflowY:“auto”,WebkitOverflowScrolling:“touch”,padding:“24px 20px 28px”,boxShadow:“0 20px 60px rgba(0,0,0,.22)”,margin:“auto”}}>
+<div style={{position:“fixed”,inset:0,zIndex:401,display:“flex”,alignItems:“flex-end”,justifyContent:“center”}} onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
+<div className=“mi” style={{background:C.white,borderRadius:“24px 24px 0 0”,width:“100%”,maxWidth:500,maxHeight:“92vh”,overflowY:“auto”,WebkitOverflowScrolling:“touch”,padding:“24px 20px 32px”,boxShadow:“0 -8px 40px rgba(0,0,0,.18)”}}>
 
 ```
+      {/* Handle bar */}
+      <div style={{width:40,height:4,background:C.b,borderRadius:50,margin:"0 auto 20px"}}/>
+
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
         <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:24,color:C.t}}>Order Summary</h2>
         <button onClick={onClose} className="btn" style={{width:30,height:30,borderRadius:"50%",background:C.cream,fontSize:18,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
@@ -807,7 +778,6 @@ const[promoInput,setPromoInput]=useState(””);
 const[promoApplied,setPromoApplied]=useState(null);
 const[promoErr,setPromoErr]=useState(””);
 const[phone,setPhone]=useState(””);
-const[name,setName]=useState(user?user.name:””);
 
 useEffect(()=>{if(hasSignupDisc&&!promoApplied)setPromoApplied(“signup”);},[hasSignupDisc]);
 
@@ -875,10 +845,10 @@ return val?<p key={k} style={{fontSize:11,color:C.tm,lineHeight:1.5}}>✦ {val}<
 </div>
 {cart.length>0&&(
 <div style={{padding:“14px 18px”,borderTop:`1px solid ${C.b}`,flexShrink:0}}>
-{/* Name + Phone */}
-<div style={{display:“grid”,gridTemplateColumns:“1fr 1fr”,gap:8,marginBottom:10}}>
-<div><Lbl c="Name"/><input value={name} onChange={e=>setName(e.target.value)} placeholder=“Your name” style={{…iSt(),padding:“9px 13px”,fontSize:13}}/></div>
-<div><Lbl c="Phone"/><input value={phone} onChange={e=>setPhone(e.target.value)} placeholder=“01X-XXXXXXX” style={{…iSt(),padding:“9px 13px”,fontSize:13}}/></div>
+{/* Phone */}
+<div style={{marginBottom:10}}>
+<Lbl c="Your Phone Number"/>
+<input value={phone} onChange={e=>setPhone(e.target.value)} placeholder=“e.g. 0123456789” style={{…iSt(),padding:“9px 13px”,fontSize:13}}/>
 </div>
 {/* Signup upsell */}
 {!user&&!promoApplied&&(
@@ -910,7 +880,7 @@ style={{flex:1,padding:“8px 13px”,borderRadius:9,border:`1.5px solid ${C.b}`
 <span style={{fontSize:17,fontWeight:700,color:C.t}}>RM {total.toFixed(2)}</span>
 </div>
 </div>
-<button onClick={()=>onCheckout(promoApplied,discAmt,phone,name)} className=“btn” style={{width:“100%”,padding:13,background:”#25D366”,color:C.white,borderRadius:12,fontSize:15,fontWeight:600,display:“flex”,alignItems:“center”,justifyContent:“center”,gap:8}}>
+<button onClick={()=>onCheckout(promoApplied,discAmt,phone)} className=“btn” style={{width:“100%”,padding:13,background:”#25D366”,color:C.white,borderRadius:12,fontSize:15,fontWeight:600,display:“flex”,alignItems:“center”,justifyContent:“center”,gap:8}}>
 <span>💬</span><span>Order via WhatsApp</span>
 </button>
 <p style={{fontSize:11,color:C.tl,textAlign:“center”,marginTop:6}}>You’ll be redirected to WhatsApp to complete your order</p>
@@ -1243,26 +1213,26 @@ return(
         <textarea value={ec.aboutText||""} onChange={e=>setEc({...ec,aboutText:e.target.value})} rows={5} style={{...iSt(),resize:"vertical",borderRadius:10}}/>
       </div>
       <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
+        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:4}}>🖼️ Hero Section</p>
+        <p style={{fontSize:12,color:C.tl,marginBottom:12}}>Paste a photo URL as your hero background. Best size: <strong>1920×700px</strong>. Leave empty for the default dark gradient.</p>
+        <div><Lbl c="Hero Image URL (leave empty for dark gradient)"/><input value={ec.heroImage||""} onChange={e=>setEc({...ec,heroImage:e.target.value})} placeholder="https://your-photo.jpg" style={iSt()}/></div>
+        {ec.heroImage&&<div style={{marginTop:8,borderRadius:10,overflow:"hidden"}}><img src={ec.heroImage} alt="preview" onError={e=>e.target.style.display="none"} style={{width:"100%",height:90,objectFit:"cover",display:"block"}}/></div>}
+      </div>
+      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
         <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:4}}>🎨 Colour Customiser</p>
-        <p style={{fontSize:12,color:C.tl,marginBottom:14}}>Change any colour. Click the colour box or type a HEX code. Save when done!</p>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-          {[["Main Colour (buttons, highlights)","clrPrimary"],["Background Colour","clrBg"],["Card Colour","clrCard"],["Text Colour","clrText"],["Footer Colour","clrFooter"],["Button Text Colour","clrButtonText"]].map(([lbl,k])=>(
+        <p style={{fontSize:12,color:C.tl,marginBottom:14}}>Click a colour box or type a HEX code to change any colour. Save when done!</p>
+        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+          {[["Main Colour (buttons & highlights)","clrPrimary","#E8192C"],["Background Colour","clrBg","#FAF6EE"],["Card Colour","clrCard","#FFFFFF"],["Footer Colour","clrFooter","#1A0808"]].map(([lbl,k,def])=>(
             <div key={k}>
               <Lbl c={lbl}/>
               <div style={{display:"flex",gap:8,alignItems:"center"}}>
-                <input type="color" value={ec[k]||"#E8192C"} onChange={e=>setEc({...ec,[k]:e.target.value})}
-                  style={{width:42,height:36,borderRadius:8,border:`1.5px solid ${C.b}`,cursor:"pointer",padding:2,flexShrink:0}}/>
-                <input value={ec[k]||""} onChange={e=>setEc({...ec,[k]:e.target.value})} placeholder="#000000" style={{...iSt(),flex:1,padding:"8px 10px",fontSize:12}}/>
+                <input type="color" value={ec[k]||def} onChange={e=>setEc({...ec,[k]:e.target.value})} style={{width:44,height:38,borderRadius:8,border:`1.5px solid ${C.b}`,cursor:"pointer",padding:3,flexShrink:0}}/>
+                <input value={ec[k]||""} onChange={e=>setEc({...ec,[k]:e.target.value})} placeholder={def} style={{...iSt(),flex:1,padding:"9px 12px",fontSize:13}}/>
               </div>
             </div>
           ))}
         </div>
-      </div>
-      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
-        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:4}}>🖼️ Hero Section</p>
-        <p style={{fontSize:12,color:C.tl,marginBottom:12}}>Paste an image URL to use as your hero background. Recommended size: <strong>1920 × 700px</strong>. Leave empty for the default dark gradient.</p>
-        <div><Lbl c="Hero Image URL"/><input value={ec.heroImage||""} onChange={e=>setEc({...ec,heroImage:e.target.value})} placeholder="https://your-image.jpg (leave empty for gradient)" style={iSt()}/></div>
-        {ec.heroImage&&<div style={{marginTop:10,borderRadius:10,overflow:"hidden"}}><img src={ec.heroImage} alt="preview" onError={e=>e.target.style.display="none"} style={{width:"100%",height:100,objectFit:"cover",display:"block"}}/></div>}
+        <p style={{fontSize:11,color:C.tl,marginTop:10}}>⚠️ Colour changes apply after you save and reload the page.</p>
       </div>
       <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
         <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:6}}>☁️ Cloud Sync</p>
