@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -9,1111 +8,840 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{scroll-behavior:smooth;height:100%}
-body{font-family:'Jost',sans-serif;background:#FAF6EE}
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:#FAF6EE}
-::-webkit-scrollbar-thumb{background:#B5607A;border-radius:3px}
+body{font-family:'Jost',sans-serif}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--pd,#E8003D);border-radius:3px}::-webkit-scrollbar-track{background:var(--bg,#FAF6EE)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideIn{from{transform:translateX(110%)}to{transform:translateX(0)}}
 @keyframes fadeInBg{from{opacity:0}to{opacity:1}}
-@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.fu{animation:fadeUp .4s ease both}
-.oi{animation:fadeInBg .22s ease both}
-.si{animation:slideIn .35s cubic-bezier(.34,1.1,.64,1) both}
-.mi{animation:fadeUp .32s cubic-bezier(.34,1.1,.64,1) both}
-.fl{animation:floatY 3.5s ease-in-out infinite}
-.card{transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s}
-.card:hover{transform:translateY(-5px) scale(1.012)}
-.btn{transition:all .18s ease;cursor:pointer;outline:none;border:none;font-family:'Jost',sans-serif}
-.btn:hover{transform:translateY(-1px)}
-.btn:active{transform:scale(.97)}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.fu{animation:fadeUp .4s ease both}.oi{animation:fadeInBg .22s ease both}.si{animation:slideIn .35s cubic-bezier(.34,1.1,.64,1) both}.mi{animation:fadeUp .32s cubic-bezier(.34,1.1,.64,1) both}.fl{animation:floatY 3.5s ease-in-out infinite}
+.card{transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s}.card:hover{transform:translateY(-6px) scale(1.014)}
+.btn{transition:all .18s ease;cursor:pointer;outline:none;border:none;font-family:'Jost',sans-serif}.btn:hover{transform:translateY(-1px)}.btn:active{transform:scale(.97)}
 input,textarea,select{outline:none;font-family:'Jost',sans-serif}
-input:focus,textarea:focus,select:focus{border-color:#B5607A!important;box-shadow:0 0 0 3px rgba(181,96,122,.18)!important}
-.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;padding-bottom:64px}
-@media(max-width:560px){
-  .items-grid{grid-template-columns:1fr 1fr!important;gap:11px!important}
-  .card-btns{flex-direction:column!important;gap:5px!important}
-  .card-price{font-size:14px!important}
-  .card-name{font-size:16px!important}
-  .hide-sm{display:none!important}
-}
+input:focus,textarea:focus,select:focus{border-color:var(--pd,#E8003D)!important;box-shadow:0 0 0 3px rgba(232,0,61,.15)!important}
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px;padding-bottom:64px}
+@media(max-width:560px){.items-grid{grid-template-columns:1fr 1fr!important;gap:10px!important}.card-btns{flex-direction:column!important;gap:5px!important}.hide-sm{display:none!important}}
 </style>
 </head>
-<body>
-<div id="root"></div>
+<body><div id="root"></div>
 <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script type="text/babel">
 const {useState,useEffect,useRef}=React;
-
-/* ── COLOURS: Maroon + Cream + White + Brown ── */
-const C={
-cream:”#FAF6EE”,white:”#FFFFFF”,
-pl:”#F3E6EA”,pm:”#B5607A”,pd:”#7D2A42”,
-yl:”#FDF3E0”,ym:”#D4A843”,yd:”#A67C00”,
-t:”#2E1A22”,tm:”#6B3A4A”,tl:”#9E7A84”,
-b:”#E8D5C8”,
-sh:“0 4px 20px rgba(125,42,66,.08)”,
-sh2:“0 12px 36px rgba(125,42,66,.14)”
-};
-
-/* ── CONFIG ── */
 const DCFG={
-whatsapp:“60123456789”,
-adminPass:“admin123”,
-siteName:“Baisics”,
-tagline:“curated mystery boxes ✦”,
-discPct:10,
-promoCode:””,
-promoPct:0,
-jbKey:”$2a$10$BXkVan9Db9eFVS1ghQjrpuq39DtVmn5Y2JEf7MXpf0UGyY4HngBG6”,
-jbId:“69afda2eff3f7076473e2c11”,
-aboutText:“We are Baisics — a small, passion-driven mystery box brand. Every box is carefully curated with love, bringing you delightful surprises that make ordinary days feel magical. ✦\n\nEach box is packed with handpicked items chosen to bring joy, beauty, and a little magic into your life.”,
-contactWa:“60123456789”,
-contactEmail:“hello@baisics.com”,
-contactIG:”@baisics”,
-contactIGLink:””,
-contactTK:”@baisics”,
-contactTKLink:””,
-heroTags:[“✦ mystery inside”,“✦ curated with love”,“✦ free surprise”],
-heroImage:””
+  whatsapp:"60123456789",adminPass:"admin123",siteName:"Baisics",tagline:"curated mystery boxes ✦",
+  discPct:10,promoCode:"",promoPct:0,
+  jbKey:"$2a$10$BXkVan9Db9eFVS1ghQjrpuq39DtVmn5Y2JEf7MXpf0UGyY4HngBG6",jbId:"69afda2eff3f7076473e2c11",
+  aboutText:"We are Baisics — a small, passion-driven mystery box brand. Every box is carefully curated with love, bringing you delightful surprises that make ordinary days feel magical. ✦\n\nEach box is packed with handpicked items chosen to bring joy, beauty, and a little magic into your life.",
+  contactWa:"60123456789",contactEmail:"hello@baisics.com",contactIG:"@baisics",contactIGUrl:"https://instagram.com/baisics",contactTT:"@baisics",contactTTUrl:"https://tiktok.com/@baisics",
+  heroImage:"",heroBgColor:"",heroTags:["✦ mystery inside","✦ curated with love","✦ free surprise"],
+  colorPrimary:"#E8003D",colorBg:"#FAF6EE",colorCard:"#FFFFFF",colorFooter:"#1A0A06",colorText:"#1A0A06",
 };
-
-/* ── STORAGE ── */
-const LS={
-get:k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch{return null}},
-set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
-};
-const JB={
-async pull(key,id){
-if(!key||!id)return null;
-try{const r=await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`,{headers:{‘X-Master-Key’:key}});if(!r.ok)return null;const d=await r.json();return d.record||null;}catch{return null;}
-},
-async push(key,id,data){
-if(!key||!id)return false;
-try{const r=await fetch(`https://api.jsonbin.io/v3/b/${id}`,{method:‘PUT’,headers:{‘X-Master-Key’:key,‘Content-Type’:‘application/json’},body:JSON.stringify(data)});return r.ok;}catch{return false;}
+let C={};
+function buildC(cfg){
+  const p=cfg.colorPrimary||"#E8003D",bg=cfg.colorBg||"#FAF6EE",card=cfg.colorCard||"#FFFFFF",footer=cfg.colorFooter||"#1A0A06",text=cfg.colorText||"#1A0A06";
+  C={cream:bg,white:card,pl:p+"1A",pm:p+"AA",pd:p,yl:"#FFF8E8",ym:"#F5D86A",yd:"#C8A000",t:text,tm:"#5C3A2A",tl:"#9E7060",b:"#EAD8D0",footer,sh:`0 4px 20px rgba(0,0,0,.07)`,sh2:`0 14px 38px rgba(0,0,0,.13)`};
+  if(typeof document!=="undefined"){const r=document.documentElement;r.style.setProperty("--pd",p);r.style.setProperty("--bg",bg);document.body.style.background=bg;}
 }
+buildC(DCFG);
+const LS={get:k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const JB={
+  async pull(k,id){if(!k||!id)return null;try{const r=await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`,{headers:{'X-Master-Key':k}});if(!r.ok)return null;const d=await r.json();return d.record||null;}catch{return null;}},
+  async push(k,id,data){if(!k||!id)return false;try{const r=await fetch(`https://api.jsonbin.io/v3/b/${id}`,{method:'PUT',headers:{'X-Master-Key':k,'Content-Type':'application/json'},body:JSON.stringify(data)});return r.ok;}catch{return false;}}
 };
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-const noAt=s=>(s||””).replace(”@”,””);
-const igUrl=cfg=>cfg.contactIGLink||(cfg.contactIG?“https://instagram.com/”+noAt(cfg.contactIG):””);
-const tkUrl=cfg=>cfg.contactTKLink||(cfg.contactTK?“https://tiktok.com/@”+noAt(cfg.contactTK):””);
-const iSt=(x={})=>({width:“100%”,padding:“11px 15px”,borderRadius:10,border:`1.5px solid ${C.b}`,fontSize:14,background:C.cream,color:C.t,fontFamily:”‘Jost’,sans-serif”,…x});
-function Lbl({c}){return <label style={{fontSize:11,fontWeight:600,textTransform:“uppercase”,letterSpacing:”.09em”,color:C.tm,display:“block”,marginBottom:5}}>{c}</label>;}
-function Chip({ch,bg,col}){return <span style={{background:bg||C.yl,color:col||C.tm,borderRadius:50,padding:“3px 10px”,fontSize:11,fontWeight:500}}>{ch}</span>;}
-function Toast({m}){return <div className=“mi” style={{position:“fixed”,bottom:30,left:10,right:10,background:C.t,color:C.white,padding:“13px 18px”,borderRadius:16,zIndex:9999,fontSize:13,textAlign:“center”,boxShadow:“0 6px 20px rgba(0,0,0,.25)”,pointerEvents:“none”,lineHeight:1.5}}>{m}</div>;}
+const iSt=(x={})=>({width:"100%",padding:"11px 15px",borderRadius:10,border:`1.5px solid ${C.b}`,fontSize:14,background:C.cream,color:C.t,fontFamily:"'Jost',sans-serif",...x});
+function Lbl({c}){return <label style={{fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:".09em",color:C.tm,display:"block",marginBottom:5}}>{c}</label>;}
+function Chip({ch,bg,col}){return <span style={{background:bg||C.yl,color:col||C.tm,borderRadius:50,padding:"3px 10px",fontSize:11,fontWeight:500}}>{ch}</span>;}
+function Toast({m}){return <div className="mi" style={{position:"fixed",bottom:30,left:10,right:10,background:C.t,color:C.white,padding:"13px 18px",borderRadius:16,zIndex:9999,fontSize:13,textAlign:"center",boxShadow:"0 6px 24px rgba(0,0,0,.28)",pointerEvents:"none",lineHeight:1.5}}>{m}</div>;}
 
-/* ══════════════ APP ══════════════ */
+/* ══ APP ══ */
 function App(){
-const[pg,setPg]=useState(“shop”);
-const[cur,setCur]=useState(null);
-const[formFlow,setFormFlow]=useState(null); // {item,form,mode:“cart”|“order”}
-const[orderModal,setOrderModal]=useState(null); // {item,answers,mode}
-const[items,setItemsS]=useState([]);
-const[forms,setFormsS]=useState([]);
-const[cart,setCart]=useState([]);
-const[cOpen,setCOpen]=useState(false);
-const[aOpen,setAOpen]=useState(false);
-const[aMode,setAMode]=useState(“login”);
-const[user,setUser]=useState(null);
-const[users,setUsersS]=useState([]);
-const[cfg,setCfgS]=useState(DCFG);
-const[notif,setNotif]=useState(null);
-const[adminOk,setAdminOk]=useState(false);
-const[loading,setLoading]=useState(true);
-const logoTaps=useRef(0);
-const logoTimer=useRef(null);
+  const[pg,setPg]=useState("shop");const[cur,setCur]=useState(null);
+  const[formFlow,setFormFlow]=useState(null);const[orderModal,setOrderModal]=useState(null);
+  const[items,setItemsS]=useState([]);const[forms,setFormsS]=useState([]);
+  const[cart,setCart]=useState([]);const[cOpen,setCOpen]=useState(false);
+  const[aOpen,setAOpen]=useState(false);const[aMode,setAMode]=useState("login");
+  const[user,setUser]=useState(null);const[users,setUsersS]=useState([]);
+  const[cfg,setCfgS]=useState(DCFG);const[notif,setNotif]=useState(null);
+  const[adminOk,setAdminOk]=useState(false);const[loading,setLoading]=useState(true);
+  const logoTaps=useRef(0);const logoTimer=useRef(null);
 
-useEffect(()=>{(async()=>{
-const cloud=await JB.pull(DCFG.jbKey,DCFG.jbId);
-if(cloud){
-setItemsS(cloud.items||[]);LS.set(“mx:items”,cloud.items||[]);
-setFormsS(cloud.forms||[]);LS.set(“mx:forms”,cloud.forms||[]);
-setUsersS(cloud.users||[]);LS.set(“mx:users”,cloud.users||[]);
-const merged={…DCFG,…(cloud.cfg||{})};setCfgS(merged);LS.set(“mx:cfg”,merged);
-setLoading(false);return;
-}
-setItemsS(LS.get(“mx:items”)||[]);
-setFormsS(LS.get(“mx:forms”)||[]);
-setUsersS(LS.get(“mx:users”)||[]);
-const lc=LS.get(“mx:cfg”)||DCFG;setCfgS(lc);if(lc.clrBg)document.body.style.background=lc.clrBg;
-setLoading(false);
-})();},[]);
+  useEffect(()=>{(async()=>{
+    const cloud=await JB.pull(DCFG.jbKey,DCFG.jbId);
+    if(cloud){
+      setItemsS(cloud.items||[]);LS.set("mx:items",cloud.items||[]);
+      setFormsS(cloud.forms||[]);LS.set("mx:forms",cloud.forms||[]);
+      setUsersS(cloud.users||[]);LS.set("mx:users",cloud.users||[]);
+      const merged={...DCFG,...(cloud.cfg||{})};buildC(merged);setCfgS(merged);LS.set("mx:cfg",merged);
+      setLoading(false);return;
+    }
+    setItemsS(LS.get("mx:items")||[]);setFormsS(LS.get("mx:forms")||[]);
+    setUsersS(LS.get("mx:users")||[]);
+    const lc=LS.get("mx:cfg")||DCFG;buildC(lc);setCfgS(lc);
+    setLoading(false);
+  })();},[]);
 
-const syncCloud=async(ni,nf,nu,nc)=>{
-const c=nc||cfg;if(!c.jbKey||!c.jbId)return;
-await JB.push(c.jbKey,c.jbId,{items:ni||items,forms:nf||forms,users:nu||users,cfg:c});
-};
-const saveItems=async v=>{setItemsS(v);LS.set(“mx:items”,v);await syncCloud(v,null,null,null);};
-const saveForms=async v=>{setFormsS(v);LS.set(“mx:forms”,v);await syncCloud(null,v,null,null);};
-const saveUsers=async v=>{setUsersS(v);LS.set(“mx:users”,v);await syncCloud(null,null,v,null);};
-const saveCfg=async v=>{setCfgS(v);LS.set(“mx:cfg”,v);if(v.clrBg)document.body.style.background=v.clrBg;await syncCloud(null,null,null,v);};
+  const syncCloud=async(ni,nf,nu,nc)=>{const c=nc||cfg;if(!c.jbKey||!c.jbId)return;await JB.push(c.jbKey,c.jbId,{items:ni||items,forms:nf||forms,users:nu||users,cfg:c});};
+  const saveItems=async v=>{setItemsS(v);LS.set("mx:items",v);await syncCloud(v,null,null,null);};
+  const saveForms=async v=>{setFormsS(v);LS.set("mx:forms",v);await syncCloud(null,v,null,null);};
+  const saveUsers=async v=>{setUsersS(v);LS.set("mx:users",v);await syncCloud(null,null,v,null);};
+  const saveCfg=async v=>{buildC(v);setCfgS(v);LS.set("mx:cfg",v);await syncCloud(null,null,null,v);};
+  const toast=m=>{setNotif(m);setTimeout(()=>setNotif(null),3200)};
+  const handleLogoTap=()=>{logoTaps.current++;clearTimeout(logoTimer.current);if(logoTaps.current>=5){logoTaps.current=0;setPg("admin");toast("🔐 Admin mode")}else{logoTimer.current=setTimeout(()=>{logoTaps.current=0},2000)}};
+  useEffect(()=>{if(window.location.search.includes("admin")||window.location.hash.includes("admin"))setPg("admin");},[]);
 
-const toast=m=>{setNotif(m);setTimeout(()=>setNotif(null),3000)};
-const handleLogoTap=()=>{
-logoTaps.current++;clearTimeout(logoTimer.current);
-if(logoTaps.current>=5){logoTaps.current=0;setPg(“admin”);toast(“🔐 Admin mode”)}
-else{logoTimer.current=setTimeout(()=>{logoTaps.current=0},2000)}
-};
-useEffect(()=>{if(window.location.search.includes(“admin”)||window.location.hash.includes(“admin”))setPg(“admin”);},[]);
+  const addCart=(it,qty=1,answers=null)=>{if(answers&&Object.keys(answers).length>0){const cid=uid();setCart(p=>[...p,{...it,qty,answers,cartId:cid}]);}else{setCart(p=>{const e=p.find(c=>c.id===it.id&&!c.answers);return e?p.map(c=>c.id===it.id&&!c.answers?{...c,qty:c.qty+qty}:c):[...p,{...it,qty,answers:null,cartId:uid()}]});}toast(`${it.name} added! 🛍️`);};
+  const remCart=cid=>setCart(p=>p.filter(c=>(c.cartId||c.id)!==cid));
+  const updQty=(cid,q)=>{if(q<1)return remCart(cid);setCart(p=>p.map(c=>(c.cartId||c.id)===cid?{...c,qty:q}:c))};
+  const cnt=cart.reduce((s,c)=>s+c.qty,0);
+  const sub=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const hasSignupDisc=user&&user.discUsed===false;
 
-/* ── CART ── */
-const addCart=(it,qty=1,answers=null)=>{
-setCart(p=>{
-const e=p.find(c=>c.id===it.id);
-const entry={…it,qty,answers:answers||null};
-return e?p.map(c=>c.id===it.id?{…c,qty:c.qty+qty}:c):[…p,entry];
-});
-toast(`${it.name} added to cart! 🛍️`);
-};
-const remCart=id=>setCart(p=>p.filter(c=>c.id!==id));
-const updQty=(id,q)=>{if(q<1)return remCart(id);setCart(p=>p.map(c=>c.id===id?{…c,qty:q}:c))};
-const cnt=cart.reduce((s,c)=>s+c.qty,0);
-const sub=cart.reduce((s,c)=>s+c.price*c.qty,0);
-const hasSignupDisc=user&&user.discUsed===false;
+  const goItem=it=>{setCur(it);setFormFlow(null);setPg("item");window.scrollTo(0,0)};
+  const goShop=()=>{setPg("shop");setCur(null);setFormFlow(null)};
+  const openDirectOrder=(it,qty=1)=>{setOrderModal({item:it,answers:null,qty});};
+  const startFormFlow=(item,form,mode,qty=1)=>{setFormFlow({item,form,mode,qty});setPg("orderform");window.scrollTo(0,0)};
+  const finishFormFlow=(item,answers,mode,qty=1)=>{
+    setFormFlow(null);
+    if(mode==="cart"){addCart(item,qty,answers);setPg("item");setCur(item);}
+    else{setOrderModal({item,answers,qty});setPg("item");setCur(item);}
+  };
 
-const goItem=it=>{setCur(it);setFormFlow(null);setPg(“item”);window.scrollTo(0,0)};
-const goShop=()=>{setPg(“shop”);setCur(null);setFormFlow(null)};
+  const cartCheckout=(promoApplied,discAmt,phone,cartName)=>{
+    if(!cart.length)return;
+    const n=cartName||user?.name||"Customer";
+    const lines=cart.map(c=>{
+      let l=`• ${c.name} x${c.qty} — RM${(c.price*c.qty).toFixed(2)}`;
+      if(c.answers){const ch=Object.values(c.answers).map(v=>Array.isArray(v)?v.join(", "):v).filter(Boolean).join(", ");if(ch)l+=`\n  (${ch})`;}
+      return l;
+    }).join("\n");
+    let msg=`Hello! I'd like to place an order 🛍️\n\n*Order Details:*\n${lines}\n\n`;
+    if(discAmt>0)msg+=`Discount: -RM${discAmt.toFixed(2)}\n`;
+    msg+=`*Total: RM${(sub-discAmt).toFixed(2)}*\n\nName: ${n}`;
+    if(phone)msg+=`\nPhone: ${phone}`;
+    if(user?.email)msg+=`\nEmail: ${user.email}`;
+    window.open(`https://wa.me/${cfg.whatsapp}?text=${encodeURIComponent(msg)}`,"_blank");
+    if(hasSignupDisc&&user&&promoApplied==="signup"){const u2={...user,discUsed:true};setUser(u2);saveUsers(users.map(u=>u.email===user.email?u2:u));}
+  };
 
-/* ── DIRECT ORDER (no form) ── */
-const openDirectOrder=it=>{setOrderModal({item:it,answers:null,mode:“direct”});};
+  // Rebuild C on every render so child components get fresh colors
+  buildC(cfg);
 
-/* ── FORM FLOW: start ── */
-const startFormFlow=(item,form,mode)=>{
-setFormFlow({item,form,mode});setPg(“orderform”);window.scrollTo(0,0);
-};
-/* ── FORM FLOW: finish → open modal ── */
-const finishFormFlow=(item,answers,mode)=>{
-setFormFlow(null);
-if(mode===“cart”){addCart(item,1,answers);setPg(“item”);setCur(item);}
-else{setOrderModal({item,answers,mode:“custom”});setPg(“item”);setCur(item);}
-};
-
-/* ── CART CHECKOUT ── */
-const cartCheckout=(promoApplied,discAmt,phone)=>{
-if(!cart.length)return;
-const n=user?user.name:“Customer”;
-const lines=cart.map(c=>`• ${c.name} x${c.qty} — RM${(c.price*c.qty).toFixed(2)}`).join(”\n”);
-let msg=`Hello! I'd like to place an order 🛍️\n\n*Order Details:*\n${lines}\n\n`;
-if(discAmt>0)msg+=`Discount: -RM${discAmt.toFixed(2)}\n`;
-msg+=`*Total: RM${(sub-discAmt).toFixed(2)}*\n\nName: ${n}`;
-if(phone)msg+=`\nPhone: ${phone}`;
-if(user&&user.email)msg+=`\nEmail: ${user.email}`;
-window.open(`https://wa.me/${cfg.whatsapp}?text=${encodeURIComponent(msg)}`,”_blank”);
-if(hasSignupDisc&&user&&promoApplied===“signup”){
-const u2={…user,discUsed:true};setUser(u2);saveUsers(users.map(u=>u.email===user.email?u2:u));
-}
-};
-
-if(loading)return(
-<div style={{height:“100vh”,display:“flex”,flexDirection:“column”,alignItems:“center”,justifyContent:“center”,background:`linear-gradient(135deg,${C.pl},${C.yl})`,gap:12}}>
-<div className="fl" style={{fontSize:48,color:C.pd}}>✦</div>
-<p style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:36,color:C.t}}>{DCFG.siteName}</p>
-<p style={{color:C.tl,fontSize:13,letterSpacing:”.12em”}}>preparing your magic…</p>
-</div>
-);
-
-return(
-<div style={{minHeight:“100vh”,background:C.cream,display:“flex”,flexDirection:“column”}}>
-{notif&&<Toast m={notif}/>}
-
-```
-  {/* NAV */}
-  <nav style={{position:"sticky",top:0,zIndex:100,background:"rgba(250,246,238,.96)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.b}`,padding:"0 20px",flexShrink:0}}>
-    <div style={{maxWidth:1200,margin:"0 auto",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
-      <button onClick={()=>{handleLogoTap();goShop()}} className="btn" style={{background:"none",display:"flex",alignItems:"center",gap:7,padding:0}}>
-        <span style={{color:C.pd,fontSize:18}}>✦</span>
-        <span style={{fontFamily:"'Cormorant Garamond',serif",fontSize:26,fontWeight:500,color:C.t}}>{cfg.siteName}</span>
-      </button>
-      <div style={{display:"flex",alignItems:"center",gap:7}}>
-        {user?(
-          <div style={{display:"flex",alignItems:"center",gap:7}}>
-            <span style={{fontSize:12,color:C.tm}} className="hide-sm">{user.name.split(" ")[0]}</span>
-            <button onClick={()=>setUser(null)} className="btn" style={{background:C.pl,borderRadius:50,padding:"6px 14px",fontSize:12,color:C.pd}}>logout</button>
-          </div>
-        ):(
-          <div style={{display:"flex",gap:5}}>
-            <button onClick={()=>{setAMode("login");setAOpen(true)}} className="btn" style={{background:"none",border:`1.5px solid ${C.b}`,borderRadius:50,padding:"6px 14px",fontSize:13,color:C.t}}>login</button>
-            <button onClick={()=>{setAMode("signup");setAOpen(true)}} className="btn hide-sm" style={{background:C.pd,borderRadius:50,padding:"6px 14px",fontSize:13,color:C.white}}>sign up</button>
-          </div>
-        )}
-        <button onClick={()=>setCOpen(true)} className="btn" style={{position:"relative",background:C.t,borderRadius:"50%",width:38,height:38,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-          <span style={{fontSize:16}}>🛍️</span>
-          {cnt>0&&<span style={{position:"absolute",top:-4,right:-4,background:C.pd,color:C.white,borderRadius:"50%",width:18,height:18,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700}}>{cnt}</span>}
-        </button>
-      </div>
+  if(loading)return(
+    <div style={{height:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"linear-gradient(160deg,#1A0A06 0%,#3D0010 50%,#6B0015 100%)",gap:14}}>
+      <div className="fl" style={{fontSize:52,color:"#FF6680"}}>✦</div>
+      <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:40,color:"#FAF6EE",fontWeight:300,letterSpacing:".02em"}}>{DCFG.siteName}</p>
+      <p style={{color:"rgba(250,246,238,.45)",fontSize:12,letterSpacing:".22em",textTransform:"uppercase"}}>curating your magic…</p>
     </div>
-  </nav>
+  );
 
-  {/* PAGES */}
-  <div style={{flex:1}}>
-    {pg==="shop"&&<ShopPage items={items} onItem={goItem} onAdd={addCart} cfg={cfg}/>}
-    {pg==="item"&&cur&&<ItemPage item={cur} items={items} forms={forms} onBack={goShop} onAdd={addCart} onItem={goItem} onDirectOrder={openDirectOrder} onStartForm={startFormFlow} cfg={cfg}/>}
-    {pg==="orderform"&&formFlow&&<CustomOrderForm item={formFlow.item} form={formFlow.form} mode={formFlow.mode} onBack={()=>{setCur(formFlow.item);setPg("item");window.scrollTo(0,0)}} onFinish={finishFormFlow}/>}
-    {pg==="about"&&<AboutPage cfg={cfg} onBack={goShop}/>}
-    {pg==="contact"&&<ContactPage cfg={cfg} onBack={goShop}/>}
-    {pg==="privacy"&&<PrivacyPage onBack={goShop}/>}
-    {pg==="admin"&&<AdminPage ok={adminOk} onAuth={p=>{if(p===cfg.adminPass){setAdminOk(true);return true}return false}} items={items} saveItems={saveItems} forms={forms} saveForms={saveForms} users={users} saveUsers={saveUsers} cfg={cfg} saveCfg={saveCfg} onBack={goShop} toast={toast}/>}
-  </div>
+  const heroStyle=cfg.heroImage
+    ?{backgroundImage:`url(${cfg.heroImage})`,backgroundSize:"cover",backgroundPosition:"center"}
+    :cfg.heroBgColor
+      ?{background:cfg.heroBgColor}
+      :{background:"linear-gradient(160deg,#1A0A06 0%,#3D0010 45%,#6B0015 100%)"};
 
-  {/* FOOTER */}
-  {pg!=="admin"&&(
-    <footer style={{background:C.t,color:"rgba(255,255,255,.55)",padding:"40px 20px 24px",marginTop:"auto"}}>
-      <div style={{maxWidth:1200,margin:"0 auto"}}>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:32,marginBottom:32}}>
-          <div>
-            <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:10}}>
-              <span style={{color:C.pm,fontSize:16}}>✦</span>
-              <span style={{fontFamily:"'Cormorant Garamond',serif",fontSize:22,color:C.white,fontWeight:500}}>{cfg.siteName}</span>
-            </div>
-            <p style={{fontSize:13,lineHeight:1.7}}>{cfg.tagline}</p>
+  return(
+    <div style={{minHeight:"100vh",background:cfg.colorBg||"#FAF6EE",display:"flex",flexDirection:"column"}}>
+      {notif&&<Toast m={notif}/>}
+      {/* NAV */}
+      <nav style={{position:"sticky",top:0,zIndex:100,background:`${cfg.colorBg||"#FAF6EE"}F5`,backdropFilter:"blur(14px)",borderBottom:`1px solid ${C.b}`,padding:"0 20px",flexShrink:0}}>
+        <div style={{maxWidth:1200,margin:"0 auto",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
+          <button onClick={()=>{handleLogoTap();goShop()}} className="btn" style={{background:"none",display:"flex",alignItems:"center",gap:8,padding:0}}>
+            <span style={{color:C.pd,fontSize:18}}>✦</span>
+            <span style={{fontFamily:"'Cormorant Garamond',serif",fontSize:26,fontWeight:500,color:C.t}}>{cfg.siteName}</span>
+          </button>
+          <div style={{display:"flex",alignItems:"center",gap:7}}>
+            {user?(<div style={{display:"flex",alignItems:"center",gap:7}}>
+              <span style={{fontSize:12,color:C.tm}} className="hide-sm">{user.name.split(" ")[0]}</span>
+              <button onClick={()=>setUser(null)} className="btn" style={{background:C.pl,borderRadius:50,padding:"6px 14px",fontSize:12,color:C.pd}}>logout</button>
+            </div>):(<div style={{display:"flex",gap:5}}>
+              <button onClick={()=>{setAMode("login");setAOpen(true)}} className="btn" style={{background:"none",border:`1.5px solid ${C.b}`,borderRadius:50,padding:"6px 14px",fontSize:13,color:C.t}}>login</button>
+              <button onClick={()=>{setAMode("signup");setAOpen(true)}} className="btn hide-sm" style={{background:C.pd,borderRadius:50,padding:"6px 14px",fontSize:13,color:"#FFF"}}>sign up</button>
+            </div>)}
+            <button onClick={()=>setCOpen(true)} className="btn" style={{position:"relative",background:C.t,borderRadius:"50%",width:38,height:38,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <span style={{fontSize:16}}>🛍️</span>
+              {cnt>0&&<span style={{position:"absolute",top:-4,right:-4,background:C.pd,color:"#fff",borderRadius:"50%",width:18,height:18,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700}}>{cnt}</span>}
+            </button>
           </div>
-          <div>
-            <p style={{color:C.white,fontWeight:600,fontSize:12,textTransform:"uppercase",letterSpacing:".1em",marginBottom:12}}>Explore</p>
-            {[["shop","🛍️ Shop"],["about","About Us"],["contact","Contact"]].map(([p,l])=>(
-              <button key={p} onClick={()=>{setPg(p);window.scrollTo(0,0)}} className="btn" style={{display:"block",background:"none",color:"rgba(255,255,255,.55)",fontSize:13,padding:"3px 0",textAlign:"left",width:"100%"}}
-                onMouseEnter={e=>e.currentTarget.style.color=C.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.55)"}>{l}</button>
+        </div>
+      </nav>
+      {/* PAGES */}
+      <div style={{flex:1}}>
+        {pg==="shop"&&<ShopPage items={items} forms={forms} onItem={goItem} onAdd={addCart} onDirectOrder={openDirectOrder} onStartForm={startFormFlow} cfg={cfg}/>}
+        {pg==="item"&&cur&&<ItemPage item={cur} items={items} forms={forms} onBack={goShop} onAdd={addCart} onItem={goItem} onDirectOrder={openDirectOrder} onStartForm={startFormFlow} cfg={cfg}/>}
+        {pg==="orderform"&&formFlow&&<CustomOrderForm item={formFlow.item} form={formFlow.form} mode={formFlow.mode} qty={formFlow.qty||1} onBack={()=>{setCur(formFlow.item);setPg("item");window.scrollTo(0,0)}} onFinish={finishFormFlow}/>}
+        {pg==="about"&&<AboutPage cfg={cfg} onBack={goShop}/>}
+        {pg==="contact"&&<ContactPage cfg={cfg} onBack={goShop}/>}
+        {pg==="privacy"&&<PrivacyPage onBack={goShop}/>}
+        {pg==="admin"&&<AdminPage ok={adminOk} onAuth={p=>{if(p===cfg.adminPass){setAdminOk(true);return true}return false}} items={items} saveItems={saveItems} forms={forms} saveForms={saveForms} users={users} saveUsers={saveUsers} cfg={cfg} saveCfg={saveCfg} onBack={goShop} toast={toast}/>}
+      </div>
+      {/* FOOTER */}
+      {pg!=="admin"&&(
+        <footer style={{background:cfg.colorFooter||"#1A0A06",color:"rgba(255,255,255,.5)",padding:"44px 20px 24px",marginTop:"auto"}}>
+          <div style={{maxWidth:1200,margin:"0 auto"}}>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:32,marginBottom:32}}>
+              <div>
+                <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:10}}>
+                  <span style={{color:C.pd,fontSize:16}}>✦</span>
+                  <span style={{fontFamily:"'Cormorant Garamond',serif",fontSize:22,color:"#FAF6EE",fontWeight:400}}>{cfg.siteName}</span>
+                </div>
+                <p style={{fontSize:13,lineHeight:1.7}}>{cfg.tagline}</p>
+              </div>
+              <div>
+                <p style={{color:"rgba(255,255,255,.8)",fontWeight:600,fontSize:11,textTransform:"uppercase",letterSpacing:".1em",marginBottom:12}}>Explore</p>
+                {[["shop","🛍️ Shop"],["about","About Us"],["contact","Contact"],["privacy","Privacy Policy"]].map(([p,l])=>(
+                  <button key={p} onClick={()=>{setPg(p);window.scrollTo(0,0)}} className="btn" style={{display:"block",background:"none",color:"rgba(255,255,255,.5)",fontSize:13,padding:"3px 0",textAlign:"left",width:"100%"}}
+                    onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.5)"}>{l}</button>
+                ))}
+              </div>
+              <div>
+                <p style={{color:"rgba(255,255,255,.8)",fontWeight:600,fontSize:11,textTransform:"uppercase",letterSpacing:".1em",marginBottom:12}}>Follow Us</p>
+                {cfg.contactIG&&<a href={cfg.contactIGUrl||"#"} target="_blank" style={{display:"flex",alignItems:"center",gap:8,color:"rgba(255,255,255,.5)",fontSize:13,textDecoration:"none",marginBottom:8}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.5)"}>
+                  <span>📸</span><span>{cfg.contactIG}</span>
+                </a>}
+                {cfg.contactTT&&<a href={cfg.contactTTUrl||"#"} target="_blank" style={{display:"flex",alignItems:"center",gap:8,color:"rgba(255,255,255,.5)",fontSize:13,textDecoration:"none"}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.5)"}>
+                  <span>🎵</span><span>{cfg.contactTT}</span>
+                </a>}
+              </div>
+              <div>
+                <p style={{color:"rgba(255,255,255,.8)",fontWeight:600,fontSize:11,textTransform:"uppercase",letterSpacing:".1em",marginBottom:12}}>Contact</p>
+                <p style={{fontSize:13,lineHeight:1.9}}>
+                  <a href={`https://wa.me/${cfg.contactWa||cfg.whatsapp}`} target="_blank" style={{color:"rgba(255,255,255,.5)",textDecoration:"none",display:"block"}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.5)"}>💬 {cfg.contactWa||cfg.whatsapp}</a>
+                  {cfg.contactEmail&&<span style={{display:"block"}}>✉️ {cfg.contactEmail}</span>}
+                </p>
+              </div>
+            </div>
+            <div style={{borderTop:"1px solid rgba(255,255,255,.08)",paddingTop:18,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}>
+              <p style={{fontSize:12}}>© {new Date().getFullYear()} {cfg.siteName}. All rights reserved.</p>
+              <button onClick={()=>{setPg("admin");window.scrollTo(0,0)}} className="btn" style={{background:"none",color:"rgba(255,255,255,.07)",fontSize:11,padding:0}} onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,.25)"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.07)"}>manage</button>
+            </div>
+          </div>
+        </footer>
+      )}
+      {cOpen&&<CartDrawer cart={cart} onClose={()=>setCOpen(false)} onRem={remCart} onQty={updQty} onCheckout={cartCheckout} sub={sub} hasSignupDisc={hasSignupDisc} discPct={cfg.discPct} cfg={cfg} user={user} onSignup={()=>{setCOpen(false);setAMode("signup");setAOpen(true)}}/>}
+      {aOpen&&<AuthModal mode={aMode} setMode={setAMode} onClose={()=>setAOpen(false)} users={users} saveUsers={saveUsers} onLogin={u=>{setUser(u);setAOpen(false);toast(`Welcome back, ${u.name}! 💕`)}} onSignup={u=>{setUser(u);setAOpen(false);toast(`Welcome ${u.name}! 🎉 ${cfg.discPct}% off your first order!`)}} cfg={cfg}/>}
+      {orderModal&&<OrderSummaryModal item={orderModal.item} answers={orderModal.answers} qty={orderModal.qty||1} onClose={()=>setOrderModal(null)} cfg={cfg} user={user} hasSignupDisc={hasSignupDisc} saveUsers={saveUsers} users={users} setUser={setUser} onSignup={()=>{setOrderModal(null);setAMode("signup");setAOpen(true)}}/>}
+    </div>
+  );
+}
+
+/* ══ SHOP PAGE ══ */
+function ShopPage({items,forms,onItem,onAdd,onDirectOrder,onStartForm,cfg}){
+  const[q,setQ]=useState("");
+  const list=items.filter(i=>i.name.toLowerCase().includes(q.toLowerCase()));
+  const heroStyle=cfg.heroImage?{backgroundImage:`url(${cfg.heroImage})`,backgroundSize:"cover",backgroundPosition:"center center"}:cfg.heroBgColor?{background:cfg.heroBgColor}:{background:"linear-gradient(160deg,#1A0A06 0%,#3D0010 45%,#6B0015 100%)"};
+  return(
+    <div>
+      {/* Hero */}
+      <div style={{...heroStyle,padding:"80px 24px 60px",textAlign:"center",position:"relative",overflow:"hidden",minHeight:320,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+        {/* Overlay for image mode */}
+        {cfg.heroImage&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.45)",zIndex:0}}/>}
+        <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(255,255,255,.03) 1px,transparent 1px)",backgroundSize:"30px 30px",pointerEvents:"none",zIndex:1}}/>
+        {[{top:"10%",left:"5%",s:28,d:0},{top:"18%",right:"7%",s:16,d:1.2},{bottom:"12%",right:"9%",s:22,d:.6},{bottom:"18%",left:"11%",s:12,d:1.8}].map((p,i)=>(
+          <span key={i} className="fl" style={{position:"absolute",fontSize:p.s,opacity:.22,color:"#FF6680",top:p.top,left:p.left,right:p.right,bottom:p.bottom,animationDelay:`${p.d}s`,zIndex:1}}>✦</span>
+        ))}
+        <div style={{position:"relative",zIndex:2}}>
+          <p style={{fontSize:11,letterSpacing:".38em",textTransform:"uppercase",color:"#FF9090",marginBottom:10,fontWeight:500}}>welcome to</p>
+          <h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(52px,9vw,100px)",fontWeight:300,color:"#FAF6EE",lineHeight:.92,marginBottom:14,letterSpacing:"-.01em"}}>{cfg.siteName}</h1>
+          <div style={{width:56,height:2,background:`linear-gradient(90deg,transparent,${C.pd},transparent)`,margin:"0 auto 14px",borderRadius:2}}/>
+          <p style={{color:"rgba(250,246,238,.6)",fontSize:14,marginBottom:32,letterSpacing:".04em"}}>{cfg.tagline}</p>
+          <div style={{display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}>
+            {(cfg.heroTags||[]).map(t=>(
+              <span key={t} style={{background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"7px 18px",fontSize:12,color:"rgba(250,246,238,.85)",backdropFilter:"blur(8px)"}}>{t}</span>
             ))}
           </div>
-          <div>
-            <p style={{color:C.white,fontWeight:600,fontSize:12,textTransform:"uppercase",letterSpacing:".1em",marginBottom:12}}>Legal</p>
-            <button onClick={()=>{setPg("privacy");window.scrollTo(0,0)}} className="btn" style={{display:"block",background:"none",color:"rgba(255,255,255,.55)",fontSize:13,padding:"3px 0",textAlign:"left",width:"100%"}}
-              onMouseEnter={e=>e.currentTarget.style.color=C.white} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.55)"}>Privacy Policy</button>
+        </div>
+      </div>
+      {/* Curved divider */}
+      <div style={{height:40,background:cfg.colorBg||"#FAF6EE",marginTop:-2,borderRadius:"0 0 0 0",position:"relative"}}>
+        <svg viewBox="0 0 1440 40" style={{position:"absolute",top:-38,left:0,width:"100%",height:40}} preserveAspectRatio="none">
+          <path d="M0,40 C360,0 1080,0 1440,40 L1440,40 L0,40 Z" fill={cfg.colorBg||"#FAF6EE"}/>
+        </svg>
+      </div>
+      {/* Grid */}
+      <div style={{maxWidth:1200,margin:"0 auto",padding:"16px 16px 0"}}>
+        <div style={{marginBottom:24}}>
+          <input placeholder="🔍  search mystery boxes…" value={q} onChange={e=>setQ(e.target.value)}
+            style={{width:"100%",maxWidth:500,padding:"11px 20px",borderRadius:50,border:`1.5px solid ${C.b}`,background:C.white,fontSize:14,color:C.t,display:"block",margin:"0 auto",boxShadow:C.sh}}/>
+        </div>
+        {list.length===0?(
+          <div style={{textAlign:"center",padding:"72px 0",color:C.tl}}>
+            <div style={{fontSize:44,marginBottom:14,color:C.pd}}>✦</div>
+            <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:22,color:C.t}}>{q?"No boxes found":"Shop coming soon ✦"}</p>
+            {!q&&<p style={{fontSize:13,marginTop:8,color:C.tl}}>Items will appear once added from the admin panel.</p>}
           </div>
+        ):(
+          <div className="items-grid">
+            {list.map((it,i)=><ItemCard key={it.id} item={it} forms={forms} onItem={onItem} onAdd={onAdd} onDirectOrder={onDirectOrder} onStartForm={onStartForm} delay={i*55}/>)}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ══ ITEM CARD ══ */
+function ItemCard({item,forms,onItem,onAdd,onDirectOrder,onStartForm,delay=0}){
+  const[h,setH]=useState(false);
+  const attachedForm=forms&&item.formId?forms.find(f=>f.id===item.formId):null;
+  const outOfStock=item.stock===0;
+  return(
+    <div className="card fu" onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
+      style={{background:C.white,borderRadius:20,overflow:"hidden",boxShadow:h?C.sh2:C.sh,animationDelay:`${delay}ms`,border:`1px solid ${C.b}`}}>
+      <div onClick={()=>onItem(item)} style={{position:"relative",paddingTop:"100%",overflow:"hidden",background:C.pl,cursor:"pointer"}}>
+        <img src={item.images&&item.images[0]} alt={item.name} onError={e=>e.target.style.display="none"}
+          style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",transition:"transform .5s",transform:h?"scale(1.07)":"scale(1)"}}/>
+        {item.originalPrice&&<div style={{position:"absolute",top:9,left:9,background:C.pd,borderRadius:50,padding:"2px 9px",fontSize:10,fontWeight:700,color:"#fff"}}>SALE</div>}
+        {item.tags?.includes("limited")&&<div style={{position:"absolute",top:9,right:9,background:C.ym,borderRadius:50,padding:"2px 9px",fontSize:10,fontWeight:700,color:C.t}}>LIMITED</div>}
+        {item.tags?.includes("bestseller")&&!item.tags?.includes("limited")&&<div style={{position:"absolute",top:9,right:9,background:C.yl,border:`1px solid ${C.ym}`,borderRadius:50,padding:"2px 9px",fontSize:10,fontWeight:700,color:C.yd}}>★ BEST</div>}
+        {item.tags?.includes("new")&&!item.tags?.includes("limited")&&!item.tags?.includes("bestseller")&&<div style={{position:"absolute",top:9,right:9,background:C.white,borderRadius:50,padding:"2px 9px",fontSize:10,fontWeight:700,color:C.pd}}>NEW</div>}
+        {/* Customisable badge */}
+        {attachedForm&&<div style={{position:"absolute",bottom:9,left:9,background:"rgba(0,0,0,.65)",borderRadius:50,padding:"3px 10px",fontSize:10,fontWeight:600,color:"#fff",backdropFilter:"blur(4px)"}}>✦ Customisable</div>}
+        <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,.25)",opacity:h?1:0,transition:"opacity .3s"}}>
+          <span style={{fontSize:34}}>🎁</span>
+        </div>
+      </div>
+      <div style={{padding:"13px 14px 14px"}}>
+        <span style={{fontSize:10,color:C.pd,textTransform:"uppercase",letterSpacing:".1em",fontWeight:600}}>{item.category}</span>
+        <h3 onClick={()=>onItem(item)} style={{fontFamily:"'Cormorant Garamond',serif",fontSize:19,fontWeight:500,color:C.t,margin:"3px 0 7px",lineHeight:1.2,cursor:"pointer"}}>{item.name}</h3>
+        <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:11}}>
+          <span style={{fontSize:15,fontWeight:700,color:C.t}}>RM {item.price.toFixed(2)}</span>
+          {item.originalPrice&&<span style={{fontSize:11,color:C.tl,textDecoration:"line-through"}}>RM {item.originalPrice.toFixed(2)}</span>}
+        </div>
+        {/* Smart buttons based on whether item has form */}
+        {attachedForm?(
+          <div className="card-btns" style={{display:"flex",gap:5}}>
+            <button onClick={()=>onItem(item)} className="btn"
+              style={{flex:1,padding:"8px 6px",borderRadius:10,background:C.cream,border:`1.5px solid ${C.b}`,color:C.tm,fontSize:12}}>View</button>
+            <button onClick={e=>{e.stopPropagation();onItem(item);}} className="btn"
+              style={{flex:2,padding:"8px 6px",borderRadius:10,background:outOfStock?C.b:`linear-gradient(135deg,${C.pd},${C.pd}CC)`,color:outOfStock?C.tl:"#fff",fontSize:12,fontWeight:600,cursor:outOfStock?"not-allowed":"pointer"}}>
+              {outOfStock?"Out of Stock":"✦ Customise"}
+            </button>
+          </div>
+        ):(
+          <div className="card-btns" style={{display:"flex",gap:5}}>
+            <button onClick={()=>onItem(item)} className="btn"
+              style={{flex:1,padding:"8px 6px",borderRadius:10,background:C.cream,border:`1.5px solid ${C.b}`,color:C.tm,fontSize:12}}>View</button>
+            <button onClick={e=>{e.stopPropagation();if(!outOfStock)onAdd(item);}} className="btn"
+              style={{flex:2,padding:"8px 6px",borderRadius:10,background:outOfStock?C.b:C.t,color:outOfStock?C.tl:"#fff",fontSize:12,cursor:outOfStock?"not-allowed":"pointer"}}>
+              {outOfStock?"Sold Out":"Add to Cart"}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ══ ITEM PAGE ══ */
+function ItemPage({item,items,forms,onBack,onAdd,onItem,onDirectOrder,onStartForm,cfg}){
+  const[si,setSi]=useState(0);const[qty,setQty]=useState(1);
+  const recs=items.filter(i=>i.id!==item.id).slice(0,4);
+  const pct=item.originalPrice?Math.round((1-item.price/item.originalPrice)*100):0;
+  const attachedForm=forms&&item.formId?forms.find(f=>f.id===item.formId):null;
+  const outOfStock=item.stock===0;
+  return(
+    <div style={{maxWidth:1200,margin:"0 auto",padding:"26px 16px 60px"}}>
+      <button onClick={onBack} className="btn" style={{background:"none",padding:"5px 0",color:C.tm,fontSize:14,marginBottom:20,display:"flex",alignItems:"center",gap:5}}>← back to shop</button>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:40,marginBottom:60}}>
+        <div>
+          <div style={{borderRadius:22,overflow:"hidden",background:C.pl,paddingTop:"100%",position:"relative",marginBottom:10,boxShadow:C.sh}}>
+            <img src={(item.images&&item.images[si])||""} alt={item.name} onError={e=>e.target.style.display="none"} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+          </div>
+          {item.images&&item.images.length>1&&(
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              {item.images.map((img,i)=>(
+                <div key={i} onClick={()=>setSi(i)} style={{width:64,height:64,borderRadius:11,overflow:"hidden",border:`2px solid ${si===i?C.pd:"transparent"}`,cursor:"pointer",background:C.pl,transition:"border-color .2s"}}>
+                  <img src={img} alt="" onError={e=>e.target.style.display="none"} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:15}}>
           <div>
-            <p style={{color:C.white,fontWeight:600,fontSize:12,textTransform:"uppercase",letterSpacing:".1em",marginBottom:12}}>Contact</p>
-            <p style={{fontSize:13,lineHeight:1.9}}>
-              📱 <a href={`https://wa.me/${cfg.contactWa||cfg.whatsapp}`} target="_blank" style={{color:"rgba(255,255,255,.55)",textDecoration:"none"}}>{cfg.contactWa||cfg.whatsapp}</a><br/>
-              {cfg.contactIG&&<>📸 <a href={igUrl(cfg)} target="_blank" style={{color:"rgba(255,255,255,.7)",textDecoration:"none"}}>{cfg.contactIG}</a><br/></>}
-              {cfg.contactTK&&<>🎵 <a href={tkUrl(cfg)} target="_blank" style={{color:"rgba(255,255,255,.7)",textDecoration:"none"}}>{cfg.contactTK}</a><br/></>}
-              {cfg.contactEmail&&<>✉️ {cfg.contactEmail}</>}
+            <span style={{fontSize:11,color:C.pd,textTransform:"uppercase",letterSpacing:".14em",fontWeight:600}}>{item.category}</span>
+            <h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(26px,5vw,46px)",fontWeight:400,color:C.t,lineHeight:1.1,margin:"5px 0"}}>{item.name}</h1>
+            <div style={{display:"flex",alignItems:"baseline",gap:10,flexWrap:"wrap"}}>
+              <span style={{fontSize:26,fontWeight:700,color:C.t}}>RM {item.price.toFixed(2)}</span>
+              {item.originalPrice&&<><span style={{fontSize:14,color:C.tl,textDecoration:"line-through"}}>RM {item.originalPrice.toFixed(2)}</span><span style={{fontSize:11,background:C.pd,padding:"2px 9px",borderRadius:50,color:"#fff",fontWeight:600}}>{pct}% off</span></>}
+            </div>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:7}}>
+            <div style={{width:8,height:8,borderRadius:"50%",background:item.stock>5?"#3DA84A":item.stock>0?"#D4A843":"#D43A3A"}}/>
+            <span style={{fontSize:13,color:C.tm}}>{item.stock>5?"In stock":item.stock>0?`Only ${item.stock} left!`:"Out of stock"}</span>
+          </div>
+          {item.tags&&item.tags.length>0&&<div style={{display:"flex",gap:6,flexWrap:"wrap"}}>{item.tags.map(t=><Chip key={t} ch={`✦ ${t}`} bg={C.yl} col={C.tm}/>)}</div>}
+          <div style={{background:C.cream,borderRadius:14,padding:"14px 16px",border:`1px solid ${C.b}`}}>
+            <p style={{fontSize:14,lineHeight:1.85,color:C.tm,whiteSpace:"pre-line"}}>{item.description}</p>
+          </div>
+
+          {attachedForm?(
+            <div style={{display:"flex",flexDirection:"column",gap:10}}>
+              <div style={{background:`${C.pd}10`,borderRadius:12,padding:"10px 14px",border:`1px dashed ${C.pd}44`,display:"flex",alignItems:"center",gap:8}}>
+                <span style={{fontSize:18}}>✦</span>
+                <p style={{fontSize:13,color:C.t}}>This box can be <strong>customised</strong> to your preference before ordering!</p>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:10}}>
+                <div style={{display:"flex",alignItems:"center",background:C.cream,border:`1.5px solid ${C.b}`,borderRadius:50,overflow:"hidden"}}>
+                  <button onClick={()=>setQty(Math.max(1,qty-1))} className="btn" style={{width:40,height:40,background:"none",fontSize:20,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>−</button>
+                  <span style={{width:34,textAlign:"center",fontSize:14,fontWeight:500}}>{qty}</span>
+                  <button onClick={()=>setQty(qty+1)} className="btn" style={{width:40,height:40,background:"none",fontSize:20,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
+                </div>
+                <span style={{fontSize:12,color:C.tl}}>Qty</span>
+              </div>
+              <button onClick={()=>onStartForm(item,attachedForm,"cart",qty)} disabled={outOfStock} className="btn"
+                style={{width:"100%",padding:"12px 20px",background:outOfStock?C.b:C.cream,color:outOfStock?C.tl:C.t,borderRadius:13,fontSize:14,fontWeight:500,border:`1.5px solid ${outOfStock?C.b:C.b}`,cursor:outOfStock?"not-allowed":"pointer"}}>
+                {outOfStock?"Out of Stock":"🛍️ Customise & Add to Cart"}
+              </button>
+              <button onClick={()=>onStartForm(item,attachedForm,"order",qty)} disabled={outOfStock} className="btn"
+                style={{width:"100%",padding:"12px 20px",background:outOfStock?C.b:`linear-gradient(135deg,${C.pd},${C.pd}BB)`,color:outOfStock?C.tl:"#fff",borderRadius:13,fontSize:14,fontWeight:600,cursor:outOfStock?"not-allowed":"pointer",boxShadow:outOfStock?"none":`0 4px 16px ${C.pd}33`}}>
+                {outOfStock?"Out of Stock":"✦ Customise & Order"}
+              </button>
+            </div>
+          ):(
+            <div style={{display:"flex",flexDirection:"column",gap:10}}>
+              <div style={{display:"flex",gap:10,alignItems:"center",flexWrap:"wrap"}}>
+                <div style={{display:"flex",alignItems:"center",background:C.cream,border:`1.5px solid ${C.b}`,borderRadius:50,overflow:"hidden"}}>
+                  <button onClick={()=>setQty(Math.max(1,qty-1))} className="btn" style={{width:40,height:40,background:"none",fontSize:20,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>−</button>
+                  <span style={{width:34,textAlign:"center",fontSize:14,fontWeight:500}}>{qty}</span>
+                  <button onClick={()=>setQty(qty+1)} className="btn" style={{width:40,height:40,background:"none",fontSize:20,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
+                </div>
+                <button onClick={()=>onAdd(item,qty)} disabled={outOfStock} className="btn"
+                  style={{flex:1,minWidth:120,padding:"12px 16px",background:outOfStock?C.b:C.t,color:outOfStock?C.tl:"#fff",borderRadius:50,fontSize:14,fontWeight:500,cursor:outOfStock?"not-allowed":"pointer"}}>
+                  {outOfStock?"Out of Stock":"🛍️ Add to Cart"}
+                </button>
+              </div>
+              <button onClick={()=>onDirectOrder(item,qty)} disabled={outOfStock} className="btn"
+                style={{width:"100%",padding:"12px 20px",background:outOfStock?C.b:`linear-gradient(135deg,${C.pd},${C.pd}BB)`,color:outOfStock?C.tl:"#fff",borderRadius:13,fontSize:14,fontWeight:600,cursor:outOfStock?"not-allowed":"pointer",boxShadow:outOfStock?"none":`0 4px 16px ${C.pd}33`}}>
+                {outOfStock?"Out of Stock":"⚡ Order Now"}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+      {recs.length>0&&(
+        <div>
+          <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:30,fontWeight:400,color:C.t,marginBottom:20,textAlign:"center"}}>you might also love ✦</h2>
+          <div className="items-grid">{recs.map(r=><ItemCard key={r.id} item={r} forms={forms} onItem={onItem} onAdd={onAdd} onDirectOrder={onDirectOrder} onStartForm={onStartForm}/>)}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══ CUSTOM ORDER FORM ══ */
+function CustomOrderForm({item,form,mode,qty=1,onBack,onFinish}){
+  const[step,setStep]=useState(0);const[answers,setAnswers]=useState({});
+  const questions=form.questions||[];const curQ=questions[step];
+  const getAns=qid=>answers[qid];
+  const setAns=(qid,val)=>setAnswers(p=>({...p,[qid]:val}));
+  const toggleMulti=(qid,val)=>{const cur=answers[qid]||[];setAns(qid,cur.includes(val)?cur.filter(v=>v!==val):[...cur,val])};
+  const canNext=()=>{if(!curQ||curQ.required===false)return true;const a=answers[curQ.id];if(curQ.type==="multi")return a&&a.length>0;if(curQ.type==="text")return a&&a.trim().length>0;return!!a;};
+  const next=()=>{if(!canNext())return;if(step<questions.length-1){setStep(s=>s+1);window.scrollTo(0,0);}else{onFinish(item,answers,mode,qty);}};
+  const progress=Math.round((step/Math.max(questions.length,1))*100);
+  return(
+    <div style={{maxWidth:560,margin:"0 auto",padding:"28px 16px 64px"}}>
+      <button onClick={step===0?onBack:()=>{setStep(s=>s-1);window.scrollTo(0,0)}} className="btn" style={{background:"none",color:C.tm,fontSize:14,marginBottom:16,display:"flex",alignItems:"center",gap:5}}>
+        ← {step===0?"back to product":"previous"}
+      </button>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
+        <div style={{flex:1,height:5,background:C.b,borderRadius:50,overflow:"hidden"}}>
+          <div style={{width:`${progress}%`,height:"100%",background:C.pd,borderRadius:50,transition:"width .4s ease"}}/>
+        </div>
+        <span style={{fontSize:12,color:C.tl,flexShrink:0}}>Step {step+1} of {questions.length}</span>
+      </div>
+      <div style={{display:"flex",alignItems:"center",gap:10,background:C.white,borderRadius:12,padding:"10px 14px",boxShadow:C.sh,marginBottom:22,border:`1px solid ${C.b}`}}>
+        <div style={{width:44,height:44,borderRadius:9,overflow:"hidden",background:C.pl,flexShrink:0}}>
+          <img src={item.images&&item.images[0]} alt="" onError={e=>e.target.style.display="none"} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+        </div>
+        <div><p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:15,color:C.t}}>{item.name}</p><p style={{fontSize:12,color:C.tl}}>RM {item.price.toFixed(2)} · {mode==="cart"?"Adding to cart":"Ordering"}</p></div>
+      </div>
+      {curQ&&(
+        <div className="fu">
+          {curQ.image&&<div style={{borderRadius:18,overflow:"hidden",marginBottom:18,boxShadow:C.sh}}><img src={curQ.image} alt="" onError={e=>e.target.style.display="none"} style={{width:"100%",maxHeight:220,objectFit:"cover",display:"block"}}/></div>}
+          <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(20px,5vw,28px)",color:C.t,marginBottom:4,lineHeight:1.3}}>{curQ.question}</h2>
+          {curQ.subtitle&&<p style={{fontSize:13,color:C.tl,marginBottom:16}}>{curQ.subtitle}</p>}
+          {!curQ.subtitle&&<div style={{marginBottom:16}}/>}
+          {(curQ.type==="single"||!curQ.type)&&(
+            <div style={{display:"flex",flexDirection:"column",gap:10}}>
+              {(curQ.options||[]).map(opt=>{
+                const sel=getAns(curQ.id)===opt.label;
+                return(<button key={opt.id} onClick={()=>setAns(curQ.id,opt.label)} className="btn"
+                  style={{display:"flex",alignItems:"center",gap:14,padding:"12px 16px",borderRadius:14,border:`2px solid ${sel?C.pd:C.b}`,background:sel?C.pl:C.white,textAlign:"left",width:"100%",transition:"all .2s"}}>
+                  {opt.image&&<div style={{width:64,height:64,borderRadius:10,overflow:"hidden",background:C.cream,flexShrink:0}}><img src={opt.image} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>e.target.style.display="none"}/></div>}
+                  <div style={{flex:1}}><p style={{fontWeight:600,color:sel?C.pd:C.t,fontSize:14}}>{opt.label}</p>{opt.desc&&<p style={{fontSize:12,color:C.tl,marginTop:2}}>{opt.desc}</p>}</div>
+                  <div style={{width:20,height:20,borderRadius:"50%",border:`2px solid ${sel?C.pd:C.b}`,background:sel?C.pd:C.white,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    {sel&&<div style={{width:8,height:8,borderRadius:"50%",background:"#fff"}}/>}
+                  </div>
+                </button>);
+              })}
+            </div>
+          )}
+          {curQ.type==="multi"&&(
+            <div style={{display:"flex",flexDirection:"column",gap:10}}>
+              <p style={{fontSize:12,color:C.tl,marginBottom:4}}>Select all that apply</p>
+              {(curQ.options||[]).map(opt=>{
+                const sel=(getAns(curQ.id)||[]).includes(opt.label);
+                return(<button key={opt.id} onClick={()=>toggleMulti(curQ.id,opt.label)} className="btn"
+                  style={{display:"flex",alignItems:"center",gap:14,padding:"12px 16px",borderRadius:14,border:`2px solid ${sel?C.pd:C.b}`,background:sel?C.pl:C.white,textAlign:"left",width:"100%",transition:"all .2s"}}>
+                  {opt.image&&<div style={{width:64,height:64,borderRadius:10,overflow:"hidden",background:C.cream,flexShrink:0}}><img src={opt.image} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>e.target.style.display="none"}/></div>}
+                  <div style={{flex:1}}><p style={{fontWeight:600,color:sel?C.pd:C.t,fontSize:14}}>{opt.label}</p>{opt.desc&&<p style={{fontSize:12,color:C.tl,marginTop:2}}>{opt.desc}</p>}</div>
+                  <div style={{width:20,height:20,borderRadius:5,border:`2px solid ${sel?C.pd:C.b}`,background:sel?C.pd:C.white,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    {sel&&<span style={{color:"#fff",fontSize:11,fontWeight:700}}>✓</span>}
+                  </div>
+                </button>);
+              })}
+            </div>
+          )}
+          {curQ.type==="text"&&<textarea value={getAns(curQ.id)||""} onChange={e=>setAns(curQ.id,e.target.value)} placeholder={curQ.placeholder||"Type your answer here…"} rows={4} style={{...iSt(),resize:"vertical",borderRadius:12,fontSize:14,lineHeight:1.7}}/>}
+          <button onClick={next} className="btn"
+            style={{width:"100%",marginTop:24,padding:14,background:canNext()?C.pd:C.b,color:canNext()?"#fff":C.tl,borderRadius:14,fontSize:15,fontWeight:600,cursor:canNext()?"pointer":"not-allowed",boxShadow:canNext()?`0 4px 16px ${C.pd}33`:"none"}}>
+            {step===questions.length-1?(mode==="cart"?"Add to Cart →":"Review Order →"):"Next →"}
+          </button>
+          {curQ.required===false&&<p style={{fontSize:12,color:C.tl,textAlign:"center",marginTop:8}}>Optional — you can skip this</p>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══ ORDER SUMMARY MODAL ══ */
+function OrderSummaryModal({item,answers,qty=1,onClose,cfg,user,hasSignupDisc,saveUsers,users,setUser,onSignup}){
+  const[name,setName]=useState(user?user.name:"");const[phone,setPhone]=useState("");
+  const[promoInput,setPromoInput]=useState("");const[promoApplied,setPromoApplied]=useState(hasSignupDisc?"signup":null);
+  const[promoErr,setPromoErr]=useState("");const[nameErr,setNameErr]=useState("");
+  useEffect(()=>{if(hasSignupDisc)setPromoApplied("signup");},[hasSignupDisc]);
+  const applyPromo=()=>{const code=promoInput.trim().toUpperCase();if(!code){setPromoErr("Enter a code.");return;}if(cfg.promoCode&&code===cfg.promoCode.toUpperCase()){setPromoApplied("promo");setPromoErr("");}else setPromoErr("Invalid code.");};
+  let discAmt=0,discLabel="";
+  if(promoApplied==="signup"){discAmt=(item.price*qty)*(cfg.discPct/100);discLabel=`Welcome discount (${cfg.discPct}%)`;}
+  else if(promoApplied==="promo"&&cfg.promoPct>0){discAmt=(item.price*qty)*(cfg.promoPct/100);discLabel=`Promo (${cfg.promoPct}%)`;}
+  const total=(item.price*qty)-discAmt;
+  const send=()=>{
+    if(!name.trim()){setNameErr("Please enter your name.");return;}
+    setNameErr("");
+    let msg=`Hello! I'd like to order ✦\n\n*${item.name}*${qty>1?` x${qty}`:""}
+Price: RM${(item.price*qty).toFixed(2)}\n`;
+    if(answers&&Object.keys(answers).length>0){msg+=`\n*My Preferences:*\n`;Object.entries(answers).forEach(([,val])=>{const v=Array.isArray(val)?val.join(", "):val;if(v)msg+=`• ${v}\n`;});}
+    if(discAmt>0)msg+=`\nDiscount: -RM${discAmt.toFixed(2)}`;
+    msg+=`\n*Total: RM${total.toFixed(2)}*\n\nName: ${name}`;
+    if(phone)msg+=`\nPhone: ${phone}`;
+    if(user?.email)msg+=`\nEmail: ${user.email}`;
+    window.open(`https://wa.me/${cfg.whatsapp}?text=${encodeURIComponent(msg)}`,"_blank");
+    if(hasSignupDisc&&user&&promoApplied==="signup"){const u2={...user,discUsed:true};setUser(u2);saveUsers(users.map(u=>u.email===user.email?u2:u));}
+    onClose();
+  };
+  return(
+    <>
+      <div className="oi" onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:400}}/>
+      <div style={{position:"fixed",inset:0,zIndex:401,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px",overflowY:"auto"}} onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
+        <div className="mi" style={{background:C.white,borderRadius:24,width:"100%",maxWidth:460,maxHeight:"92vh",overflowY:"auto",WebkitOverflowScrolling:"touch",padding:"24px 20px 28px",boxShadow:"0 24px 64px rgba(0,0,0,.25)",margin:"auto"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
+            <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:24,color:C.t}}>Order Summary</h2>
+            <button onClick={onClose} className="btn" style={{width:30,height:30,borderRadius:"50%",background:C.cream,fontSize:18,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+          </div>
+          <div style={{display:"flex",gap:12,padding:"12px 14px",background:C.cream,borderRadius:14,marginBottom:14,border:`1px solid ${C.b}`}}>
+            <div style={{width:60,height:60,borderRadius:10,overflow:"hidden",background:C.pl,flexShrink:0}}>
+              <img src={item.images&&item.images[0]} alt={item.name} onError={e=>e.target.style.display="none"} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+            </div>
+            <div><p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:16,color:C.t,marginBottom:2}}>{item.name}</p><p style={{fontSize:14,fontWeight:700,color:C.t}}>RM {item.price.toFixed(2)}{qty>1&&<span style={{fontSize:12,color:C.tl,fontWeight:400}}> × {qty}</span>}</p></div>
+          </div>
+          {answers&&Object.keys(answers).length>0&&(
+            <div style={{background:C.cream,borderRadius:14,padding:"12px 14px",marginBottom:14,border:`1px solid ${C.b}`}}>
+              <p style={{fontSize:11,fontWeight:700,color:C.tm,textTransform:"uppercase",letterSpacing:".08em",marginBottom:8}}>Your Choices</p>
+              {Object.entries(answers).map(([k,val])=>{const v=Array.isArray(val)?val.join(", "):val;return v?<p key={k} style={{fontSize:13,color:C.t,marginBottom:3}}>✦ {v}</p>:null;})}
+            </div>
+          )}
+          <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:14}}>
+            <div><Lbl c="Your Name *"/><input value={name} onChange={e=>{setName(e.target.value);setNameErr("")}} placeholder="Name" style={iSt()}/>{nameErr&&<p style={{fontSize:12,color:"#C04040",marginTop:4}}>{nameErr}</p>}</div>
+            <div><Lbl c="Phone Number *"/><input value={phone} onChange={e=>setPhone(e.target.value)} placeholder="e.g. 0123456789" style={iSt()}/></div>
+          </div>
+          {!user&&!promoApplied&&(<div style={{background:C.yl,borderRadius:11,padding:"9px 13px",marginBottom:10,display:"flex",justifyContent:"space-between",alignItems:"center",gap:8}}>
+            <p style={{fontSize:12,color:C.tm}}>🎁 Sign up for {cfg.discPct}% off!</p>
+            <button onClick={onSignup} className="btn" style={{background:C.ym,borderRadius:50,padding:"5px 12px",fontSize:12,color:C.t,flexShrink:0}}>Sign up</button>
+          </div>)}
+          {!promoApplied&&(<div style={{display:"flex",gap:7,marginBottom:10}}>
+            <input placeholder="Discount code" value={promoInput} onChange={e=>{setPromoInput(e.target.value);setPromoErr("")}} onKeyDown={e=>e.key==="Enter"&&applyPromo()} style={{flex:1,padding:"9px 13px",borderRadius:9,border:`1.5px solid ${C.b}`,fontSize:13,background:C.cream,color:C.t}}/>
+            <button onClick={applyPromo} className="btn" style={{background:C.t,color:"#fff",borderRadius:9,padding:"9px 14px",fontSize:12,flexShrink:0}}>Apply</button>
+          </div>)}
+          {promoErr&&<p style={{fontSize:12,color:"#C04040",marginBottom:8}}>{promoErr}</p>}
+          {promoApplied&&(<div style={{background:C.pl,borderRadius:10,padding:"7px 13px",marginBottom:10,fontSize:13,color:C.pd,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <span>✓ {discLabel}</span>
+            <button onClick={()=>{setPromoApplied(null);setPromoInput("")}} className="btn" style={{background:"none",fontSize:11,color:C.pd,padding:0,textDecoration:"underline"}}>remove</button>
+          </div>)}
+          <div style={{borderTop:`1px solid ${C.b}`,paddingTop:12,marginBottom:16}}>
+            <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}><span style={{fontSize:13,color:C.tm}}>Price{qty>1?` × ${qty}`:""}</span><span style={{fontSize:13}}>RM {(item.price*qty).toFixed(2)}</span></div>
+            {discAmt>0&&<div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}><span style={{fontSize:13,color:C.pd}}>Discount</span><span style={{fontSize:13,color:C.pd}}>-RM {discAmt.toFixed(2)}</span></div>}
+            <div style={{display:"flex",justifyContent:"space-between",marginTop:6}}><span style={{fontSize:15,fontWeight:700,color:C.t}}>Total</span><span style={{fontSize:18,fontWeight:700,color:C.t}}>RM {total.toFixed(2)}</span></div>
+          </div>
+          <button onClick={send} className="btn" style={{width:"100%",padding:14,background:"#25D366",color:"#fff",borderRadius:14,fontSize:15,fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",gap:10,boxShadow:"0 4px 16px rgba(37,211,102,.3)"}}>
+            <span>💬</span><span>Send Order via WhatsApp</span>
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ══ CART DRAWER ══ */
+function CartDrawer({cart,onClose,onRem,onQty,onCheckout,sub,hasSignupDisc,discPct,cfg,user,onSignup}){
+  const[promoInput,setPromoInput]=useState("");const[promoApplied,setPromoApplied]=useState(null);
+  const[promoErr,setPromoErr]=useState("");const[phone,setPhone]=useState("");const[name,setName]=useState(user?user.name:"");
+  useEffect(()=>{if(hasSignupDisc&&!promoApplied)setPromoApplied("signup");},[hasSignupDisc]);
+  const applyPromo=()=>{const code=promoInput.trim().toUpperCase();if(!code){setPromoErr("Enter a code.");return;}if(cfg.promoCode&&code===cfg.promoCode.toUpperCase()){setPromoApplied("promo");setPromoErr("");}else setPromoErr("Invalid discount code.");};
+  let discAmt=0,discLabel="";
+  if(promoApplied==="signup"){discAmt=sub*(discPct/100);discLabel=`Welcome ${discPct}% off`;}
+  else if(promoApplied==="promo"&&cfg.promoPct>0){discAmt=sub*(cfg.promoPct/100);discLabel=`Promo ${cfg.promoPct}% off`;}
+  const total=sub-discAmt;
+  return(
+    <>
+      <div className="oi" onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.3)",zIndex:200}}/>
+      <div className="si" style={{position:"fixed",right:0,top:0,bottom:0,width:"min(420px,100vw)",background:C.white,zIndex:201,display:"flex",flexDirection:"column",boxShadow:"-4px 0 40px rgba(0,0,0,.14)"}}>
+        <div style={{padding:"15px 18px",borderBottom:`1px solid ${C.b}`,display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
+          <div><h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:25,fontWeight:500,color:C.t}}>Your Cart</h2><p style={{fontSize:12,color:C.tl}}>{cart.length} item{cart.length!==1?"s":""}</p></div>
+          <button onClick={onClose} className="btn" style={{width:34,height:34,borderRadius:"50%",background:C.cream,fontSize:20,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+        </div>
+        <div style={{flex:1,overflowY:"auto",WebkitOverflowScrolling:"touch",padding:"11px 18px"}}>
+          {cart.length===0?(
+            <div style={{textAlign:"center",padding:"56px 0",color:C.tl}}>
+              <div style={{fontSize:44,marginBottom:12}}>🛍️</div>
+              <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20,color:C.t}}>Your cart is empty</p>
+              <p style={{fontSize:13,marginTop:6}}>Add some mystery boxes!</p>
+            </div>
+          ):(
+            <div style={{display:"flex",flexDirection:"column",gap:9}}>
+              {cart.map(it=>(
+                <div key={it.id} style={{display:"flex",gap:10,padding:11,background:C.cream,borderRadius:13,border:`1px solid ${C.b}`}}>
+                  <div style={{width:62,height:62,borderRadius:10,overflow:"hidden",background:C.pl,flexShrink:0}}>
+                    <img src={it.images&&it.images[0]} alt={it.name} onError={e=>e.target.style.display="none"} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                  </div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:14,color:C.t,marginBottom:2,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{it.name}</p>
+                    <p style={{fontSize:13,fontWeight:700,color:C.t,marginBottom:it.answers?3:6}}>RM {it.price.toFixed(2)}</p>
+                    {it.answers&&Object.keys(it.answers).length>0&&(
+                      <div style={{marginBottom:5}}>{Object.entries(it.answers).map(([k,v])=>{const val=Array.isArray(v)?v.join(", "):v;return val?<p key={k} style={{fontSize:11,color:C.tm,lineHeight:1.5}}>✦ {val}</p>:null;})}</div>
+                    )}
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                      <div style={{display:"flex",alignItems:"center",background:C.white,borderRadius:50,border:`1px solid ${C.b}`,overflow:"hidden"}}>
+                        <button onClick={()=>onQty(it.cartId||it.id,it.qty-1)} className="btn" style={{width:26,height:26,background:"none",fontSize:16,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>−</button>
+                        <span style={{width:22,textAlign:"center",fontSize:12,fontWeight:500}}>{it.qty}</span>
+                        <button onClick={()=>onQty(it.cartId||it.id,it.qty+1)} className="btn" style={{width:26,height:26,background:"none",fontSize:16,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
+                      </div>
+                      <button onClick={()=>onRem(it.cartId||it.id)} className="btn" style={{background:"none",color:C.tl,fontSize:12,padding:"3px 7px"}}>remove</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        {cart.length>0&&(
+          <div style={{padding:"14px 18px",borderTop:`1px solid ${C.b}`,flexShrink:0}}>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
+              <div><Lbl c="Name"/><input value={name} onChange={e=>setName(e.target.value)} placeholder="Your name" style={{...iSt(),padding:"9px 13px",fontSize:13}}/></div>
+              <div><Lbl c="Phone"/><input value={phone} onChange={e=>setPhone(e.target.value)} placeholder="01X-XXXXXXX" style={{...iSt(),padding:"9px 13px",fontSize:13}}/></div>
+            </div>
+            {!user&&!promoApplied&&(<div style={{background:C.yl,borderRadius:11,padding:"9px 13px",marginBottom:10,display:"flex",justifyContent:"space-between",alignItems:"center",gap:8}}>
+              <p style={{fontSize:12,color:C.tm}}>🎁 Sign up for {discPct}% off!</p>
+              <button onClick={onSignup} className="btn" style={{background:C.ym,borderRadius:50,padding:"5px 12px",fontSize:12,color:C.t,flexShrink:0}}>Sign up</button>
+            </div>)}
+            {!promoApplied&&(<div style={{display:"flex",gap:7,marginBottom:10}}>
+              <input placeholder="Discount code" value={promoInput} onChange={e=>{setPromoInput(e.target.value);setPromoErr("")}} onKeyDown={e=>e.key==="Enter"&&applyPromo()} style={{flex:1,padding:"8px 13px",borderRadius:9,border:`1.5px solid ${C.b}`,fontSize:13,background:C.cream,color:C.t}}/>
+              <button onClick={applyPromo} className="btn" style={{background:C.t,color:"#fff",borderRadius:9,padding:"8px 14px",fontSize:12,flexShrink:0}}>Apply</button>
+            </div>)}
+            {promoErr&&<p style={{fontSize:12,color:"#C04040",marginBottom:8}}>{promoErr}</p>}
+            {promoApplied&&(<div style={{background:C.pl,borderRadius:10,padding:"7px 13px",marginBottom:10,fontSize:13,color:C.pd,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <span>✓ {discLabel}</span>
+              <button onClick={()=>{setPromoApplied(null);setPromoInput("")}} className="btn" style={{background:"none",fontSize:11,color:C.pd,padding:0,textDecoration:"underline"}}>remove</button>
+            </div>)}
+            <div style={{marginBottom:12}}>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}><span style={{fontSize:13,color:C.tm}}>Subtotal</span><span style={{fontSize:13}}>RM {sub.toFixed(2)}</span></div>
+              {discAmt>0&&<div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}><span style={{fontSize:13,color:C.pd}}>Discount</span><span style={{fontSize:13,color:C.pd}}>-RM {discAmt.toFixed(2)}</span></div>}
+              <div style={{display:"flex",justifyContent:"space-between",paddingTop:8,borderTop:`1px solid ${C.b}`}}><span style={{fontSize:15,fontWeight:600,color:C.t}}>Total</span><span style={{fontSize:17,fontWeight:700,color:C.t}}>RM {total.toFixed(2)}</span></div>
+            </div>
+            <button onClick={()=>onCheckout(promoApplied,discAmt,phone,name)} className="btn" style={{width:"100%",padding:13,background:"#25D366",color:"#fff",borderRadius:12,fontSize:15,fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+              <span>💬</span><span>Order via WhatsApp</span>
+            </button>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
+
+/* ══ AUTH MODAL ══ */
+function AuthModal({mode,setMode,onClose,users,saveUsers,onLogin,onSignup,cfg}){
+  const[f,setF]=useState({name:"",email:"",password:""});const[err,setErr]=useState("");const[busy,setBusy]=useState(false);
+  const go=()=>{setErr("");setBusy(true);setTimeout(()=>{
+    if(mode==="signup"){
+      if(!f.name||!f.email||!f.password){setErr("Please fill in all fields.");setBusy(false);return;}
+      if(!/\S+@\S+\.\S+/.test(f.email)){setErr("Please enter a valid email.");setBusy(false);return;}
+      if(users.find(u=>u.email===f.email)){setErr("Email already registered.");setBusy(false);return;}
+      const nu={id:uid(),name:f.name,email:f.email,password:f.password,discUsed:false,createdAt:new Date().toISOString()};
+      saveUsers([...users,nu]);onSignup(nu);
+    }else{
+      if(!f.email||!f.password){setErr("Please fill in all fields.");setBusy(false);return;}
+      const u=users.find(u=>u.email===f.email&&u.password===f.password);
+      if(!u){setErr("Invalid email or password.");setBusy(false);return;}
+      onLogin(u);
+    }
+    setBusy(false);
+  },0);};
+  return(
+    <>
+      <div className="oi" onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:300}}/>
+      <div style={{position:"fixed",inset:0,zIndex:301,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
+        <div className="mi" style={{background:C.white,borderRadius:24,width:"100%",maxWidth:420,padding:"36px 28px",boxShadow:"0 22px 56px rgba(0,0,0,.18)",position:"relative",maxHeight:"90vh",overflowY:"auto",WebkitOverflowScrolling:"touch"}}>
+          <button onClick={onClose} className="btn" style={{position:"absolute",top:14,right:14,width:30,height:30,borderRadius:"50%",background:C.cream,fontSize:18,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+          <div style={{textAlign:"center",marginBottom:24}}>
+            <div className="fl" style={{fontSize:30,marginBottom:7,color:C.pd}}>✦</div>
+            <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:27,fontWeight:500,color:C.t,marginBottom:5}}>{mode==="login"?"Welcome back":`Join ${cfg.siteName}`}</h2>
+            {mode==="signup"&&<p style={{fontSize:13,color:C.pd}}>🎁 Get {cfg.discPct}% off your first order!</p>}
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {mode==="signup"&&<input placeholder="Your name" value={f.name} onChange={e=>setF({...f,name:e.target.value})} style={iSt()}/>}
+            <input type="email" placeholder="Email address" value={f.email} onChange={e=>setF({...f,email:e.target.value})} style={iSt()}/>
+            <input type="password" placeholder="Password" value={f.password} onChange={e=>setF({...f,password:e.target.value})} onKeyDown={e=>e.key==="Enter"&&go()} style={iSt()}/>
+            {err&&<p style={{fontSize:13,color:"#C04040",textAlign:"center"}}>{err}</p>}
+            <button onClick={go} disabled={busy} className="btn" style={{padding:13,background:C.t,color:"#fff",borderRadius:11,fontSize:14,fontWeight:500,marginTop:2}}>{busy?"…":mode==="login"?"Log In":"Create Account"}</button>
+            <p style={{textAlign:"center",fontSize:13,color:C.tm}}>{mode==="login"?"Don't have an account? ":"Already have an account? "}
+              <button onClick={()=>{setMode(mode==="login"?"signup":"login");setErr("")}} style={{background:"none",border:"none",color:C.pd,cursor:"pointer",fontSize:13,fontWeight:600,textDecoration:"underline"}}>{mode==="login"?"Sign up":"Log in"}</button>
             </p>
           </div>
         </div>
-        <div style={{borderTop:"1px solid rgba(255,255,255,.1)",paddingTop:20,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}>
-          <p style={{fontSize:12}}>© {new Date().getFullYear()} {cfg.siteName}. All rights reserved.</p>
-          <button onClick={()=>{setPg("admin");window.scrollTo(0,0)}} className="btn" style={{background:"none",color:"rgba(255,255,255,.1)",fontSize:11,padding:0}}
-            onMouseEnter={e=>e.currentTarget.style.color="rgba(255,255,255,.3)"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,.1)"}>manage</button>
-        </div>
       </div>
-    </footer>
-  )}
-
-  {/* OVERLAYS */}
-  {cOpen&&<CartDrawer cart={cart} onClose={()=>setCOpen(false)} onRem={remCart} onQty={updQty} onCheckout={cartCheckout} sub={sub} hasSignupDisc={hasSignupDisc} discPct={cfg.discPct} cfg={cfg} user={user} onSignup={()=>{setCOpen(false);setAMode("signup");setAOpen(true)}}/>}
-  {aOpen&&<AuthModal mode={aMode} setMode={setAMode} onClose={()=>setAOpen(false)} users={users} saveUsers={saveUsers} onLogin={u=>{setUser(u);setAOpen(false);toast(`Welcome back, ${u.name}! 💕`)}} onSignup={u=>{setUser(u);setAOpen(false);toast(`Welcome ${u.name}! 🎉 You've got ${cfg.discPct}% off your first order!`)}} cfg={cfg}/>}
-  {orderModal&&<OrderSummaryModal item={orderModal.item} answers={orderModal.answers} onClose={()=>setOrderModal(null)} cfg={cfg} user={user} hasSignupDisc={hasSignupDisc} saveUsers={saveUsers} users={users} setUser={setUser} onSignup={()=>{setOrderModal(null);setAMode("signup");setAOpen(true)}}/>}
-</div>
-```
-
-);
+    </>
+  );
 }
 
-/* ══════════════ SHOP PAGE ══════════════ */
-function ShopPage({items,onItem,onAdd,cfg}){
-const[q,setQ]=useState(””);
-const list=items.filter(i=>i.name.toLowerCase().includes(q.toLowerCase()));
-return(
-<div>
-<div style={{background:cfg.heroImage?`url(${cfg.heroImage}) center/cover no-repeat`:`linear-gradient(160deg,#1A0606 0%,#4A0E0E 45%,#8B1010 100%)`,padding:“76px 24px 56px”,textAlign:“center”,position:“relative”,overflow:“hidden”}}>
-{[{top:“10%”,left:“5%”,s:26,d:0},{top:“20%”,right:“7%”,s:15,d:1.1},{bottom:“12%”,right:“10%”,s:20,d:.5},{bottom:“20%”,left:“12%”,s:10,d:1.7}].map((p,i)=>(
-<span key={i} className=“fl” style={{position:“absolute”,fontSize:p.s,opacity:.2,color:C.pd,top:p.top,left:p.left,right:p.right,bottom:p.bottom,animationDelay:`${p.d}s`}}>✦</span>
-))}
-<p style={{fontSize:11,letterSpacing:”.3em”,textTransform:“uppercase”,color:C.pd,marginBottom:8,fontWeight:500}}>welcome to</p>
-<h1 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:“clamp(46px,8vw,84px)”,fontWeight:400,color:C.t,lineHeight:1,marginBottom:8}}>{cfg.siteName}</h1>
-<p style={{color:C.tm,fontSize:14,marginBottom:30}}>{cfg.tagline}</p>
-<div style={{display:“flex”,gap:8,justifyContent:“center”,flexWrap:“wrap”}}>
-{(cfg.heroTags||[“✦ mystery inside”,“✦ curated with love”,“✦ free surprise”]).map(t=>(
-<span key={t} style={{background:C.white,border:`1px solid ${C.b}`,borderRadius:50,padding:“6px 16px”,fontSize:12,color:C.tm}}>{t}</span>
-))}
-</div>
-</div>
-<div style={{maxWidth:1200,margin:“0 auto”,padding:“28px 16px 0”}}>
-<div style={{marginBottom:22}}>
-<input placeholder=“🔍  search mystery boxes…” value={q} onChange={e=>setQ(e.target.value)}
-style={{width:“100%”,maxWidth:500,padding:“10px 18px”,borderRadius:50,border:`1.5px solid ${C.b}`,background:C.white,fontSize:14,color:C.t,display:“block”,margin:“0 auto”}}/>
-</div>
-{list.length===0?(
-<div style={{textAlign:“center”,padding:“72px 0”,color:C.tl}}>
-<div style={{fontSize:44,marginBottom:14,color:C.pd}}>✦</div>
-<p style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:22}}>{q?“No boxes found”:“Shop coming soon ✦”}</p>
-{!q&&<p style={{fontSize:13,marginTop:8}}>Items will appear here once added from the admin panel.</p>}
-</div>
-):(
-<div className="items-grid">
-{list.map((it,i)=><ItemCard key={it.id} item={it} onItem={onItem} onAdd={onAdd} delay={i*50}/>)}
-</div>
-)}
-</div>
-</div>
-);
-}
-
-/* ══════════════ ITEM CARD ══════════════ */
-function ItemCard({item,onItem,onAdd,delay=0}){
-const[h,setH]=useState(false);
-return(
-<div className=“card fu” onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
-style={{background:C.white,borderRadius:18,overflow:“hidden”,boxShadow:h?C.sh2:C.sh,animationDelay:`${delay}ms`}}>
-<div onClick={()=>onItem(item)} style={{position:“relative”,paddingTop:“100%”,overflow:“hidden”,background:C.pl,cursor:“pointer”}}>
-<img src={item.images&&item.images[0]} alt={item.name} onError={e=>e.target.style.display=“none”}
-style={{position:“absolute”,inset:0,width:“100%”,height:“100%”,objectFit:“cover”,transition:“transform .5s”,transform:h?“scale(1.07)”:“scale(1)”}}/>
-{item.originalPrice&&<div style={{position:“absolute”,top:9,left:9,background:C.pd,borderRadius:50,padding:“2px 9px”,fontSize:10,fontWeight:700,color:C.white}}>SALE</div>}
-{item.tags&&item.tags.includes(“limited”)&&<div style={{position:“absolute”,top:9,right:9,background:C.ym,borderRadius:50,padding:“2px 9px”,fontSize:10,fontWeight:700,color:C.t}}>LIMITED</div>}
-{item.tags&&item.tags.includes(“bestseller”)&&!item.tags.includes(“limited”)&&<div style={{position:“absolute”,top:9,right:9,background:C.yl,border:`1px solid ${C.ym}`,borderRadius:50,padding:“2px 9px”,fontSize:10,fontWeight:700,color:C.yd}}>★ BEST</div>}
-{item.tags&&item.tags.includes(“new”)&&!item.tags.includes(“limited”)&&!item.tags.includes(“bestseller”)&&<div style={{position:“absolute”,top:9,right:9,background:C.white,borderRadius:50,padding:“2px 9px”,fontSize:10,fontWeight:700,color:C.pd}}>NEW</div>}
-<div style={{position:“absolute”,inset:0,display:“flex”,alignItems:“center”,justifyContent:“center”,background:“rgba(250,246,238,.55)”,opacity:h?1:0,transition:“opacity .3s”}}>
-<span style={{fontSize:34}}>🎁</span>
-</div>
-</div>
-<div style={{padding:“11px 13px 13px”}}>
-<span style={{fontSize:10,color:C.pd,textTransform:“uppercase”,letterSpacing:”.1em”,fontWeight:600}}>{item.category}</span>
-<h3 onClick={()=>onItem(item)} className=“card-name” style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:18,fontWeight:500,color:C.t,margin:“3px 0 7px”,lineHeight:1.2,cursor:“pointer”}}>{item.name}</h3>
-<div style={{display:“flex”,alignItems:“center”,gap:6,marginBottom:10}}>
-<span className="card-price" style={{fontSize:15,fontWeight:700,color:C.t}}>RM {item.price.toFixed(2)}</span>
-{item.originalPrice&&<span style={{fontSize:11,color:C.tl,textDecoration:“line-through”}}>RM {item.originalPrice.toFixed(2)}</span>}
-</div>
-<div className=“card-btns” style={{display:“flex”,gap:5}}>
-<button onClick={()=>onItem(item)} className=“btn” style={{flex:1,padding:“7px”,borderRadius:9,background:C.cream,border:`1.5px solid ${C.b}`,color:C.tm,fontSize:12}}>View</button>
-{item.formId
-?<button onClick={()=>onItem(item)} className=“btn” style={{flex:2,padding:“7px”,borderRadius:9,background:C.pd,color:”#fff”,fontSize:12,fontWeight:600}}>✦ Customise</button>
-:<button onClick={e=>{e.stopPropagation();onAdd(item)}} className=“btn” style={{flex:2,padding:“7px”,borderRadius:9,background:C.t,color:”#fff”,fontSize:12}}>Add to Cart</button>
-}
-</div>
-</div>
-</div>
-);
-}
-
-/* ══════════════ ITEM PAGE ══════════════ */
-function ItemPage({item,items,forms,onBack,onAdd,onItem,onDirectOrder,onStartForm,cfg}){
-const[si,setSi]=useState(0);
-const[qty,setQty]=useState(1);
-const recs=items.filter(i=>i.id!==item.id).slice(0,4);
-const pct=item.originalPrice?Math.round((1-item.price/item.originalPrice)*100):0;
-const attachedForm=forms&&item.formId?forms.find(f=>f.id===item.formId):null;
-
-return(
-<div style={{maxWidth:1200,margin:“0 auto”,padding:“26px 16px 60px”}}>
-<button onClick={onBack} className=“btn” style={{background:“none”,padding:“5px 0”,color:C.tm,fontSize:14,marginBottom:20,display:“flex”,alignItems:“center”,gap:5}}>← back to shop</button>
-<div style={{display:“grid”,gridTemplateColumns:“repeat(auto-fit,minmax(280px,1fr))”,gap:38,marginBottom:60}}>
-{/* Image */}
-<div>
-<div style={{borderRadius:22,overflow:“hidden”,background:C.pl,paddingTop:“100%”,position:“relative”,marginBottom:10,boxShadow:C.sh}}>
-<img src={(item.images&&item.images[si])||””} alt={item.name} onError={e=>e.target.style.display=“none”} style={{position:“absolute”,inset:0,width:“100%”,height:“100%”,objectFit:“cover”}}/>
-</div>
-{item.images&&item.images.length>1&&(
-<div style={{display:“flex”,gap:8,flexWrap:“wrap”}}>
-{item.images.map((img,i)=>(
-<div key={i} onClick={()=>setSi(i)} style={{width:64,height:64,borderRadius:11,overflow:“hidden”,border:`2px solid ${si===i?C.pd:"transparent"}`,cursor:“pointer”,background:C.pl,transition:“border-color .2s”}}>
-<img src={img} alt=”” onError={e=>e.target.style.display=“none”} style={{width:“100%”,height:“100%”,objectFit:“cover”}}/>
-</div>
-))}
-</div>
-)}
-</div>
-
-```
-    {/* Details */}
-    <div style={{display:"flex",flexDirection:"column",gap:15}}>
-      <div>
-        <span style={{fontSize:11,color:C.pd,textTransform:"uppercase",letterSpacing:".14em",fontWeight:600}}>{item.category}</span>
-        <h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(26px,5vw,46px)",fontWeight:400,color:C.t,lineHeight:1.1,margin:"5px 0"}}>{item.name}</h1>
-        <div style={{display:"flex",alignItems:"baseline",gap:10,flexWrap:"wrap"}}>
-          <span style={{fontSize:26,fontWeight:700,color:C.t}}>RM {item.price.toFixed(2)}</span>
-          {item.originalPrice&&<><span style={{fontSize:14,color:C.tl,textDecoration:"line-through"}}>RM {item.originalPrice.toFixed(2)}</span><span style={{fontSize:11,background:C.pd,padding:"2px 9px",borderRadius:50,color:C.white,fontWeight:600}}>{pct}% off</span></>}
-        </div>
-      </div>
-
-      <div style={{display:"flex",alignItems:"center",gap:7}}>
-        <div style={{width:8,height:8,borderRadius:"50%",background:item.stock>5?"#5A9E5A":item.stock>0?"#D4A843":"#C04040"}}/>
-        <span style={{fontSize:13,color:C.tm}}>{item.stock>5?"In stock":item.stock>0?`Only ${item.stock} left!`:"Out of stock"}</span>
-      </div>
-
-      {item.tags&&item.tags.length>0&&<div style={{display:"flex",gap:6,flexWrap:"wrap"}}>{item.tags.map(t=><Chip key={t} ch={`✦ ${t}`} bg={C.yl} col={C.tm}/>)}</div>}
-
-      <div style={{background:C.cream,borderRadius:14,padding:"14px 16px"}}>
-        <p style={{fontSize:14,lineHeight:1.85,color:C.tm,whiteSpace:"pre-line"}}>{item.description}</p>
-      </div>
-
-      {/* ── BUTTONS ── */}
-      {attachedForm?(
-        /* Product WITH custom form */
-        <div style={{display:"flex",flexDirection:"column",gap:10}}>
-          {/* Qty row */}
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div style={{display:"flex",alignItems:"center",background:C.cream,border:`1.5px solid ${C.b}`,borderRadius:50,overflow:"hidden"}}>
-              <button onClick={()=>setQty(Math.max(1,qty-1))} className="btn" style={{width:40,height:40,background:"none",fontSize:20,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>−</button>
-              <span style={{width:34,textAlign:"center",fontSize:14,fontWeight:500}}>{qty}</span>
-              <button onClick={()=>setQty(qty+1)} className="btn" style={{width:40,height:40,background:"none",fontSize:20,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
-            </div>
-            <span style={{fontSize:12,color:C.tl}}>Quantity</span>
-          </div>
-          {/* Customise & Add to Cart */}
-          <button onClick={()=>onStartForm(item,attachedForm,"cart")} disabled={item.stock===0} className="btn"
-            style={{width:"100%",padding:"12px 20px",background:item.stock===0?C.b:C.cream,color:item.stock===0?C.tl:C.t,borderRadius:13,fontSize:14,fontWeight:500,border:`1.5px solid ${item.stock===0?C.b:C.b}`,cursor:item.stock===0?"not-allowed":"pointer"}}>
-            {item.stock===0?"Out of Stock":"🛍️ Customise & Add to Cart"}
-          </button>
-          {/* Customise & Order */}
-          <button onClick={()=>onStartForm(item,attachedForm,"order")} disabled={item.stock===0} className="btn"
-            style={{width:"100%",padding:"12px 20px",background:item.stock===0?C.b:`linear-gradient(135deg,${C.pd},#6B0F22)`,color:item.stock===0?C.tl:C.white,borderRadius:13,fontSize:14,fontWeight:600,cursor:item.stock===0?"not-allowed":"pointer",boxShadow:item.stock===0?"none":"0 4px 16px rgba(139,26,47,.3)"}}>
-            {item.stock===0?"Out of Stock":"✦ Customise & Order"}
-          </button>
-        </div>
-      ):(
-        /* Product WITHOUT custom form */
-        <div style={{display:"flex",flexDirection:"column",gap:10}}>
-          {/* Qty + Add to Cart */}
-          <div style={{display:"flex",gap:10,alignItems:"center",flexWrap:"wrap"}}>
-            <div style={{display:"flex",alignItems:"center",background:C.cream,border:`1.5px solid ${C.b}`,borderRadius:50,overflow:"hidden"}}>
-              <button onClick={()=>setQty(Math.max(1,qty-1))} className="btn" style={{width:40,height:40,background:"none",fontSize:20,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>−</button>
-              <span style={{width:34,textAlign:"center",fontSize:14,fontWeight:500}}>{qty}</span>
-              <button onClick={()=>setQty(qty+1)} className="btn" style={{width:40,height:40,background:"none",fontSize:20,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
-            </div>
-            <button onClick={()=>onAdd(item,qty)} disabled={item.stock===0} className="btn"
-              style={{flex:1,minWidth:120,padding:"12px 16px",background:item.stock===0?C.b:C.t,color:item.stock===0?C.tl:C.white,borderRadius:50,fontSize:14,fontWeight:500,cursor:item.stock===0?"not-allowed":"pointer"}}>
-              {item.stock===0?"Out of Stock":"🛍️ Add to Cart"}
-            </button>
-          </div>
-          {/* Direct Order */}
-          <button onClick={()=>onDirectOrder(item)} disabled={item.stock===0} className="btn"
-            style={{width:"100%",padding:"12px 20px",background:item.stock===0?C.b:`linear-gradient(135deg,${C.pd},#6B0F22)`,color:item.stock===0?C.tl:C.white,borderRadius:13,fontSize:14,fontWeight:600,cursor:item.stock===0?"not-allowed":"pointer",boxShadow:item.stock===0?"none":"0 4px 16px rgba(139,26,47,.3)"}}>
-            {item.stock===0?"Out of Stock":"⚡ Order Now"}
-          </button>
-        </div>
-      )}
-
-      <div style={{background:`linear-gradient(130deg,${C.pl},${C.yl})`,borderRadius:13,padding:"13px 16px"}}>
-        <p style={{fontSize:13,fontWeight:600,color:C.t,marginBottom:4}}>✦ What to expect</p>
-        <p style={{fontSize:13,color:C.tm,lineHeight:1.7}}>Each mystery box is a surprise — contents revealed only when you open it. All items are brand new and beautifully wrapped. 🎁</p>
-      </div>
-    </div>
-  </div>
-
-  {recs.length>0&&(
-    <div>
-      <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:30,fontWeight:400,color:C.t,marginBottom:20,textAlign:"center"}}>you might also love ✦</h2>
-      <div className="items-grid">{recs.map(r=><ItemCard key={r.id} item={r} onItem={onItem} onAdd={onAdd}/>)}</div>
-    </div>
-  )}
-</div>
-```
-
-);
-}
-
-/* ══════════════ CUSTOM ORDER FORM ══════════════ */
-function CustomOrderForm({item,form,mode,onBack,onFinish}){
-const[step,setStep]=useState(0);
-const[answers,setAnswers]=useState({});
-const questions=form.questions||[];
-const curQ=questions[step];
-
-const getAns=qid=>answers[qid];
-const setAns=(qid,val)=>setAnswers(p=>({…p,[qid]:val}));
-const toggleMulti=(qid,val)=>{const cur=answers[qid]||[];setAns(qid,cur.includes(val)?cur.filter(v=>v!==val):[…cur,val])};
-
-const canNext=()=>{
-if(!curQ||curQ.required===false)return true;
-const ans=answers[curQ.id];
-if(curQ.type===“multi”)return ans&&ans.length>0;
-if(curQ.type===“text”)return ans&&ans.trim().length>0;
-return !!ans;
-};
-
-const next=()=>{
-if(!canNext())return;
-if(step<questions.length-1){setStep(s=>s+1);window.scrollTo(0,0);}
-else{onFinish(item,answers,mode);}
-};
-
-const progress=Math.round((step/Math.max(questions.length,1))*100);
-
-return(
-<div style={{maxWidth:560,margin:“0 auto”,padding:“28px 16px 64px”}}>
-<button onClick={step===0?onBack:()=>{setStep(s=>s-1);window.scrollTo(0,0)}} className=“btn”
-style={{background:“none”,color:C.tm,fontSize:14,marginBottom:16,display:“flex”,alignItems:“center”,gap:5}}>
-← {step===0?“back to product”:“previous”}
-</button>
-
-```
-  {/* Progress */}
-  <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
-    <div style={{flex:1,height:5,background:C.b,borderRadius:50,overflow:"hidden"}}>
-      <div style={{width:`${progress}%`,height:"100%",background:`linear-gradient(90deg,${C.pm},${C.pd})`,borderRadius:50,transition:"width .4s ease"}}/>
-    </div>
-    <span style={{fontSize:12,color:C.tl,flexShrink:0}}>Step {step+1} of {questions.length}</span>
-  </div>
-
-  {/* Mini product header */}
-  <div style={{display:"flex",alignItems:"center",gap:10,background:C.white,borderRadius:12,padding:"10px 14px",boxShadow:C.sh,marginBottom:22}}>
-    <div style={{width:44,height:44,borderRadius:9,overflow:"hidden",background:C.pl,flexShrink:0}}>
-      <img src={item.images&&item.images[0]} alt="" onError={e=>e.target.style.display="none"} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-    </div>
-    <div>
-      <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:15,color:C.t}}>{item.name}</p>
-      <p style={{fontSize:12,color:C.tl}}>RM {item.price.toFixed(2)} · {mode==="cart"?"Adding to cart":"Ordering now"}</p>
-    </div>
-  </div>
-
-  {curQ&&(
-    <div className="fu">
-      {curQ.image&&(
-        <div style={{borderRadius:18,overflow:"hidden",marginBottom:18,boxShadow:C.sh}}>
-          <img src={curQ.image} alt="" onError={e=>e.target.style.display="none"} style={{width:"100%",maxHeight:220,objectFit:"cover",display:"block"}}/>
-        </div>
-      )}
-      <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(20px,5vw,28px)",color:C.t,marginBottom:4,lineHeight:1.3}}>{curQ.question}</h2>
-      {curQ.subtitle&&<p style={{fontSize:13,color:C.tl,marginBottom:16}}>{curQ.subtitle}</p>}
-      {!curQ.subtitle&&<div style={{marginBottom:16}}/>}
-
-      {/* SINGLE */}
-      {(curQ.type==="single"||!curQ.type)&&(
-        <div style={{display:"flex",flexDirection:"column",gap:10}}>
-          {(curQ.options||[]).map(opt=>{
-            const sel=getAns(curQ.id)===opt.label;
-            return(
-              <button key={opt.id} onClick={()=>setAns(curQ.id,opt.label)} className="btn"
-                style={{display:"flex",alignItems:"center",gap:14,padding:"12px 16px",borderRadius:14,border:`2px solid ${sel?C.pd:C.b}`,background:sel?C.pl:C.white,textAlign:"left",width:"100%",transition:"all .2s"}}>
-                {opt.image&&<div style={{width:64,height:64,borderRadius:10,overflow:"hidden",background:C.cream,flexShrink:0}}><img src={opt.image} alt="" onError={e=>e.target.style.display="none"} style={{width:"100%",height:"100%",objectFit:"cover"}}/></div>}
-                <div style={{flex:1}}>
-                  <p style={{fontWeight:600,color:sel?C.pd:C.t,fontSize:14}}>{opt.label}</p>
-                  {opt.desc&&<p style={{fontSize:12,color:C.tl,marginTop:2}}>{opt.desc}</p>}
-                </div>
-                <div style={{width:20,height:20,borderRadius:"50%",border:`2px solid ${sel?C.pd:C.b}`,background:sel?C.pd:C.white,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                  {sel&&<div style={{width:8,height:8,borderRadius:"50%",background:C.white}}/>}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      )}
-
-      {/* MULTI */}
-      {curQ.type==="multi"&&(
-        <div style={{display:"flex",flexDirection:"column",gap:10}}>
-          <p style={{fontSize:12,color:C.tl,marginBottom:4}}>Select all that apply</p>
-          {(curQ.options||[]).map(opt=>{
-            const sel=(getAns(curQ.id)||[]).includes(opt.label);
-            return(
-              <button key={opt.id} onClick={()=>toggleMulti(curQ.id,opt.label)} className="btn"
-                style={{display:"flex",alignItems:"center",gap:14,padding:"12px 16px",borderRadius:14,border:`2px solid ${sel?C.pd:C.b}`,background:sel?C.pl:C.white,textAlign:"left",width:"100%",transition:"all .2s"}}>
-                {opt.image&&<div style={{width:64,height:64,borderRadius:10,overflow:"hidden",background:C.cream,flexShrink:0}}><img src={opt.image} alt="" onError={e=>e.target.style.display="none"} style={{width:"100%",height:"100%",objectFit:"cover"}}/></div>}
-                <div style={{flex:1}}>
-                  <p style={{fontWeight:600,color:sel?C.pd:C.t,fontSize:14}}>{opt.label}</p>
-                  {opt.desc&&<p style={{fontSize:12,color:C.tl,marginTop:2}}>{opt.desc}</p>}
-                </div>
-                <div style={{width:20,height:20,borderRadius:5,border:`2px solid ${sel?C.pd:C.b}`,background:sel?C.pd:C.white,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                  {sel&&<span style={{color:C.white,fontSize:11,fontWeight:700}}>✓</span>}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      )}
-
-      {/* TEXT */}
-      {curQ.type==="text"&&(
-        <textarea value={getAns(curQ.id)||""} onChange={e=>setAns(curQ.id,e.target.value)}
-          placeholder={curQ.placeholder||"Type your answer here…"} rows={4}
-          style={{...iSt(),resize:"vertical",borderRadius:12,fontSize:14,lineHeight:1.7}}/>
-      )}
-
-      <button onClick={next} className="btn"
-        style={{width:"100%",marginTop:24,padding:14,background:canNext()?`linear-gradient(135deg,${C.pd},#6B0F22)`:C.b,color:canNext()?C.white:C.tl,borderRadius:14,fontSize:15,fontWeight:600,cursor:canNext()?"pointer":"not-allowed",boxShadow:canNext()?"0 4px 16px rgba(139,26,47,.25)":"none"}}>
-        {step===questions.length-1?(mode==="cart"?"Add to Cart →":"Review Order →"):"Next →"}
-      </button>
-      {curQ.required===false&&<p style={{fontSize:12,color:C.tl,textAlign:"center",marginTop:8}}>Optional — you can skip this</p>}
-    </div>
-  )}
-</div>
-```
-
-);
-}
-
-/* ══════════════ ORDER SUMMARY MODAL ══════════════ */
-function OrderSummaryModal({item,answers,onClose,cfg,user,hasSignupDisc,saveUsers,users,setUser,onSignup}){
-const[name,setName]=useState(user?user.name:””);
-const[phone,setPhone]=useState(””);
-const[promoInput,setPromoInput]=useState(””);
-const[promoApplied,setPromoApplied]=useState(hasSignupDisc?“signup”:null);
-const[promoErr,setPromoErr]=useState(””);
-const[nameErr,setNameErr]=useState(””);
-
-useEffect(()=>{if(hasSignupDisc)setPromoApplied(“signup”);},[hasSignupDisc]);
-
-const applyPromo=()=>{
-const code=promoInput.trim().toUpperCase();
-if(!code){setPromoErr(“Enter a code.”);return;}
-if(cfg.promoCode&&code===cfg.promoCode.toUpperCase()){setPromoApplied(“promo”);setPromoErr(””);}
-else setPromoErr(“Invalid code.”);
-};
-
-let discAmt=0,discLabel=””;
-if(promoApplied===“signup”){discAmt=item.price*(cfg.discPct/100);discLabel=`Welcome discount (${cfg.discPct}%)`;}
-else if(promoApplied===“promo”&&cfg.promoPct>0){discAmt=item.price*(cfg.promoPct/100);discLabel=`Promo (${cfg.promoPct}%)`;}
-const total=item.price-discAmt;
-
-const send=()=>{
-if(!name.trim()){setNameErr(“Please enter your name.”);return;}
-setNameErr(””);
-let msg=`Hello! I'd like to order ✦\n\n*${item.name}*\nPrice: RM${item.price.toFixed(2)}\n`;
-if(answers){
-msg+=`\n*My Preferences:*\n`;
-Object.entries(answers).forEach(([qid,val])=>{
-const v=Array.isArray(val)?val.join(”, “):val;
-if(v)msg+=`• ${v}\n`;
-});
-}
-if(discAmt>0)msg+=`\nDiscount: -RM${discAmt.toFixed(2)}`;
-msg+=`\n*Total: RM${total.toFixed(2)}*`;
-msg+=`\n\nName: ${name}`;
-if(phone)msg+=`\nPhone: ${phone}`;
-if(user&&user.email)msg+=`\nEmail: ${user.email}`;
-window.open(`https://wa.me/${cfg.whatsapp}?text=${encodeURIComponent(msg)}`,”_blank”);
-if(hasSignupDisc&&user&&promoApplied===“signup”){
-const u2={…user,discUsed:true};setUser(u2);saveUsers(users.map(u=>u.email===user.email?u2:u));
-}
-onClose();
-};
-
-return(
-<>
-<div className=“oi” onClick={onClose} style={{position:“fixed”,inset:0,background:“rgba(0,0,0,.5)”,zIndex:400}}/>
-<div style={{position:“fixed”,inset:0,zIndex:401,display:“flex”,alignItems:“flex-end”,justifyContent:“center”}} onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
-<div className=“mi” style={{background:C.white,borderRadius:“24px 24px 0 0”,width:“100%”,maxWidth:500,maxHeight:“92vh”,overflowY:“auto”,WebkitOverflowScrolling:“touch”,padding:“24px 20px 32px”,boxShadow:“0 -8px 40px rgba(0,0,0,.18)”}}>
-
-```
-      {/* Handle bar */}
-      <div style={{width:40,height:4,background:C.b,borderRadius:50,margin:"0 auto 20px"}}/>
-
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
-        <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:24,color:C.t}}>Order Summary</h2>
-        <button onClick={onClose} className="btn" style={{width:30,height:30,borderRadius:"50%",background:C.cream,fontSize:18,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
-      </div>
-
-      {/* Product */}
-      <div style={{display:"flex",gap:12,padding:"12px 14px",background:C.cream,borderRadius:14,marginBottom:14}}>
-        <div style={{width:60,height:60,borderRadius:10,overflow:"hidden",background:C.pl,flexShrink:0}}>
-          <img src={item.images&&item.images[0]} alt={item.name} onError={e=>e.target.style.display="none"} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-        </div>
-        <div>
-          <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:16,color:C.t,marginBottom:2}}>{item.name}</p>
-          <p style={{fontSize:14,fontWeight:700,color:C.t}}>RM {item.price.toFixed(2)}</p>
-          {item.category&&<p style={{fontSize:11,color:C.tl,marginTop:2,textTransform:"uppercase",letterSpacing:".08em"}}>{item.category}</p>}
-        </div>
-      </div>
-
-      {/* Choices summary */}
-      {answers&&Object.keys(answers).length>0&&(
-        <div style={{background:C.cream,borderRadius:14,padding:"12px 14px",marginBottom:14}}>
-          <p style={{fontSize:11,fontWeight:700,color:C.tm,textTransform:"uppercase",letterSpacing:".08em",marginBottom:8}}>Your Choices</p>
-          {Object.entries(answers).map(([qid,val])=>{
-            const v=Array.isArray(val)?val.join(", "):val;
-            return v?<p key={qid} style={{fontSize:13,color:C.t,marginBottom:3}}>✦ {v}</p>:null;
-          })}
-        </div>
-      )}
-
-      {/* Contact details */}
-      <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:14}}>
-        <div>
-          <Lbl c="Your Name *"/>
-          <input value={name} onChange={e=>{setName(e.target.value);setNameErr("")}} placeholder="Full name" style={iSt()}/>
-          {nameErr&&<p style={{fontSize:12,color:"#C04040",marginTop:4}}>{nameErr}</p>}
-        </div>
-        <div>
-          <Lbl c="Phone Number *"/>
-          <input value={phone} onChange={e=>setPhone(e.target.value)} placeholder="e.g. 0123456789" style={iSt()}/>
-        </div>
-      </div>
-
-      {/* Discount */}
-      {!user&&!promoApplied&&(
-        <div style={{background:C.yl,borderRadius:11,padding:"10px 14px",marginBottom:12,display:"flex",justifyContent:"space-between",alignItems:"center",gap:8}}>
-          <p style={{fontSize:12,color:C.tm}}>🎁 Sign up for {cfg.discPct}% off!</p>
-          <button onClick={onSignup} className="btn" style={{background:C.ym,borderRadius:50,padding:"5px 12px",fontSize:12,color:C.t,flexShrink:0}}>Sign up</button>
-        </div>
-      )}
-      {!promoApplied&&(
-        <div style={{display:"flex",gap:7,marginBottom:12}}>
-          <input placeholder="Discount code" value={promoInput} onChange={e=>{setPromoInput(e.target.value);setPromoErr("")}}
-            onKeyDown={e=>e.key==="Enter"&&applyPromo()}
-            style={{flex:1,padding:"9px 13px",borderRadius:9,border:`1.5px solid ${C.b}`,fontSize:13,background:C.cream,color:C.t}}/>
-          <button onClick={applyPromo} className="btn" style={{background:C.t,color:C.white,borderRadius:9,padding:"9px 14px",fontSize:12,flexShrink:0}}>Apply</button>
-        </div>
-      )}
-      {promoErr&&<p style={{fontSize:12,color:"#C04040",marginBottom:8}}>{promoErr}</p>}
-      {promoApplied&&(
-        <div style={{background:C.pl,borderRadius:10,padding:"8px 14px",marginBottom:12,fontSize:13,color:C.pd,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-          <span>✓ {discLabel} applied!</span>
-          <button onClick={()=>{setPromoApplied(null);setPromoInput("")}} className="btn" style={{background:"none",fontSize:11,color:C.pd,padding:0,textDecoration:"underline"}}>remove</button>
-        </div>
-      )}
-
-      {/* Total */}
-      <div style={{borderTop:`1px solid ${C.b}`,paddingTop:12,marginBottom:16}}>
-        <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}><span style={{fontSize:13,color:C.tm}}>Price</span><span style={{fontSize:13}}>RM {item.price.toFixed(2)}</span></div>
-        {discAmt>0&&<div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}><span style={{fontSize:13,color:C.pd}}>Discount</span><span style={{fontSize:13,color:C.pd}}>-RM {discAmt.toFixed(2)}</span></div>}
-        <div style={{display:"flex",justifyContent:"space-between",marginTop:6}}>
-          <span style={{fontSize:15,fontWeight:700,color:C.t}}>Total</span>
-          <span style={{fontSize:18,fontWeight:700,color:C.t}}>RM {total.toFixed(2)}</span>
-        </div>
-      </div>
-
-      <button onClick={send} className="btn" style={{width:"100%",padding:14,background:"#25D366",color:C.white,borderRadius:14,fontSize:15,fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",gap:10,boxShadow:"0 4px 16px rgba(37,211,102,.3)"}}>
-        <span>💬</span><span>Send Order via WhatsApp</span>
-      </button>
-      <p style={{fontSize:11,color:C.tl,textAlign:"center",marginTop:8}}>You'll be redirected to WhatsApp to complete your order</p>
-    </div>
-  </div>
-</>
-```
-
-);
-}
-
-/* ══════════════ CART DRAWER ══════════════ */
-function CartDrawer({cart,onClose,onRem,onQty,onCheckout,sub,hasSignupDisc,discPct,cfg,user,onSignup}){
-const[promoInput,setPromoInput]=useState(””);
-const[promoApplied,setPromoApplied]=useState(null);
-const[promoErr,setPromoErr]=useState(””);
-const[phone,setPhone]=useState(””);
-
-useEffect(()=>{if(hasSignupDisc&&!promoApplied)setPromoApplied(“signup”);},[hasSignupDisc]);
-
-const applyPromo=()=>{
-const code=promoInput.trim().toUpperCase();
-if(!code){setPromoErr(“Enter a code.”);return;}
-if(cfg.promoCode&&code===cfg.promoCode.toUpperCase()){setPromoApplied(“promo”);setPromoErr(””);}
-else setPromoErr(“Invalid discount code.”);
-};
-
-let discAmt=0,discLabel=””;
-if(promoApplied===“signup”){discAmt=sub*(discPct/100);discLabel=`Welcome discount (${discPct}%)`;}
-else if(promoApplied===“promo”&&cfg.promoPct>0){discAmt=sub*(cfg.promoPct/100);discLabel=`Promo (${cfg.promoPct}%)`;}
-const total=sub-discAmt;
-
-return(
-<>
-<div className=“oi” onClick={onClose} style={{position:“fixed”,inset:0,background:“rgba(0,0,0,.3)”,zIndex:200}}/>
-<div className=“si” style={{position:“fixed”,right:0,top:0,bottom:0,width:“min(410px,100vw)”,background:C.white,zIndex:201,display:“flex”,flexDirection:“column”,boxShadow:”-4px 0 40px rgba(0,0,0,.12)”}}>
-<div style={{padding:“15px 18px”,borderBottom:`1px solid ${C.b}`,display:“flex”,justifyContent:“space-between”,alignItems:“center”,flexShrink:0}}>
-<div>
-<h2 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:25,fontWeight:500,color:C.t}}>Your Cart</h2>
-<p style={{fontSize:12,color:C.tl}}>{cart.length} item{cart.length!==1?“s”:””}</p>
-</div>
-<button onClick={onClose} className=“btn” style={{width:34,height:34,borderRadius:“50%”,background:C.cream,fontSize:20,color:C.t,display:“flex”,alignItems:“center”,justifyContent:“center”}}>×</button>
-</div>
-<div style={{flex:1,overflowY:“auto”,WebkitOverflowScrolling:“touch”,padding:“11px 18px”}}>
-{cart.length===0?(
-<div style={{textAlign:“center”,padding:“56px 0”,color:C.tl}}>
-<div style={{fontSize:44,marginBottom:12}}>🛍️</div>
-<p style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:20}}>Your cart is empty</p>
-<p style={{fontSize:13,marginTop:6}}>Add some mystery boxes!</p>
-</div>
-):(
-<div style={{display:“flex”,flexDirection:“column”,gap:9}}>
-{cart.map(it=>(
-<div key={it.id} style={{display:“flex”,gap:10,padding:11,background:C.cream,borderRadius:13}}>
-<div style={{width:62,height:62,borderRadius:10,overflow:“hidden”,background:C.pl,flexShrink:0}}>
-<img src={it.images&&it.images[0]} alt={it.name} onError={e=>e.target.style.display=“none”} style={{width:“100%”,height:“100%”,objectFit:“cover”}}/>
-</div>
-<div style={{flex:1,minWidth:0}}>
-<p style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:14,color:C.t,marginBottom:2,whiteSpace:“nowrap”,overflow:“hidden”,textOverflow:“ellipsis”}}>{it.name}</p>
-<p style={{fontSize:13,fontWeight:700,color:C.t,marginBottom:it.answers?4:6}}>RM {it.price.toFixed(2)}</p>
-{it.answers&&Object.keys(it.answers).length>0&&(
-<div style={{marginBottom:6}}>
-{Object.entries(it.answers).map(([k,v])=>{
-const val=Array.isArray(v)?v.join(”, “):v;
-return val?<p key={k} style={{fontSize:11,color:C.tm,lineHeight:1.5}}>✦ {val}</p>:null;
-})}
-</div>
-)}
-<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”}}>
-<div style={{display:“flex”,alignItems:“center”,background:C.white,borderRadius:50,border:`1px solid ${C.b}`,overflow:“hidden”}}>
-<button onClick={()=>onQty(it.id,it.qty-1)} className=“btn” style={{width:26,height:26,background:“none”,fontSize:16,color:C.t,display:“flex”,alignItems:“center”,justifyContent:“center”}}>−</button>
-<span style={{width:22,textAlign:“center”,fontSize:12,fontWeight:500}}>{it.qty}</span>
-<button onClick={()=>onQty(it.id,it.qty+1)} className=“btn” style={{width:26,height:26,background:“none”,fontSize:16,color:C.t,display:“flex”,alignItems:“center”,justifyContent:“center”}}>+</button>
-</div>
-<button onClick={()=>onRem(it.id)} className=“btn” style={{background:“none”,color:C.tl,fontSize:12,padding:“3px 7px”}}>remove</button>
-</div>
-</div>
-</div>
-))}
-</div>
-)}
-</div>
-{cart.length>0&&(
-<div style={{padding:“14px 18px”,borderTop:`1px solid ${C.b}`,flexShrink:0}}>
-{/* Phone */}
-<div style={{marginBottom:10}}>
-<Lbl c="Your Phone Number"/>
-<input value={phone} onChange={e=>setPhone(e.target.value)} placeholder=“e.g. 0123456789” style={{…iSt(),padding:“9px 13px”,fontSize:13}}/>
-</div>
-{/* Signup upsell */}
-{!user&&!promoApplied&&(
-<div style={{background:C.yl,borderRadius:11,padding:“9px 13px”,marginBottom:10,display:“flex”,justifyContent:“space-between”,alignItems:“center”,gap:8}}>
-<p style={{fontSize:12,color:C.tm}}>🎁 Sign up for {discPct}% off!</p>
-<button onClick={onSignup} className=“btn” style={{background:C.ym,borderRadius:50,padding:“5px 12px”,fontSize:12,color:C.t,flexShrink:0}}>Sign up</button>
-</div>
-)}
-{!promoApplied&&(
-<div style={{display:“flex”,gap:7,marginBottom:10}}>
-<input placeholder=“Discount code” value={promoInput} onChange={e=>{setPromoInput(e.target.value);setPromoErr(””)}}
-onKeyDown={e=>e.key===“Enter”&&applyPromo()}
-style={{flex:1,padding:“8px 13px”,borderRadius:9,border:`1.5px solid ${C.b}`,fontSize:13,background:C.cream,color:C.t}}/>
-<button onClick={applyPromo} className=“btn” style={{background:C.t,color:C.white,borderRadius:9,padding:“8px 14px”,fontSize:12,flexShrink:0}}>Apply</button>
-</div>
-)}
-{promoErr&&<p style={{fontSize:12,color:”#C04040”,marginBottom:8}}>{promoErr}</p>}
-{promoApplied&&(
-<div style={{background:C.pl,borderRadius:10,padding:“7px 13px”,marginBottom:10,fontSize:13,color:C.pd,display:“flex”,justifyContent:“space-between”,alignItems:“center”}}>
-<span>✓ {discLabel} applied!</span>
-<button onClick={()=>{setPromoApplied(null);setPromoInput(””)}} className=“btn” style={{background:“none”,fontSize:11,color:C.pd,padding:0,textDecoration:“underline”}}>remove</button>
-</div>
-)}
-<div style={{marginBottom:12}}>
-<div style={{display:“flex”,justifyContent:“space-between”,marginBottom:4}}><span style={{fontSize:13,color:C.tm}}>Subtotal</span><span style={{fontSize:13}}>RM {sub.toFixed(2)}</span></div>
-{discAmt>0&&<div style={{display:“flex”,justifyContent:“space-between”,marginBottom:4}}><span style={{fontSize:13,color:C.pd}}>Discount</span><span style={{fontSize:13,color:C.pd}}>-RM {discAmt.toFixed(2)}</span></div>}
-<div style={{display:“flex”,justifyContent:“space-between”,paddingTop:8,borderTop:`1px solid ${C.b}`}}>
-<span style={{fontSize:15,fontWeight:600,color:C.t}}>Total</span>
-<span style={{fontSize:17,fontWeight:700,color:C.t}}>RM {total.toFixed(2)}</span>
-</div>
-</div>
-<button onClick={()=>onCheckout(promoApplied,discAmt,phone)} className=“btn” style={{width:“100%”,padding:13,background:”#25D366”,color:C.white,borderRadius:12,fontSize:15,fontWeight:600,display:“flex”,alignItems:“center”,justifyContent:“center”,gap:8}}>
-<span>💬</span><span>Order via WhatsApp</span>
-</button>
-<p style={{fontSize:11,color:C.tl,textAlign:“center”,marginTop:6}}>You’ll be redirected to WhatsApp to complete your order</p>
-</div>
-)}
-</div>
-</>
-);
-}
-
-/* ══════════════ AUTH MODAL ══════════════ */
-function AuthModal({mode,setMode,onClose,users,saveUsers,onLogin,onSignup,cfg}){
-const[f,setF]=useState({name:””,email:””,password:””});
-const[err,setErr]=useState(””);
-const[busy,setBusy]=useState(false);
-const go=()=>{
-setErr(””);setBusy(true);
-setTimeout(()=>{
-if(mode===“signup”){
-if(!f.name||!f.email||!f.password){setErr(“Please fill in all fields.”);setBusy(false);return;}
-if(!/\S+@\S+.\S+/.test(f.email)){setErr(“Please enter a valid email.”);setBusy(false);return;}
-if(users.find(u=>u.email===f.email)){setErr(“Email already registered.”);setBusy(false);return;}
-const nu={id:uid(),name:f.name,email:f.email,password:f.password,discUsed:false,createdAt:new Date().toISOString()};
-saveUsers([…users,nu]);onSignup(nu);
-}else{
-if(!f.email||!f.password){setErr(“Please fill in all fields.”);setBusy(false);return;}
-const u=users.find(u=>u.email===f.email&&u.password===f.password);
-if(!u){setErr(“Invalid email or password.”);setBusy(false);return;}
-onLogin(u);
-}
-setBusy(false);
-},0);
-};
-return(
-<>
-<div className=“oi” onClick={onClose} style={{position:“fixed”,inset:0,background:“rgba(0,0,0,.45)”,zIndex:300}}/>
-<div style={{position:“fixed”,inset:0,zIndex:301,display:“flex”,alignItems:“center”,justifyContent:“center”,padding:“20px”}}>
-<div className=“mi” style={{background:C.white,borderRadius:24,width:“100%”,maxWidth:420,padding:“36px 28px”,boxShadow:“0 22px 56px rgba(0,0,0,.15)”,position:“relative”,maxHeight:“90vh”,overflowY:“auto”,WebkitOverflowScrolling:“touch”}}>
-<button onClick={onClose} className=“btn” style={{position:“absolute”,top:14,right:14,width:30,height:30,borderRadius:“50%”,background:C.cream,fontSize:18,color:C.t,display:“flex”,alignItems:“center”,justifyContent:“center”}}>×</button>
-<div style={{textAlign:“center”,marginBottom:24}}>
-<div className="fl" style={{fontSize:30,marginBottom:7,color:C.pd}}>✦</div>
-<h2 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:27,fontWeight:500,color:C.t,marginBottom:5}}>{mode===“login”?“Welcome back”:`Join ${cfg.siteName}`}</h2>
-{mode===“signup”&&<p style={{fontSize:13,color:C.pd}}>🎁 Get {cfg.discPct}% off your first order!</p>}
-</div>
-<div style={{display:“flex”,flexDirection:“column”,gap:10}}>
-{mode===“signup”&&<input placeholder=“Your name” value={f.name} onChange={e=>setF({…f,name:e.target.value})} style={iSt()}/>}
-<input type=“email” placeholder=“Email address” value={f.email} onChange={e=>setF({…f,email:e.target.value})} style={iSt()}/>
-<input type=“password” placeholder=“Password” value={f.password} onChange={e=>setF({…f,password:e.target.value})} onKeyDown={e=>e.key===“Enter”&&go()} style={iSt()}/>
-{err&&<p style={{fontSize:13,color:”#C04040”,textAlign:“center”}}>{err}</p>}
-<button onClick={go} disabled={busy} className="btn" style={{padding:13,background:C.t,color:C.white,borderRadius:11,fontSize:14,fontWeight:500,marginTop:2}}>
-{busy?”…”:mode===“login”?“Log In”:“Create Account”}
-</button>
-<p style={{textAlign:“center”,fontSize:13,color:C.tm}}>
-{mode===“login”?“Don’t have an account? “:“Already have an account? “}
-<button onClick={()=>{setMode(mode===“login”?“signup”:“login”);setErr(””)}} style={{background:“none”,border:“none”,color:C.pd,cursor:“pointer”,fontSize:13,fontWeight:600,textDecoration:“underline”}}>
-{mode===“login”?“Sign up”:“Log in”}
-</button>
-</p>
-</div>
-</div>
-</div>
-</>
-);
-}
-
-/* ══════════════ ABOUT PAGE ══════════════ */
+/* ══ ABOUT ══ */
 function AboutPage({cfg,onBack}){
-return(
-<div style={{maxWidth:760,margin:“0 auto”,padding:“44px 20px 64px”}}>
-<button onClick={onBack} className=“btn” style={{background:“none”,color:C.tm,fontSize:14,marginBottom:28,display:“flex”,alignItems:“center”,gap:5}}>← back to shop</button>
-<div style={{textAlign:“center”,marginBottom:40}}>
-<div className="fl" style={{fontSize:40,marginBottom:10,color:C.pd}}>✦</div>
-<h1 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:“clamp(36px,6vw,60px)”,fontWeight:400,color:C.t,marginBottom:10}}>About {cfg.siteName}</h1>
-<p style={{color:C.tl,fontSize:14}}>{cfg.tagline}</p>
-</div>
-<div style={{background:C.white,borderRadius:22,padding:“32px 28px”,boxShadow:C.sh,marginBottom:24}}>
-<p style={{fontSize:15,lineHeight:2,color:C.tm,whiteSpace:“pre-line”}}>{cfg.aboutText}</p>
-</div>
-<div style={{display:“grid”,gridTemplateColumns:“repeat(auto-fit,minmax(180px,1fr))”,gap:16}}>
-{[[“🎁”,“Mystery & Surprise”,“Every box is a unique experience”],[“💕”,“Curated with Love”,“Hand-selected items just for you”],[“✦”,“Premium Quality”,“Only the best makes it inside”]].map(([ic,t,d])=>(
-<div key={t} style={{background:C.white,borderRadius:16,padding:“20px 18px”,boxShadow:C.sh,textAlign:“center”}}>
-<div style={{fontSize:32,marginBottom:10}}>{ic}</div>
-<p style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:17,color:C.t,marginBottom:5}}>{t}</p>
-<p style={{fontSize:13,color:C.tl}}>{d}</p>
-</div>
-))}
-</div>
-</div>
-);
+  return(<div style={{maxWidth:760,margin:"0 auto",padding:"44px 20px 64px"}}>
+    <button onClick={onBack} className="btn" style={{background:"none",color:C.tm,fontSize:14,marginBottom:28,display:"flex",alignItems:"center",gap:5}}>← back to shop</button>
+    <div style={{textAlign:"center",marginBottom:40}}>
+      <div className="fl" style={{fontSize:40,marginBottom:10,color:C.pd}}>✦</div>
+      <h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(36px,6vw,60px)",fontWeight:400,color:C.t,marginBottom:10}}>About {cfg.siteName}</h1>
+      <p style={{color:C.tl,fontSize:14}}>{cfg.tagline}</p>
+    </div>
+    <div style={{background:C.white,borderRadius:22,padding:"32px 28px",boxShadow:C.sh,marginBottom:24,border:`1px solid ${C.b}`}}>
+      <p style={{fontSize:15,lineHeight:2,color:C.tm,whiteSpace:"pre-line"}}>{cfg.aboutText}</p>
+    </div>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:16}}>
+      {[["🎁","Mystery & Surprise","Every box is a unique experience"],["💕","Curated with Love","Hand-selected items just for you"],["✦","Premium Quality","Only the best makes it inside"]].map(([ic,t,d])=>(
+        <div key={t} style={{background:C.white,borderRadius:16,padding:"20px 18px",boxShadow:C.sh,textAlign:"center",border:`1px solid ${C.b}`}}>
+          <div style={{fontSize:32,marginBottom:10}}>{ic}</div>
+          <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:17,color:C.t,marginBottom:5}}>{t}</p>
+          <p style={{fontSize:13,color:C.tl}}>{d}</p>
+        </div>
+      ))}
+    </div>
+  </div>);
 }
 
-/* ══════════════ CONTACT PAGE ══════════════ */
+/* ══ CONTACT ══ */
 function ContactPage({cfg,onBack}){
-return(
-<div style={{maxWidth:640,margin:“0 auto”,padding:“44px 20px 64px”}}>
-<button onClick={onBack} className=“btn” style={{background:“none”,color:C.tm,fontSize:14,marginBottom:28,display:“flex”,alignItems:“center”,gap:5}}>← back to shop</button>
-<div style={{textAlign:“center”,marginBottom:36}}>
-<h1 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:“clamp(32px,6vw,54px)”,fontWeight:400,color:C.t,marginBottom:8}}>Contact Us</h1>
-<p style={{color:C.tl,fontSize:14}}>We’d love to hear from you ✦</p>
-</div>
-<div style={{display:“flex”,flexDirection:“column”,gap:14}}>
-<a href={`https://wa.me/${cfg.contactWa||cfg.whatsapp}`} target=”_blank” style={{textDecoration:“none”}}>
-<div className=“card” style={{background:C.white,borderRadius:16,padding:“20px 22px”,boxShadow:C.sh,display:“flex”,alignItems:“center”,gap:16}}>
-<div style={{width:46,height:46,borderRadius:14,background:”#E7F8EE”,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:22,flexShrink:0}}>💬</div>
-<div><p style={{fontWeight:600,color:C.t,marginBottom:3}}>WhatsApp</p><p style={{fontSize:13,color:C.tm}}>{cfg.contactWa||cfg.whatsapp}</p></div>
-</div>
-</a>
-{cfg.contactEmail&&(
-<a href={`mailto:${cfg.contactEmail}`} style={{textDecoration:“none”}}>
-<div className=“card” style={{background:C.white,borderRadius:16,padding:“20px 22px”,boxShadow:C.sh,display:“flex”,alignItems:“center”,gap:16}}>
-<div style={{width:46,height:46,borderRadius:14,background:C.pl,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:22,flexShrink:0}}>✉️</div>
-<div><p style={{fontWeight:600,color:C.t,marginBottom:3}}>Email</p><p style={{fontSize:13,color:C.tm}}>{cfg.contactEmail}</p></div>
-</div>
-</a>
-)}
-{cfg.contactIG&&(
-<a href={igUrl(cfg)} target=”_blank” style={{textDecoration:“none”}}>
-<div className=“card” style={{background:C.white,borderRadius:16,padding:“20px 22px”,boxShadow:C.sh,display:“flex”,alignItems:“center”,gap:16}}>
-<div style={{width:46,height:46,borderRadius:14,background:”#FCE8F8”,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:22,flexShrink:0}}>📸</div>
-<div><p style={{fontWeight:600,color:C.t,marginBottom:3}}>Instagram</p><p style={{fontSize:13,color:C.tm}}>{cfg.contactIG}</p></div>
-</div>
-</a>
-)}
-{cfg.contactTK&&(
-<a href={tkUrl(cfg)} target=”_blank” style={{textDecoration:“none”}}>
-<div className=“card” style={{background:C.white,borderRadius:16,padding:“20px 22px”,boxShadow:C.sh,display:“flex”,alignItems:“center”,gap:16}}>
-<div style={{width:46,height:46,borderRadius:14,background:”#E8F8F8”,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:22,flexShrink:0}}>🎵</div>
-<div><p style={{fontWeight:600,color:C.t,marginBottom:3}}>TikTok</p><p style={{fontSize:13,color:C.tm}}>{cfg.contactTK}</p></div>
-</div>
-</a>
-)}
-</div>
-</div>
-);
+  const contacts=[
+    cfg.contactWa&&{icon:"💬",label:"WhatsApp",val:cfg.contactWa,href:`https://wa.me/${cfg.contactWa}`},
+    cfg.contactEmail&&{icon:"✉️",label:"Email",val:cfg.contactEmail,href:`mailto:${cfg.contactEmail}`},
+    cfg.contactIG&&{icon:"📸",label:"Instagram",val:cfg.contactIG,href:cfg.contactIGUrl||"#"},
+    cfg.contactTT&&{icon:"🎵",label:"TikTok",val:cfg.contactTT,href:cfg.contactTTUrl||"#"},
+  ].filter(Boolean);
+  return(<div style={{maxWidth:640,margin:"0 auto",padding:"44px 20px 64px"}}>
+    <button onClick={onBack} className="btn" style={{background:"none",color:C.tm,fontSize:14,marginBottom:28,display:"flex",alignItems:"center",gap:5}}>← back to shop</button>
+    <div style={{textAlign:"center",marginBottom:36}}>
+      <h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(32px,6vw,54px)",fontWeight:400,color:C.t,marginBottom:8}}>Contact Us</h1>
+      <p style={{color:C.tl,fontSize:14}}>We'd love to hear from you ✦</p>
+    </div>
+    <div style={{display:"flex",flexDirection:"column",gap:14}}>
+      {contacts.map(({icon,label,val,href})=>(
+        <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none"}}>
+          <div className="card" style={{background:C.white,borderRadius:16,padding:"18px 22px",boxShadow:C.sh,display:"flex",alignItems:"center",gap:16,border:`1px solid ${C.b}`}}>
+            <div style={{width:46,height:46,borderRadius:14,background:C.pl,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>{icon}</div>
+            <div><p style={{fontWeight:600,color:C.t,marginBottom:3}}>{label}</p><p style={{fontSize:13,color:C.tm}}>{val}</p></div>
+            <div style={{marginLeft:"auto",color:C.pd,fontSize:16}}>→</div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>);
 }
 
-/* ══════════════ PRIVACY PAGE ══════════════ */
+/* ══ PRIVACY ══ */
 function PrivacyPage({onBack}){
-const sections=[
-[“What we collect”,“We collect your name, email, and phone number when you place an order or create an account. We do not store payment information.”],
-[“How we use it”,“Your information is used only to process orders and provide customer support. We will never sell your data.”],
-[“WhatsApp Orders”,“When you place an order, you are redirected to WhatsApp. Your order details are shared only with us.”],
-[“Cookies”,“We use local browser storage to keep your cart and account session. No third-party tracking cookies are used.”],
-[“Your rights”,“You may request deletion of your account and data at any time by contacting us via WhatsApp.”],
-];
-return(
-<div style={{maxWidth:720,margin:“0 auto”,padding:“44px 20px 64px”}}>
-<button onClick={onBack} className=“btn” style={{background:“none”,color:C.tm,fontSize:14,marginBottom:28,display:“flex”,alignItems:“center”,gap:5}}>← back to shop</button>
-<h1 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:“clamp(30px,5vw,50px)”,fontWeight:400,color:C.t,marginBottom:6}}>Privacy Policy</h1>
-<p style={{fontSize:13,color:C.tl,marginBottom:32}}>Last updated: {new Date().toLocaleDateString(‘en-MY’,{year:‘numeric’,month:‘long’})}</p>
-<div style={{display:“flex”,flexDirection:“column”,gap:20}}>
-{sections.map(([t,d])=>(
-<div key={t} style={{background:C.white,borderRadius:14,padding:“20px 22px”,boxShadow:C.sh}}>
-<h3 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:20,color:C.t,marginBottom:8}}>{t}</h3>
-<p style={{fontSize:14,lineHeight:1.8,color:C.tm}}>{d}</p>
-</div>
-))}
-</div>
-</div>
-);
+  const s=[["What we collect","We collect your name, email, and phone number when you place an order or create an account. We do not store payment information."],["How we use it","Your information is used only to process orders and provide customer support. We will never sell your data to third parties."],["WhatsApp Orders","When you place an order, you are redirected to WhatsApp. Your order details are shared only with us to process your purchase."],["Cookies","We use local browser storage to keep your cart and session. No third-party tracking cookies are used."],["Your rights","You may request deletion of your account at any time by contacting us."]];
+  return(<div style={{maxWidth:720,margin:"0 auto",padding:"44px 20px 64px"}}>
+    <button onClick={onBack} className="btn" style={{background:"none",color:C.tm,fontSize:14,marginBottom:28,display:"flex",alignItems:"center",gap:5}}>← back to shop</button>
+    <h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(30px,5vw,50px)",fontWeight:400,color:C.t,marginBottom:6}}>Privacy Policy</h1>
+    <p style={{fontSize:13,color:C.tl,marginBottom:32}}>Last updated: {new Date().toLocaleDateString('en-MY',{year:'numeric',month:'long'})}</p>
+    <div style={{display:"flex",flexDirection:"column",gap:16}}>
+      {s.map(([t,d])=>(<div key={t} style={{background:C.white,borderRadius:14,padding:"18px 22px",boxShadow:C.sh,border:`1px solid ${C.b}`}}>
+        <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20,color:C.t,marginBottom:7}}>{t}</h3>
+        <p style={{fontSize:14,lineHeight:1.8,color:C.tm}}>{d}</p>
+      </div>))}
+    </div>
+  </div>);
 }
 
-/* ══════════════ ADMIN PAGE ══════════════ */
+/* ══ ADMIN PAGE ══ */
 function AdminPage({ok,onAuth,items,saveItems,forms,saveForms,users,saveUsers,cfg,saveCfg,onBack,toast}){
-const[pw,setPw]=useState(””);
-const[err,setErr]=useState(””);
-const[tab,setTab]=useState(“items”);
-const[itemForm,setItemForm]=useState(null);
-const[formBuilder,setFormBuilder]=useState(null);
-const[ec,setEc]=useState({…cfg});
-const[testStatus,setTestStatus]=useState(””);
-useEffect(()=>setEc({…cfg}),[cfg]);
+  const[pw,setPw]=useState("");const[err,setErr]=useState("");const[tab,setTab]=useState("items");
+  const[itemForm,setItemForm]=useState(null);const[formBuilder,setFormBuilder]=useState(null);
+  const[ec,setEc]=useState({...cfg});const[testStatus,setTestStatus]=useState("");
+  useEffect(()=>setEc({...cfg}),[cfg]);
+  const delItem=id=>{if(!window.confirm("Delete this item?"))return;saveItems(items.filter(i=>i.id!==id));toast("Item deleted");};
+  const delForm=id=>{if(!window.confirm("Delete this form?"))return;saveForms(forms.filter(f=>f.id!==id));toast("Form deleted");};
+  const testCloud=async()=>{setTestStatus("Testing…");const r=await JB.pull(ec.jbKey,ec.jbId);setTestStatus(r!==null?"✅ Connected!":"❌ Failed. Check Key and Bin ID.");};
 
-const delItem=id=>{if(!window.confirm(“Delete this item?”))return;saveItems(items.filter(i=>i.id!==id));toast(“Item deleted”);};
-const delForm=id=>{if(!window.confirm(“Delete this form?”))return;saveForms(forms.filter(f=>f.id!==id));toast(“Form deleted”);};
-const testCloud=async()=>{setTestStatus(“Testing…”);const r=await JB.pull(ec.jbKey,ec.jbId);setTestStatus(r!==null?“✅ Connected!”:“❌ Failed. Check Key and Bin ID.”);};
-
-if(!ok)return(
-<div style={{minHeight:“80vh”,display:“flex”,alignItems:“center”,justifyContent:“center”,padding:20}}>
-<div style={{background:C.white,borderRadius:22,padding:“40px 32px”,width:“min(360px,100%)”,boxShadow:C.sh,textAlign:“center”}}>
-<div style={{fontSize:38,marginBottom:12}}>🔐</div>
-<h2 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:26,color:C.t,marginBottom:7}}>Admin Access</h2>
-<p style={{fontSize:13,color:C.tl,marginBottom:20}}>Enter your password to continue</p>
-<input type=“password” placeholder=“Admin password” value={pw} onChange={e=>setPw(e.target.value)}
-onKeyDown={e=>{if(e.key===“Enter”&&!onAuth(pw))setErr(“Wrong password”);}}
-style={{…iSt(),marginBottom:9}}/>
-{err&&<p style={{fontSize:13,color:”#C04040”,marginBottom:9}}>{err}</p>}
-<button onClick={()=>{if(!onAuth(pw))setErr(“Wrong password”);}} className=“btn” style={{width:“100%”,padding:12,background:C.t,color:C.white,borderRadius:11,fontSize:14,marginBottom:12}}>Enter</button>
-<button onClick={onBack} className=“btn” style={{background:“none”,color:C.tl,fontSize:13}}>← Back to shop</button>
-</div>
-</div>
-);
-
-return(
-<div style={{maxWidth:1100,margin:“0 auto”,padding:“26px 16px 56px”}}>
-<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginBottom:24,flexWrap:“wrap”,gap:10}}>
-<div>
-<h1 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:34,color:C.t}}>Admin Panel</h1>
-<p style={{fontSize:13,color:C.tl}}>Manage your mystery box shop</p>
-</div>
-<button onClick={onBack} className=“btn” style={{background:C.cream,border:`1.5px solid ${C.b}`,borderRadius:50,padding:“8px 18px”,fontSize:13,color:C.t}}>← Back to Shop</button>
-</div>
-
-```
-  <div style={{display:"flex",gap:2,marginBottom:22,borderBottom:`1px solid ${C.b}`,overflowX:"auto"}}>
-    {[["items","📦 Items"],["forms","📋 Forms"],["users","👥 Customers"],["settings","⚙️ Settings"]].map(([t,l])=>(
-      <button key={t} onClick={()=>setTab(t)} className="btn"
-        style={{padding:"9px 16px",background:"none",borderBottom:`2.5px solid ${tab===t?C.pd:"transparent"}`,color:tab===t?C.t:C.tl,fontSize:13,borderRadius:0,marginBottom:-1,whiteSpace:"nowrap"}}>
-        {l}
-      </button>
-    ))}
-  </div>
-
-  {/* ITEMS */}
-  {tab==="items"&&(
-    <div>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-        <p style={{fontSize:13,color:C.tm}}>{items.length} item{items.length!==1?"s":""}</p>
-        <button onClick={()=>setItemForm({})} className="btn" style={{background:C.t,color:C.white,borderRadius:50,padding:"9px 20px",fontSize:13}}>+ Add New Item</button>
+  if(!ok)return(
+    <div style={{minHeight:"80vh",display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+      <div style={{background:C.white,borderRadius:22,padding:"40px 32px",width:"min(360px,100%)",boxShadow:C.sh,textAlign:"center",border:`1px solid ${C.b}`}}>
+        <div style={{fontSize:38,marginBottom:12}}>🔐</div>
+        <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:26,color:C.t,marginBottom:7}}>Admin Access</h2>
+        <p style={{fontSize:13,color:C.tl,marginBottom:20}}>Enter your password to continue</p>
+        <input type="password" placeholder="Admin password" value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!onAuth(pw))setErr("Wrong password");}} style={{...iSt(),marginBottom:9}}/>
+        {err&&<p style={{fontSize:13,color:"#C04040",marginBottom:9}}>{err}</p>}
+        <button onClick={()=>{if(!onAuth(pw))setErr("Wrong password");}} className="btn" style={{width:"100%",padding:12,background:C.t,color:"#fff",borderRadius:11,fontSize:14,marginBottom:12}}>Enter</button>
+        <button onClick={onBack} className="btn" style={{background:"none",color:C.tl,fontSize:13}}>← Back to shop</button>
       </div>
-      {itemForm!==null&&<ItemForm item={itemForm.id?itemForm:null} forms={forms} onSave={d=>{if(d.id){saveItems(items.map(i=>i.id===d.id?d:i));toast("Updated ✓")}else{saveItems([...items,{id:uid(),...d}]);toast("Added ✓")}setItemForm(null);}} onClose={()=>setItemForm(null)}/>}
-      {items.length===0&&!itemForm&&<div style={{textAlign:"center",padding:"48px 0",color:C.tl}}><div style={{fontSize:44,marginBottom:12}}>📦</div><p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20}}>No items yet</p></div>}
-      <div style={{display:"flex",flexDirection:"column",gap:9}}>
-        {items.map(it=>{
-          const att=forms.find(f=>f.id===it.formId);
-          return(
-            <div key={it.id} style={{background:C.white,borderRadius:13,padding:13,display:"flex",gap:11,alignItems:"center",boxShadow:C.sh,flexWrap:"wrap"}}>
-              <div style={{width:54,height:54,borderRadius:10,overflow:"hidden",background:C.pl,flexShrink:0}}>
-                <img src={it.images&&it.images[0]} alt={it.name} onError={e=>e.target.style.display="none"} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-              </div>
+    </div>
+  );
+
+  const sBox=({title,children})=>(<div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh,border:`1px solid ${C.b}`}}>
+    <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:14}}>{title}</p>
+    {children}
+  </div>);
+
+  return(
+    <div style={{maxWidth:1100,margin:"0 auto",padding:"26px 16px 56px"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:10}}>
+        <div><h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:34,color:C.t}}>Admin Panel</h1><p style={{fontSize:13,color:C.tl}}>Manage your mystery box shop</p></div>
+        <button onClick={onBack} className="btn" style={{background:C.cream,border:`1.5px solid ${C.b}`,borderRadius:50,padding:"8px 18px",fontSize:13,color:C.t}}>← Back to Shop</button>
+      </div>
+      <div style={{display:"flex",gap:2,marginBottom:22,borderBottom:`1px solid ${C.b}`,overflowX:"auto"}}>
+        {[["items","📦 Items"],["forms","📋 Forms"],["users","👥 Customers"],["design","🎨 Design"],["settings","⚙️ Settings"]].map(([t,l])=>(
+          <button key={t} onClick={()=>setTab(t)} className="btn"
+            style={{padding:"9px 16px",background:"none",borderBottom:`2.5px solid ${tab===t?C.pd:"transparent"}`,color:tab===t?C.t:C.tl,fontSize:13,borderRadius:0,marginBottom:-1,whiteSpace:"nowrap"}}>
+            {l}
+          </button>
+        ))}
+      </div>
+
+      {/* ITEMS */}
+      {tab==="items"&&(<div>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+          <p style={{fontSize:13,color:C.tm}}>{items.length} item{items.length!==1?"s":""}</p>
+          <button onClick={()=>setItemForm({})} className="btn" style={{background:C.t,color:"#fff",borderRadius:50,padding:"9px 20px",fontSize:13}}>+ Add New Item</button>
+        </div>
+        {itemForm!==null&&<ItemForm item={itemForm.id?itemForm:null} forms={forms} onSave={d=>{if(d.id){saveItems(items.map(i=>i.id===d.id?d:i));toast("Updated ✓")}else{saveItems([...items,{id:uid(),...d}]);toast("Added ✓")}setItemForm(null);}} onClose={()=>setItemForm(null)}/>}
+        {items.length===0&&!itemForm&&<div style={{textAlign:"center",padding:"48px 0",color:C.tl}}><div style={{fontSize:44,marginBottom:12}}>📦</div><p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20,color:C.t}}>No items yet</p></div>}
+        <div style={{display:"flex",flexDirection:"column",gap:9}}>
+          {items.map(it=>{
+            const att=forms.find(f=>f.id===it.formId);
+            return(<div key={it.id} style={{background:C.white,borderRadius:13,padding:13,display:"flex",gap:11,alignItems:"center",boxShadow:C.sh,flexWrap:"wrap",border:`1px solid ${C.b}`}}>
+              <div style={{width:54,height:54,borderRadius:10,overflow:"hidden",background:C.pl,flexShrink:0}}><img src={it.images&&it.images[0]} alt={it.name} onError={e=>e.target.style.display="none"} style={{width:"100%",height:"100%",objectFit:"cover"}}/></div>
               <div style={{flex:1,minWidth:100}}>
                 <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:16,color:C.t}}>{it.name}</p>
                 <p style={{fontSize:12,color:C.tm}}>RM {it.price.toFixed(2)} · {it.category||"—"} · Stock: {it.stock}</p>
@@ -1123,30 +851,25 @@ return(
                 <button onClick={()=>setItemForm(it)} className="btn" style={{background:C.pl,borderRadius:50,padding:"6px 13px",fontSize:12,color:C.pd}}>Edit</button>
                 <button onClick={()=>delItem(it.id)} className="btn" style={{background:"#FFE0E0",borderRadius:50,padding:"6px 13px",fontSize:12,color:"#C04040"}}>Delete</button>
               </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  )}
+            </div>);
+          })}
+        </div>
+      </div>)}
 
-  {/* FORMS */}
-  {tab==="forms"&&(
-    <div>
-      <div style={{background:C.yl,borderRadius:12,padding:"12px 16px",marginBottom:16,fontSize:13,color:C.tm,lineHeight:1.7}}>
-        📋 Create forms here, then attach them to products in the Items tab. Customers will customise before ordering.
-      </div>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-        <p style={{fontSize:13,color:C.tm}}>{forms.length} form{forms.length!==1?"s":""}</p>
-        <button onClick={()=>setFormBuilder({name:"",questions:[]})} className="btn" style={{background:C.t,color:C.white,borderRadius:50,padding:"9px 20px",fontSize:13}}>+ Create Form</button>
-      </div>
-      {formBuilder!==null&&<FormBuilder form={formBuilder.id?formBuilder:null} onSave={d=>{if(d.id){saveForms(forms.map(f=>f.id===d.id?d:f));toast("Updated ✓")}else{saveForms([...forms,{id:uid(),...d}]);toast("Created ✓")}setFormBuilder(null);}} onClose={()=>setFormBuilder(null)}/>}
-      {forms.length===0&&!formBuilder&&<div style={{textAlign:"center",padding:"48px 0",color:C.tl}}><div style={{fontSize:44,marginBottom:12}}>📋</div><p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20}}>No forms yet</p></div>}
-      <div style={{display:"flex",flexDirection:"column",gap:9}}>
-        {forms.map(f=>{
-          const used=items.filter(i=>i.formId===f.id);
-          return(
-            <div key={f.id} style={{background:C.white,borderRadius:13,padding:"14px 16px",boxShadow:C.sh}}>
+      {/* FORMS */}
+      {tab==="forms"&&(<div>
+        <div style={{background:C.yl,borderRadius:12,padding:"12px 16px",marginBottom:16,fontSize:13,color:C.tm,lineHeight:1.7}}>
+          📋 Create forms here, then attach them to products. Customers will customise before ordering.
+        </div>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+          <p style={{fontSize:13,color:C.tm}}>{forms.length} form{forms.length!==1?"s":""}</p>
+          <button onClick={()=>setFormBuilder({name:"",questions:[]})} className="btn" style={{background:C.t,color:"#fff",borderRadius:50,padding:"9px 20px",fontSize:13}}>+ Create Form</button>
+        </div>
+        {formBuilder!==null&&<FormBuilder form={formBuilder.id?formBuilder:null} onSave={d=>{if(d.id){saveForms(forms.map(f=>f.id===d.id?d:f));toast("Updated ✓")}else{saveForms([...forms,{id:uid(),...d}]);toast("Created ✓")}setFormBuilder(null);}} onClose={()=>setFormBuilder(null)}/>}
+        {forms.length===0&&!formBuilder&&<div style={{textAlign:"center",padding:"48px 0",color:C.tl}}><div style={{fontSize:44,marginBottom:12}}>📋</div><p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20,color:C.t}}>No forms yet</p></div>}
+        <div style={{display:"flex",flexDirection:"column",gap:9}}>
+          {forms.map(f=>{const used=items.filter(i=>i.formId===f.id);return(
+            <div key={f.id} style={{background:C.white,borderRadius:13,padding:"14px 16px",boxShadow:C.sh,border:`1px solid ${C.b}`}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:8}}>
                 <div>
                   <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:17,color:C.t}}>📋 {f.name}</p>
@@ -1159,305 +882,270 @@ return(
                 </div>
               </div>
             </div>
-          );
-        })}
-      </div>
-    </div>
-  )}
-
-  {/* USERS */}
-  {tab==="users"&&(
-    <div>
-      <p style={{fontSize:13,color:C.tm,marginBottom:14}}>{users.length} registered customer{users.length!==1?"s":""}</p>
-      {users.length===0?<div style={{textAlign:"center",padding:48,color:C.tl}}><div style={{fontSize:40,marginBottom:10}}>👥</div><p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20}}>No customers yet</p></div>:(
-        <div style={{display:"flex",flexDirection:"column",gap:9}}>
-          {users.map(u=>(
-            <EditableUser key={u.id} u={u} onSave={updated=>{saveUsers(users.map(x=>x.id===u.id?updated:x));toast("Name updated ✓");}}/>
-          ))}
+          );})}
         </div>
-      )}
-    </div>
-  )}
+      </div>)}
 
-  {/* SETTINGS */}
-  {tab==="settings"&&(
-    <div style={{maxWidth:560,display:"flex",flexDirection:"column",gap:18}}>
-      {[
-        {title:"Site Details",fields:[["Site Name","siteName","text"],["Tagline","tagline","text"]]},
-        {title:"Contact Info",fields:[["WhatsApp (orders)","whatsapp","text"],["WhatsApp (contact page)","contactWa","text"],["Instagram handle","contactIG","text"],["Instagram URL","contactIGLink","text"],["TikTok handle","contactTK","text"],["TikTok URL","contactTKLink","text"],["Email","contactEmail","email"]]},
-        {title:"Discounts",fields:[["Welcome Discount % (new signups)","discPct","number"],["Promo Code","promoCode","text"],["Promo Code Discount %","promoPct","number"]]},
-        {title:"Security",fields:[["Admin Password","adminPass","password"]]},
-      ].map(({title,fields})=>(
-        <div key={title} style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
-          <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:14}}>{title}</p>
-          <div style={{display:"flex",flexDirection:"column",gap:11}}>
-            {fields.map(([l,k,t])=>(
-              <div key={k}><Lbl c={l}/><input type={t} value={ec[k]!==undefined?ec[k]:""} onChange={e=>setEc({...ec,[k]:t==="number"?Number(e.target.value):e.target.value})} style={iSt()}/></div>
+      {/* USERS */}
+      {tab==="users"&&(<div>
+        <p style={{fontSize:13,color:C.tm,marginBottom:14}}>{users.length} registered customer{users.length!==1?"s":""}</p>
+        {users.length===0?(<div style={{textAlign:"center",padding:48,color:C.tl}}><div style={{fontSize:40,marginBottom:10}}>👥</div><p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20,color:C.t}}>No customers yet</p></div>):(
+          <div style={{display:"flex",flexDirection:"column",gap:9}}>
+            {users.map(u=><EditableUser key={u.id} u={u} onSave={updated=>{saveUsers(users.map(x=>x.id===u.id?updated:x));toast("Updated ✓");}}/>)}
+          </div>
+        )}
+      </div>)}
+
+      {/* DESIGN */}
+      {tab==="design"&&(<div style={{maxWidth:560,display:"flex",flexDirection:"column",gap:18}}>
+        {React.createElement(sBox,{title:"🎨 Colors"},
+          <div style={{display:"flex",flexDirection:"column",gap:14}}>
+            {[["Primary Color (buttons, accents, highlights)","colorPrimary"],["Page Background","colorBg"],["Card / Panel Background","colorCard"],["Footer Background","colorFooter"],["Text Color","colorText"]].map(([l,k])=>(
+              <div key={k} style={{display:"flex",alignItems:"center",gap:12}}>
+                <div style={{flex:1}}><Lbl c={l}/></div>
+                <div style={{display:"flex",alignItems:"center",gap:8}}>
+                  <input type="color" value={ec[k]||"#000000"} onChange={e=>setEc({...ec,[k]:e.target.value})}
+                    style={{width:44,height:36,borderRadius:9,border:`1.5px solid ${C.b}`,padding:2,cursor:"pointer",background:"none"}}/>
+                  <input type="text" value={ec[k]||""} onChange={e=>setEc({...ec,[k]:e.target.value})} placeholder="#000000"
+                    style={{...iSt(),width:100,padding:"7px 10px",fontSize:13}}/>
+                </div>
+              </div>
             ))}
+            <div style={{background:C.yl,borderRadius:10,padding:"10px 14px",fontSize:12,color:C.tm}}>
+              💡 Changes apply after clicking Save. Your website will update everywhere automatically.
+            </div>
           </div>
-        </div>
-      ))}
-      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
-        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:6}}>Hero Badges</p>
-        <p style={{fontSize:12,color:C.tl,marginBottom:12}}>These are the little tags shown on the homepage (e.g. "mystery inside"). Add, remove or change them.</p>
-        {(ec.heroTags||[]).map((tag,i)=>(
-          <div key={i} style={{display:"flex",gap:7,marginBottom:7}}>
-            <input value={tag} onChange={e=>{const t=[...(ec.heroTags||[])];t[i]=e.target.value;setEc({...ec,heroTags:t});}} style={{...iSt(),flex:1}}/>
-            <button onClick={()=>{const t=(ec.heroTags||[]).filter((_,j)=>j!==i);setEc({...ec,heroTags:t});}} className="btn" style={{background:"#FFE0E0",borderRadius:8,padding:"0 11px",color:"#C04040",fontSize:16,flexShrink:0}}>×</button>
-          </div>
-        ))}
-        <button onClick={()=>setEc({...ec,heroTags:[...(ec.heroTags||[]),"✦ new tag"]})} className="btn"
-          style={{width:"100%",background:C.cream,border:`1px dashed ${C.b}`,borderRadius:8,padding:"7px",fontSize:12,color:C.tm}}>
-          + Add Badge
-        </button>
-      </div>
-      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
-        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:8}}>About Page Text</p>
-        <textarea value={ec.aboutText||""} onChange={e=>setEc({...ec,aboutText:e.target.value})} rows={5} style={{...iSt(),resize:"vertical",borderRadius:10}}/>
-      </div>
-      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
-        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:4}}>🖼️ Hero Section</p>
-        <p style={{fontSize:12,color:C.tl,marginBottom:12}}>Paste a photo URL as your hero background. Best size: <strong>1920×700px</strong>. Leave empty for the default dark gradient.</p>
-        <div><Lbl c="Hero Image URL (leave empty for dark gradient)"/><input value={ec.heroImage||""} onChange={e=>setEc({...ec,heroImage:e.target.value})} placeholder="https://your-photo.jpg" style={iSt()}/></div>
-        {ec.heroImage&&<div style={{marginTop:8,borderRadius:10,overflow:"hidden"}}><img src={ec.heroImage} alt="preview" onError={e=>e.target.style.display="none"} style={{width:"100%",height:90,objectFit:"cover",display:"block"}}/></div>}
-      </div>
-      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
-        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:4}}>🎨 Colour Customiser</p>
-        <p style={{fontSize:12,color:C.tl,marginBottom:14}}>Click a colour box or type a HEX code to change any colour. Save when done!</p>
-        <div style={{display:"flex",flexDirection:"column",gap:12}}>
-          {[["Main Colour (buttons & highlights)","clrPrimary","#E8192C"],["Background Colour","clrBg","#FAF6EE"],["Card Colour","clrCard","#FFFFFF"],["Footer Colour","clrFooter","#1A0808"]].map(([lbl,k,def])=>(
-            <div key={k}>
-              <Lbl c={lbl}/>
+        )}
+        {React.createElement(sBox,{title:"🖼️ Hero Background"},
+          <div style={{display:"flex",flexDirection:"column",gap:12}}>
+            <div>
+              <Lbl c="Hero Image URL (recommended size: 1920×600px)"/>
+              <input value={ec.heroImage||""} onChange={e=>setEc({...ec,heroImage:e.target.value})} placeholder="https://... (paste image link here)" style={iSt()}/>
+              <p style={{fontSize:11,color:C.tl,marginTop:5}}>Leave empty to use the default dark red gradient.</p>
+            </div>
+            <div>
+              <Lbl c="Or: Hero Background Color (overrides image)"/>
               <div style={{display:"flex",gap:8,alignItems:"center"}}>
-                <input type="color" value={ec[k]||def} onChange={e=>setEc({...ec,[k]:e.target.value})} style={{width:44,height:38,borderRadius:8,border:`1.5px solid ${C.b}`,cursor:"pointer",padding:3,flexShrink:0}}/>
-                <input value={ec[k]||""} onChange={e=>setEc({...ec,[k]:e.target.value})} placeholder={def} style={{...iSt(),flex:1,padding:"9px 12px",fontSize:13}}/>
+                <input type="color" value={ec.heroBgColor||"#1A0A06"} onChange={e=>setEc({...ec,heroBgColor:e.target.value})} style={{width:44,height:36,borderRadius:9,border:`1.5px solid ${C.b}`,padding:2,cursor:"pointer",background:"none"}}/>
+                <input type="text" value={ec.heroBgColor||""} onChange={e=>setEc({...ec,heroBgColor:e.target.value})} placeholder="#1A0A06 (leave empty for gradient)" style={{...iSt(),flex:1,padding:"9px 13px"}}/>
+                {ec.heroBgColor&&<button onClick={()=>setEc({...ec,heroBgColor:""})} className="btn" style={{background:"#FFE0E0",borderRadius:8,padding:"6px 11px",fontSize:12,color:"#C04040",flexShrink:0}}>Clear</button>}
               </div>
             </div>
-          ))}
-        </div>
-        <p style={{fontSize:11,color:C.tl,marginTop:10}}>⚠️ Colour changes apply after you save and reload the page.</p>
-      </div>
-      <div style={{background:C.white,borderRadius:16,padding:"20px",boxShadow:C.sh}}>
-        <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.t,marginBottom:6}}>☁️ Cloud Sync</p>
-        <div style={{display:"flex",flexDirection:"column",gap:11}}>
+          </div>
+        )}
+        {React.createElement(sBox,{title:"✦ Hero Badges"},
+          <div>
+            <p style={{fontSize:12,color:C.tl,marginBottom:12}}>The little tags shown on the homepage. Add, edit or remove them.</p>
+            {(ec.heroTags||[]).map((tag,i)=>(
+              <div key={i} style={{display:"flex",gap:7,marginBottom:7}}>
+                <input value={tag} onChange={e=>{const t=[...(ec.heroTags||[])];t[i]=e.target.value;setEc({...ec,heroTags:t});}} style={{...iSt(),flex:1}}/>
+                <button onClick={()=>setEc({...ec,heroTags:(ec.heroTags||[]).filter((_,j)=>j!==i)})} className="btn" style={{background:"#FFE0E0",borderRadius:8,padding:"0 11px",color:"#C04040",fontSize:16,flexShrink:0}}>×</button>
+              </div>
+            ))}
+            <button onClick={()=>setEc({...ec,heroTags:[...(ec.heroTags||[]),"✦ new badge"]})} className="btn"
+              style={{width:"100%",background:C.cream,border:`1px dashed ${C.b}`,borderRadius:8,padding:"7px",fontSize:12,color:C.tm}}>+ Add Badge</button>
+          </div>
+        )}
+        <button onClick={async()=>{await saveCfg(ec);toast("Design saved ✓");}} className="btn"
+          style={{alignSelf:"flex-start",background:C.t,color:"#fff",borderRadius:50,padding:"12px 28px",fontSize:14}}>
+          Save Design
+        </button>
+      </div>)}
+
+      {/* SETTINGS */}
+      {tab==="settings"&&(<div style={{maxWidth:560,display:"flex",flexDirection:"column",gap:18}}>
+        {React.createElement(sBox,{title:"Site Details"},<div style={{display:"flex",flexDirection:"column",gap:11}}>
+          {[["Site Name","siteName","text"],["Tagline","tagline","text"]].map(([l,k,t])=>(<div key={k}><Lbl c={l}/><input type={t} value={ec[k]||""} onChange={e=>setEc({...ec,[k]:e.target.value})} style={iSt()}/></div>))}
+          <div><Lbl c="About Page Text"/><textarea value={ec.aboutText||""} onChange={e=>setEc({...ec,aboutText:e.target.value})} rows={4} style={{...iSt(),resize:"vertical",borderRadius:10}}/></div>
+        </div>)}
+        {React.createElement(sBox,{title:"Contact & Social"},<div style={{display:"flex",flexDirection:"column",gap:11}}>
+          {[["WhatsApp (orders)","whatsapp","text"],["WhatsApp (contact page)","contactWa","text"],["Instagram handle","contactIG","text"],["Instagram URL","contactIGUrl","text"],["TikTok handle","contactTT","text"],["TikTok URL","contactTTUrl","text"],["Email","contactEmail","email"]].map(([l,k,t])=>(<div key={k}><Lbl c={l}/><input type={t} value={ec[k]||""} onChange={e=>setEc({...ec,[k]:e.target.value})} style={iSt()}/></div>))}
+        </div>)}
+        {React.createElement(sBox,{title:"Discounts"},<div style={{display:"flex",flexDirection:"column",gap:11}}>
+          {[["Welcome Discount % (new signups)","discPct","number"],["Promo Code","promoCode","text"],["Promo Code Discount %","promoPct","number"]].map(([l,k,t])=>(<div key={k}><Lbl c={l}/><input type={t} value={ec[k]!==undefined?ec[k]:""} onChange={e=>setEc({...ec,[k]:t==="number"?Number(e.target.value):e.target.value})} style={iSt()}/></div>))}
+        </div>)}
+        {React.createElement(sBox,{title:"Security"},<div><Lbl c="Admin Password"/><input type="password" value={ec.adminPass||""} onChange={e=>setEc({...ec,adminPass:e.target.value})} style={iSt()}/></div>)}
+        {React.createElement(sBox,{title:"☁️ Cloud Sync"},<div style={{display:"flex",flexDirection:"column",gap:11}}>
           <div><Lbl c="JSONBin Master Key"/><input type="password" value={ec.jbKey||""} onChange={e=>setEc({...ec,jbKey:e.target.value})} style={iSt()}/></div>
           <div><Lbl c="JSONBin Bin ID"/><input value={ec.jbId||""} onChange={e=>setEc({...ec,jbId:e.target.value})} style={iSt()}/></div>
           <button onClick={testCloud} className="btn" style={{alignSelf:"flex-start",background:C.cream,border:`1.5px solid ${C.b}`,borderRadius:50,padding:"8px 18px",fontSize:13,color:C.t}}>Test Connection</button>
           {testStatus&&<p style={{fontSize:13,color:testStatus.includes("✅")?C.pd:"#C04040"}}>{testStatus}</p>}
+        </div>)}
+        <button onClick={async()=>{await saveCfg(ec);toast("Settings saved ✓");}} className="btn"
+          style={{alignSelf:"flex-start",background:C.t,color:"#fff",borderRadius:50,padding:"12px 28px",fontSize:14}}>
+          Save All Settings
+        </button>
+      </div>)}
+    </div>
+  );
+}
+
+/* ══ EDITABLE USER ══ */
+function EditableUser({u,onSave}){
+  const[editing,setEditing]=useState(false);const[name,setName]=useState(u.name);
+  return(<div style={{background:C.white,borderRadius:13,padding:"12px 15px",boxShadow:C.sh,display:"flex",gap:11,alignItems:"center",flexWrap:"wrap",border:`1px solid ${C.b}`}}>
+    <div style={{width:38,height:38,borderRadius:"50%",background:`linear-gradient(135deg,${C.pd},${C.pd}88)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,fontWeight:600,color:"#fff",flexShrink:0}}>{(u.name||"?")[0].toUpperCase()}</div>
+    <div style={{flex:1,minWidth:120}}>
+      {editing?(<div style={{display:"flex",gap:7,alignItems:"center"}}>
+        <input value={name} onChange={e=>setName(e.target.value)} style={{...iSt(),padding:"6px 10px",fontSize:13,flex:1}} onKeyDown={e=>{if(e.key==="Enter"){onSave({...u,name});setEditing(false);}}}/>
+        <button onClick={()=>{onSave({...u,name});setEditing(false);}} className="btn" style={{background:C.pd,color:"#fff",borderRadius:8,padding:"6px 12px",fontSize:12,flexShrink:0}}>Save</button>
+        <button onClick={()=>{setName(u.name);setEditing(false);}} className="btn" style={{background:C.cream,border:`1px solid ${C.b}`,borderRadius:8,padding:"6px 10px",fontSize:12,flexShrink:0}}>×</button>
+      </div>):(<div style={{display:"flex",alignItems:"center",gap:8}}>
+        <p style={{fontSize:14,fontWeight:500,color:C.t}}>{u.name}</p>
+        <button onClick={()=>setEditing(true)} className="btn" style={{background:"none",color:C.tl,fontSize:11,padding:0,textDecoration:"underline"}}>edit</button>
+      </div>)}
+      <p style={{fontSize:12,color:C.tl,marginTop:2}}>{u.email}</p>
+    </div>
+    <div style={{display:"flex",gap:7,alignItems:"center",flexWrap:"wrap"}}>
+      <Chip ch={u.discUsed===false?"🎁 Discount active":"Discount used"} bg={u.discUsed===false?C.pl:C.cream} col={u.discUsed===false?C.pd:C.tl}/>
+      <span style={{fontSize:11,color:C.tl}}>{new Date(u.createdAt).toLocaleDateString()}</span>
+    </div>
+  </div>);
+}
+
+/* ══ FORM BUILDER ══ */
+function FormBuilder({form,onSave,onClose}){
+  const[name,setName]=useState(form?form.name:"");const[questions,setQuestions]=useState(form?form.questions:[]);const[err,setErr]=useState("");
+  const addQ=()=>setQuestions(p=>[...p,{id:uid(),type:"single",question:"",subtitle:"",image:"",required:true,options:[{id:uid(),label:"",image:"",desc:""}]}]);
+  const delQ=qid=>setQuestions(p=>p.filter(q=>q.id!==qid));
+  const updQ=(qid,f,v)=>setQuestions(p=>p.map(q=>q.id===qid?{...q,[f]:v}:q));
+  const addOpt=qid=>setQuestions(p=>p.map(q=>q.id===qid?{...q,options:[...(q.options||[]),{id:uid(),label:"",image:"",desc:""}]}:q));
+  const delOpt=(qid,oid)=>setQuestions(p=>p.map(q=>q.id===qid?{...q,options:(q.options||[]).filter(o=>o.id!==oid)}:q));
+  const updOpt=(qid,oid,f,v)=>setQuestions(p=>p.map(q=>q.id===qid?{...q,options:(q.options||[]).map(o=>o.id===oid?{...o,[f]:v}:o)}:q));
+  const save=()=>{
+    if(!name.trim()){setErr("Form name required.");return;}
+    if(questions.length===0){setErr("Add at least one question.");return;}
+    for(const q of questions){if(!q.question.trim()){setErr("All questions need text.");return;}if(q.type!=="text"&&(!q.options||!q.options.filter(o=>o.label.trim()).length)){setErr("Each choice question needs at least one option.");return;}}
+    onSave({...(form?{id:form.id}:{}),name,questions});
+  };
+  return(
+    <>
+      <div className="oi" onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.4)",zIndex:300}}/>
+      <div style={{position:"fixed",inset:0,zIndex:301,overflowY:"auto",WebkitOverflowScrolling:"touch",padding:"16px"}}>
+        <div className="mi" style={{background:C.white,borderRadius:22,width:"100%",maxWidth:580,padding:"24px 20px",boxShadow:"0 20px 56px rgba(0,0,0,.15)",margin:"0 auto 40px",border:`1px solid ${C.b}`}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
+            <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:23,color:C.t}}>{form?"Edit Form":"Create Form"}</h2>
+            <button onClick={onClose} className="btn" style={{width:30,height:30,borderRadius:"50%",background:C.cream,fontSize:18,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+          </div>
+          <div style={{marginBottom:16}}><Lbl c="Form Name"/><input value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. Vintage Box Preferences" style={iSt()}/></div>
+          <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:12}}>
+            {questions.map((q,qi)=>(
+              <div key={q.id} style={{background:C.cream,borderRadius:14,padding:"14px",border:`1px solid ${C.b}`}}>
+                <div style={{display:"flex",justifyContent:"space-between",marginBottom:10}}>
+                  <span style={{fontSize:12,fontWeight:700,color:C.pd,textTransform:"uppercase",letterSpacing:".08em"}}>Question {qi+1}</span>
+                  <button onClick={()=>delQ(q.id)} className="btn" style={{background:"#FFE0E0",borderRadius:50,padding:"3px 10px",fontSize:12,color:"#C04040"}}>Remove</button>
+                </div>
+                <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                  <div><Lbl c="Question"/><input value={q.question} onChange={e=>updQ(q.id,"question",e.target.value)} placeholder="e.g. What type of box?" style={iSt()}/></div>
+                  <div><Lbl c="Subtitle (optional)"/><input value={q.subtitle||""} onChange={e=>updQ(q.id,"subtitle",e.target.value)} placeholder="e.g. Pick your vibe" style={iSt()}/></div>
+                  <div><Lbl c="Question Image URL (optional)"/><input value={q.image||""} onChange={e=>updQ(q.id,"image",e.target.value)} placeholder="https://..." style={iSt()}/></div>
+                  <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+                    <div style={{flex:1,minWidth:140}}><Lbl c="Answer Type"/>
+                      <select value={q.type||"single"} onChange={e=>updQ(q.id,"type",e.target.value)} style={{...iSt(),cursor:"pointer"}}>
+                        <option value="single">Choose one</option><option value="multi">Choose multiple</option><option value="text">Type an answer</option>
+                      </select>
+                    </div>
+                    <div style={{display:"flex",alignItems:"flex-end",paddingBottom:2}}>
+                      <label style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer",fontSize:13,color:C.t}}>
+                        <div onClick={()=>updQ(q.id,"required",!q.required)} style={{width:36,height:20,background:q.required!==false?C.pd:C.b,borderRadius:50,position:"relative",transition:"background .2s",cursor:"pointer",flexShrink:0}}>
+                          <div style={{width:14,height:14,background:"#fff",borderRadius:"50%",position:"absolute",top:3,left:q.required!==false?19:3,transition:"left .2s"}}/>
+                        </div>Required
+                      </label>
+                    </div>
+                  </div>
+                  {q.type!=="text"&&(<div>
+                    <Lbl c="Options"/>
+                    {(q.options||[]).map((opt,oi)=>(
+                      <div key={opt.id} style={{background:C.white,borderRadius:10,padding:"10px 12px",marginBottom:7,border:`1px solid ${C.b}`}}>
+                        <div style={{display:"flex",gap:6,marginBottom:5}}>
+                          <input value={opt.label} onChange={e=>updOpt(q.id,opt.id,"label",e.target.value)} placeholder={`Option ${oi+1}`} style={{...iSt(),flex:1}}/>
+                          {(q.options||[]).length>1&&<button onClick={()=>delOpt(q.id,opt.id)} className="btn" style={{background:"#FFE0E0",borderRadius:8,padding:"0 10px",color:"#C04040",fontSize:15,flexShrink:0}}>×</button>}
+                        </div>
+                        <input value={opt.image||""} onChange={e=>updOpt(q.id,opt.id,"image",e.target.value)} placeholder="Image URL (optional)" style={{...iSt(),fontSize:12,marginBottom:5}}/>
+                        <input value={opt.desc||""} onChange={e=>updOpt(q.id,opt.id,"desc",e.target.value)} placeholder="Short description (optional)" style={{...iSt(),fontSize:12}}/>
+                      </div>
+                    ))}
+                    <button onClick={()=>addOpt(q.id)} className="btn" style={{width:"100%",background:C.white,border:`1px dashed ${C.b}`,borderRadius:9,padding:"7px",fontSize:12,color:C.tm}}>+ Add Option</button>
+                  </div>)}
+                  {q.type==="text"&&<div><Lbl c="Placeholder hint"/><input value={q.placeholder||""} onChange={e=>updQ(q.id,"placeholder",e.target.value)} placeholder="e.g. Tell us your preferences…" style={iSt()}/></div>}
+                </div>
+              </div>
+            ))}
+          </div>
+          <button onClick={addQ} className="btn" style={{width:"100%",background:C.cream,border:`1.5px dashed ${C.b}`,borderRadius:11,padding:"10px",fontSize:13,color:C.tm,marginBottom:12}}>+ Add Question</button>
+          {err&&<p style={{fontSize:13,color:"#C04040",marginBottom:10}}>{err}</p>}
+          <div style={{display:"flex",gap:9}}>
+            <button onClick={onClose} className="btn" style={{flex:1,padding:11,background:C.cream,border:`1.5px solid ${C.b}`,borderRadius:10,fontSize:13,color:C.t}}>Cancel</button>
+            <button onClick={save} className="btn" style={{flex:2,padding:11,background:C.t,color:"#fff",borderRadius:10,fontSize:13,fontWeight:500}}>{form?"Save Changes":"Create Form"}</button>
+          </div>
         </div>
       </div>
-      <button onClick={async()=>{await saveCfg(ec);toast("Settings saved ✓");}} className="btn"
-        style={{alignSelf:"flex-start",background:C.t,color:C.white,borderRadius:50,padding:"12px 28px",fontSize:14}}>
-        Save All Settings
-      </button>
-    </div>
-  )}
-</div>
-```
-
-);
+    </>
+  );
 }
 
-/* ══════════════ FORM BUILDER ══════════════ */
-function FormBuilder({form,onSave,onClose}){
-const[name,setName]=useState(form?form.name:””);
-const[questions,setQuestions]=useState(form?form.questions:[]);
-const[err,setErr]=useState(””);
-const addQ=()=>setQuestions(p=>[…p,{id:uid(),type:“single”,question:””,subtitle:””,image:””,required:true,options:[{id:uid(),label:””,image:””,desc:””}]}]);
-const delQ=qid=>setQuestions(p=>p.filter(q=>q.id!==qid));
-const updQ=(qid,field,val)=>setQuestions(p=>p.map(q=>q.id===qid?{…q,[field]:val}:q));
-const addOpt=qid=>setQuestions(p=>p.map(q=>q.id===qid?{…q,options:[…(q.options||[]),{id:uid(),label:””,image:””,desc:””}]}:q));
-const delOpt=(qid,oid)=>setQuestions(p=>p.map(q=>q.id===qid?{…q,options:(q.options||[]).filter(o=>o.id!==oid)}:q));
-const updOpt=(qid,oid,field,val)=>setQuestions(p=>p.map(q=>q.id===qid?{…q,options:(q.options||[]).map(o=>o.id===oid?{…o,[field]:val}:o)}:q));
-const save=()=>{
-if(!name.trim()){setErr(“Form name is required.”);return;}
-if(questions.length===0){setErr(“Add at least one question.”);return;}
-for(const q of questions){
-if(!q.question.trim()){setErr(“All questions need text.”);return;}
-if(q.type!==“text”&&(!q.options||!q.options.filter(o=>o.label.trim()).length)){setErr(“Each choice question needs at least one option.”);return;}
-}
-onSave({…(form?{id:form.id}:{}),name,questions});
-};
-return(
-<>
-<div className=“oi” onClick={onClose} style={{position:“fixed”,inset:0,background:“rgba(0,0,0,.4)”,zIndex:300}}/>
-<div style={{position:“fixed”,inset:0,zIndex:301,overflowY:“auto”,WebkitOverflowScrolling:“touch”,padding:“16px”}}>
-<div className=“mi” style={{background:C.white,borderRadius:22,width:“100%”,maxWidth:580,padding:“24px 20px”,boxShadow:“0 20px 56px rgba(0,0,0,.15)”,margin:“0 auto 40px”}}>
-<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginBottom:20}}>
-<h2 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:23,color:C.t}}>{form?“Edit Form”:“Create Form”}</h2>
-<button onClick={onClose} className=“btn” style={{width:30,height:30,borderRadius:“50%”,background:C.cream,fontSize:18,color:C.t,display:“flex”,alignItems:“center”,justifyContent:“center”}}>×</button>
-</div>
-<div style={{marginBottom:16}}><Lbl c="Form Name"/><input value={name} onChange={e=>setName(e.target.value)} placeholder=“e.g. Vintage Box Preferences” style={iSt()}/></div>
-<div style={{display:“flex”,flexDirection:“column”,gap:12,marginBottom:12}}>
-{questions.map((q,qi)=>(
-<div key={q.id} style={{background:C.cream,borderRadius:14,padding:“14px”}}>
-<div style={{display:“flex”,justifyContent:“space-between”,marginBottom:10}}>
-<span style={{fontSize:12,fontWeight:700,color:C.pd,textTransform:“uppercase”,letterSpacing:”.08em”}}>Question {qi+1}</span>
-<button onClick={()=>delQ(q.id)} className=“btn” style={{background:”#FFE0E0”,borderRadius:50,padding:“3px 10px”,fontSize:12,color:”#C04040”}}>Remove</button>
-</div>
-<div style={{display:“flex”,flexDirection:“column”,gap:8}}>
-<div><Lbl c="Question"/><input value={q.question} onChange={e=>updQ(q.id,“question”,e.target.value)} placeholder=“e.g. What type of box?” style={iSt()}/></div>
-<div><Lbl c="Subtitle (optional)"/><input value={q.subtitle||””} onChange={e=>updQ(q.id,“subtitle”,e.target.value)} placeholder=“e.g. Pick your vibe” style={iSt()}/></div>
-<div><Lbl c="Question Image URL (optional)"/><input value={q.image||””} onChange={e=>updQ(q.id,“image”,e.target.value)} placeholder=“https://…” style={iSt()}/></div>
-<div style={{display:“flex”,gap:10,flexWrap:“wrap”}}>
-<div style={{flex:1,minWidth:140}}>
-<Lbl c="Answer Type"/>
-<select value={q.type||“single”} onChange={e=>updQ(q.id,“type”,e.target.value)} style={{…iSt(),cursor:“pointer”}}>
-<option value="single">Choose one</option>
-<option value="multi">Choose multiple</option>
-<option value="text">Type an answer</option>
-</select>
-</div>
-<div style={{display:“flex”,alignItems:“flex-end”,paddingBottom:2}}>
-<label style={{display:“flex”,alignItems:“center”,gap:8,cursor:“pointer”,fontSize:13,color:C.t}}>
-<div onClick={()=>updQ(q.id,“required”,!q.required)} style={{width:36,height:20,background:q.required!==false?C.pd:C.b,borderRadius:50,position:“relative”,transition:“background .2s”,cursor:“pointer”,flexShrink:0}}>
-<div style={{width:14,height:14,background:C.white,borderRadius:“50%”,position:“absolute”,top:3,left:q.required!==false?19:3,transition:“left .2s”}}/>
-</div>
-Required
-</label>
-</div>
-</div>
-{q.type!==“text”&&(
-<div>
-<Lbl c="Options"/>
-{(q.options||[]).map((opt,oi)=>(
-<div key={opt.id} style={{background:C.white,borderRadius:10,padding:“10px 12px”,marginBottom:7}}>
-<div style={{display:“flex”,gap:6,marginBottom:5}}>
-<input value={opt.label} onChange={e=>updOpt(q.id,opt.id,“label”,e.target.value)} placeholder={`Option ${oi+1}`} style={{…iSt(),flex:1}}/>
-{(q.options||[]).length>1&&<button onClick={()=>delOpt(q.id,opt.id)} className=“btn” style={{background:”#FFE0E0”,borderRadius:8,padding:“0 10px”,color:”#C04040”,fontSize:15,flexShrink:0}}>×</button>}
-</div>
-<input value={opt.image||””} onChange={e=>updOpt(q.id,opt.id,“image”,e.target.value)} placeholder=“Image URL (optional)” style={{…iSt(),fontSize:12,marginBottom:5}}/>
-<input value={opt.desc||””} onChange={e=>updOpt(q.id,opt.id,“desc”,e.target.value)} placeholder=“Short description (optional)” style={{…iSt(),fontSize:12}}/>
-</div>
-))}
-<button onClick={()=>addOpt(q.id)} className=“btn” style={{width:“100%”,background:C.white,border:`1px dashed ${C.b}`,borderRadius:9,padding:“7px”,fontSize:12,color:C.tm}}>+ Add Option</button>
-</div>
-)}
-{q.type===“text”&&<div><Lbl c="Placeholder hint"/><input value={q.placeholder||””} onChange={e=>updQ(q.id,“placeholder”,e.target.value)} placeholder=“e.g. Tell us your colour preferences…” style={iSt()}/></div>}
-</div>
-</div>
-))}
-</div>
-<button onClick={addQ} className=“btn” style={{width:“100%”,background:C.cream,border:`1.5px dashed ${C.b}`,borderRadius:11,padding:“10px”,fontSize:13,color:C.tm,marginBottom:12}}>+ Add Question</button>
-{err&&<p style={{fontSize:13,color:”#C04040”,marginBottom:10}}>{err}</p>}
-<div style={{display:“flex”,gap:9}}>
-<button onClick={onClose} className=“btn” style={{flex:1,padding:11,background:C.cream,border:`1.5px solid ${C.b}`,borderRadius:10,fontSize:13,color:C.t}}>Cancel</button>
-<button onClick={save} className="btn" style={{flex:2,padding:11,background:C.t,color:C.white,borderRadius:10,fontSize:13,fontWeight:500}}>{form?“Save Changes”:“Create Form”}</button>
-</div>
-</div>
-</div>
-</>
-);
-}
-
-/* ══════════════ ITEM FORM ══════════════ */
+/* ══ ITEM FORM ══ */
 function ItemForm({item,onSave,onClose,forms}){
-const[f,setF]=useState({
-name:item?item.name:””,price:item?item.price:””,originalPrice:item?(item.originalPrice||””):””,
-images:item&&item.images&&item.images.length?item.images:[””],description:item?item.description:””,
-category:item?item.category:””,stock:item!=null?item.stock:10,
-featured:item?item.featured:false,tags:item&&item.tags?item.tags.join(”, “):””,
-formId:item?item.formId||””:””
-});
-const[err,setErr]=useState(””);
-const save=()=>{
-if(!f.name||!f.price){setErr(“Name and price are required.”);return;}
-const tags=f.tags?f.tags.split(”,”).map(t=>t.trim()).filter(Boolean):[];
-const images=f.images.filter(i=>i.trim());if(!images.length)images.push(””);
-onSave({…(item?{id:item.id}:{}),name:f.name,price:parseFloat(f.price),originalPrice:f.originalPrice?parseFloat(f.originalPrice):null,images,description:f.description,category:f.category,stock:parseInt(f.stock)||0,featured:f.featured,tags,formId:f.formId||null});
-};
-const setImg=(i,v)=>{const imgs=[…f.images];imgs[i]=v;setF({…f,images:imgs})};
-const rmImg=i=>setF({…f,images:f.images.filter((_,j)=>j!==i)});
-return(
-<>
-<div className=“oi” onClick={onClose} style={{position:“fixed”,inset:0,background:“rgba(0,0,0,.4)”,zIndex:300}}/>
-<div style={{position:“fixed”,inset:0,zIndex:301,display:“flex”,alignItems:“center”,justifyContent:“center”,padding:“12px”,overflowY:“auto”,WebkitOverflowScrolling:“touch”}}>
-<div className=“mi” style={{background:C.white,borderRadius:22,width:“100%”,maxWidth:520,padding:“24px 22px”,boxShadow:“0 20px 56px rgba(0,0,0,.14)”,margin:“auto”}}>
-<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginBottom:20}}>
-<h2 style={{fontFamily:”‘Cormorant Garamond’,serif”,fontSize:23,color:C.t}}>{item?“Edit Item”:“Add New Item”}</h2>
-<button onClick={onClose} className=“btn” style={{width:30,height:30,borderRadius:“50%”,background:C.cream,fontSize:18,color:C.t,display:“flex”,alignItems:“center”,justifyContent:“center”}}>×</button>
-</div>
-<div style={{display:“flex”,flexDirection:“column”,gap:11}}>
-<div><Lbl c="Item Name *"/><input value={f.name} onChange={e=>setF({…f,name:e.target.value})} placeholder=“e.g. Vintage Music Box” style={iSt()}/></div>
-<div style={{display:“grid”,gridTemplateColumns:“1fr 1fr”,gap:10}}>
-<div><Lbl c="Price (RM) *"/><input type=“number” step=”.01” value={f.price} onChange={e=>setF({…f,price:e.target.value})} placeholder=“0.00” style={iSt()}/></div>
-<div><Lbl c="Original (sale)"/><input type=“number” step=”.01” value={f.originalPrice} onChange={e=>setF({…f,originalPrice:e.target.value})} placeholder=“Optional” style={iSt()}/></div>
-</div>
-<div style={{display:“grid”,gridTemplateColumns:“1fr 1fr”,gap:10}}>
-<div><Lbl c="Category"/><input value={f.category} onChange={e=>setF({…f,category:e.target.value})} placeholder=“e.g. Vintage” style={iSt()}/></div>
-<div><Lbl c="Stock"/><input type=“number” value={f.stock} onChange={e=>setF({…f,stock:e.target.value})} style={iSt()}/></div>
-</div>
-<div>
-<Lbl c="Image URLs"/>
-{f.images.map((img,i)=>(
-<div key={i} style={{display:“flex”,gap:6,marginBottom:6}}>
-<input value={img} onChange={e=>setImg(i,e.target.value)} placeholder={`Image URL ${i+1}`} style={{…iSt(),flex:1}}/>
-{f.images.length>1&&<button onClick={()=>rmImg(i)} className=“btn” style={{background:”#FFE0E0”,borderRadius:8,padding:“0 11px”,color:”#C04040”,fontSize:16,flexShrink:0}}>×</button>}
-</div>
-))}
-<button onClick={()=>setF({…f,images:[…f.images,””]})} className=“btn” style={{width:“100%”,background:C.cream,border:`1px dashed ${C.b}`,borderRadius:8,padding:“7px”,fontSize:12,color:C.tm}}>+ Add another image</button>
-</div>
-<div><Lbl c="Description"/><textarea value={f.description} onChange={e=>setF({…f,description:e.target.value})} rows={3} placeholder=“What’s inside this mystery box…” style={{…iSt(),resize:“vertical”,borderRadius:10}}/></div>
-<div><Lbl c="Tags (comma separated)"/><input value={f.tags} onChange={e=>setF({…f,tags:e.target.value})} placeholder=“new, bestseller, limited, popular” style={iSt()}/></div>
-<div>
-<Lbl c="Attach Order Form (optional)"/>
-<select value={f.formId||””} onChange={e=>setF({…f,formId:e.target.value})} style={{…iSt(),cursor:“pointer”}}>
-<option value="">— No form, use Add to Cart + Order Now —</option>
-{(forms||[]).map(frm=><option key={frm.id} value={frm.id}>📋 {frm.name}</option>)}
-</select>
-<p style={{fontSize:11,color:C.tl,marginTop:4}}>With a form: customers customise before ordering. Without: direct Add to Cart + Order Now.</p>
-</div>
-<label style={{display:“flex”,alignItems:“center”,gap:10,cursor:“pointer”}}>
-<div onClick={()=>setF({…f,featured:!f.featured})} style={{width:40,height:22,background:f.featured?C.pd:C.b,borderRadius:50,position:“relative”,transition:“background .2s”,cursor:“pointer”,flexShrink:0}}>
-<div style={{width:16,height:16,background:C.white,borderRadius:“50%”,position:“absolute”,top:3,left:f.featured?21:3,transition:“left .2s”}}/>
-</div>
-<span style={{fontSize:13,color:C.t}}>Featured item</span>
-</label>
-{err&&<p style={{fontSize:13,color:”#C04040”}}>{err}</p>}
-<div style={{display:“flex”,gap:9,marginTop:4}}>
-<button onClick={onClose} className=“btn” style={{flex:1,padding:11,background:C.cream,border:`1.5px solid ${C.b}`,borderRadius:10,fontSize:13,color:C.t}}>Cancel</button>
-<button onClick={save} className="btn" style={{flex:2,padding:11,background:C.t,color:C.white,borderRadius:10,fontSize:13,fontWeight:500}}>{item?“Save Changes”:“Add Item”}</button>
-</div>
-</div>
-</div>
-</div>
-</>
-);
+  const[f,setF]=useState({name:item?item.name:"",price:item?item.price:"",originalPrice:item?(item.originalPrice||""):"",images:item&&item.images&&item.images.length?item.images:[""],description:item?item.description:"",category:item?item.category:"",stock:item!=null?item.stock:10,featured:item?item.featured:false,tags:item&&item.tags?item.tags.join(", "):"",formId:item?item.formId||"":""});
+  const[err,setErr]=useState("");
+  const save=()=>{if(!f.name||!f.price){setErr("Name and price required.");return;}const tags=f.tags?f.tags.split(",").map(t=>t.trim()).filter(Boolean):[];const images=f.images.filter(i=>i.trim());if(!images.length)images.push("");onSave({...(item?{id:item.id}:{}),name:f.name,price:parseFloat(f.price),originalPrice:f.originalPrice?parseFloat(f.originalPrice):null,images,description:f.description,category:f.category,stock:parseInt(f.stock)||0,featured:f.featured,tags,formId:f.formId||null});};
+  const setImg=(i,v)=>{const imgs=[...f.images];imgs[i]=v;setF({...f,images:imgs})};
+  const rmImg=i=>setF({...f,images:f.images.filter((_,j)=>j!==i)});
+  return(
+    <>
+      <div className="oi" onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.4)",zIndex:300}}/>
+      <div style={{position:"fixed",inset:0,zIndex:301,display:"flex",alignItems:"center",justifyContent:"center",padding:"12px",overflowY:"auto",WebkitOverflowScrolling:"touch"}}>
+        <div className="mi" style={{background:C.white,borderRadius:22,width:"100%",maxWidth:520,padding:"24px 22px",boxShadow:"0 20px 56px rgba(0,0,0,.14)",margin:"auto",border:`1px solid ${C.b}`}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
+            <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:23,color:C.t}}>{item?"Edit Item":"Add New Item"}</h2>
+            <button onClick={onClose} className="btn" style={{width:30,height:30,borderRadius:"50%",background:C.cream,fontSize:18,color:C.t,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:11}}>
+            <div><Lbl c="Item Name *"/><input value={f.name} onChange={e=>setF({...f,name:e.target.value})} placeholder="e.g. Vintage Music Box" style={iSt()}/></div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+              <div><Lbl c="Price (RM) *"/><input type="number" step=".01" value={f.price} onChange={e=>setF({...f,price:e.target.value})} placeholder="0.00" style={iSt()}/></div>
+              <div><Lbl c="Original (sale)"/><input type="number" step=".01" value={f.originalPrice} onChange={e=>setF({...f,originalPrice:e.target.value})} placeholder="Optional" style={iSt()}/></div>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+              <div><Lbl c="Category"/><input value={f.category} onChange={e=>setF({...f,category:e.target.value})} placeholder="e.g. Vintage" style={iSt()}/></div>
+              <div><Lbl c="Stock"/><input type="number" value={f.stock} onChange={e=>setF({...f,stock:e.target.value})} style={iSt()}/></div>
+            </div>
+            <div>
+              <Lbl c="Image URLs"/>
+              {f.images.map((img,i)=>(<div key={i} style={{display:"flex",gap:6,marginBottom:6}}>
+                <input value={img} onChange={e=>setImg(i,e.target.value)} placeholder={`Image URL ${i+1}`} style={{...iSt(),flex:1}}/>
+                {f.images.length>1&&<button onClick={()=>rmImg(i)} className="btn" style={{background:"#FFE0E0",borderRadius:8,padding:"0 11px",color:"#C04040",fontSize:16,flexShrink:0}}>×</button>}
+              </div>))}
+              <button onClick={()=>setF({...f,images:[...f.images,""]})} className="btn" style={{width:"100%",background:C.cream,border:`1px dashed ${C.b}`,borderRadius:8,padding:"7px",fontSize:12,color:C.tm}}>+ Add image</button>
+            </div>
+            <div><Lbl c="Description"/><textarea value={f.description} onChange={e=>setF({...f,description:e.target.value})} rows={3} placeholder="What's inside this mystery box…" style={{...iSt(),resize:"vertical",borderRadius:10}}/></div>
+            <div><Lbl c="Tags (comma separated)"/><input value={f.tags} onChange={e=>setF({...f,tags:e.target.value})} placeholder="new, bestseller, limited, popular" style={iSt()}/></div>
+            <div>
+              <Lbl c="Attach Order Form (optional)"/>
+              <select value={f.formId||""} onChange={e=>setF({...f,formId:e.target.value})} style={{...iSt(),cursor:"pointer"}}>
+                <option value="">— No form: Add to Cart + Order Now buttons —</option>
+                {(forms||[]).map(frm=><option key={frm.id} value={frm.id}>📋 {frm.name}</option>)}
+              </select>
+              <p style={{fontSize:11,color:C.tl,marginTop:4}}>With form: Customise buttons. Without: standard buttons.</p>
+            </div>
+            <label style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer"}}>
+              <div onClick={()=>setF({...f,featured:!f.featured})} style={{width:40,height:22,background:f.featured?C.pd:C.b,borderRadius:50,position:"relative",transition:"background .2s",cursor:"pointer",flexShrink:0}}>
+                <div style={{width:16,height:16,background:"#fff",borderRadius:"50%",position:"absolute",top:3,left:f.featured?21:3,transition:"left .2s"}}/>
+              </div>
+              <span style={{fontSize:13,color:C.t}}>Featured item</span>
+            </label>
+            {err&&<p style={{fontSize:13,color:"#C04040"}}>{err}</p>}
+            <div style={{display:"flex",gap:9,marginTop:4}}>
+              <button onClick={onClose} className="btn" style={{flex:1,padding:11,background:C.cream,border:`1.5px solid ${C.b}`,borderRadius:10,fontSize:13,color:C.t}}>Cancel</button>
+              <button onClick={save} className="btn" style={{flex:2,padding:11,background:C.t,color:"#fff",borderRadius:10,fontSize:13,fontWeight:500}}>{item?"Save Changes":"Add Item"}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
-/* ══════════════ EDITABLE USER (Admin) ══════════════ */
-function EditableUser({u,onSave}){
-const[editing,setEditing]=useState(false);
-const[name,setName]=useState(u.name);
-return(
-<div style={{background:C.white,borderRadius:13,padding:“12px 15px”,boxShadow:C.sh,display:“flex”,gap:11,alignItems:“center”,flexWrap:“wrap”}}>
-<div style={{width:38,height:38,borderRadius:“50%”,background:`linear-gradient(135deg,${C.pd},${C.pm})`,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:15,fontWeight:600,color:C.white,flexShrink:0}}>{(u.name||”?”)[0].toUpperCase()}</div>
-<div style={{flex:1,minWidth:120}}>
-{editing?(
-<div style={{display:“flex”,gap:7,alignItems:“center”}}>
-<input value={name} onChange={e=>setName(e.target.value)} style={{…iSt(),padding:“6px 10px”,fontSize:13,flex:1}} onKeyDown={e=>{if(e.key===“Enter”){onSave({…u,name});setEditing(false);}}}/>
-<button onClick={()=>{onSave({…u,name});setEditing(false);}} className=“btn” style={{background:C.pd,color:C.white,borderRadius:8,padding:“6px 12px”,fontSize:12,flexShrink:0}}>Save</button>
-<button onClick={()=>{setName(u.name);setEditing(false);}} className=“btn” style={{background:C.cream,border:`1px solid ${C.b}`,borderRadius:8,padding:“6px 10px”,fontSize:12,flexShrink:0}}>×</button>
-</div>
-):(
-<div style={{display:“flex”,alignItems:“center”,gap:8}}>
-<p style={{fontSize:14,fontWeight:500,color:C.t}}>{u.name}</p>
-<button onClick={()=>setEditing(true)} className=“btn” style={{background:“none”,color:C.tl,fontSize:11,padding:0,textDecoration:“underline”}}>edit name</button>
-</div>
-)}
-<p style={{fontSize:12,color:C.tl,marginTop:2}}>{u.email}</p>
-</div>
-<div style={{display:“flex”,gap:7,alignItems:“center”,flexWrap:“wrap”}}>
-<Chip ch={u.discUsed===false?“🎁 Discount active”:“Discount used”} bg={u.discUsed===false?C.pl:C.cream} col={u.discUsed===false?C.pd:C.tl}/>
-<span style={{fontSize:11,color:C.tl}}>{new Date(u.createdAt).toLocaleDateString()}</span>
-</div>
-</div>
-);
-}
-
-const root=ReactDOM.createRoot(document.getElementById(“root”));
+const root=ReactDOM.createRoot(document.getElementById("root"));
 root.render(<App/>);
-</script>
-
-</body>
-</html>
+</script></body></html>
