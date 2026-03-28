@@ -544,24 +544,41 @@ function ItemPage({item,items,forms,onBack,onAdd,onItem,onDirectOrder,onStartFor
 
 /* ══ CUSTOM ORDER FORM ══ */
 function CustomOrderForm({item,form,mode,qty=1,onBack,onFinish}){
-  const[step,setStep]=useState(0);const[answers,setAnswers]=useState({});
-  const questions=form.questions||[];const curQ=questions[step];
+  const questions=form.questions||[];
+  const[history,setHistory]=useState([0]);
+  const step=history[history.length-1];
+  const curQ=questions[step];
+  const[answers,setAnswers]=useState({});
   const getAns=qid=>answers[qid];
   const setAns=(qid,val)=>setAnswers(p=>({...p,[qid]:val}));
   const toggleMulti=(qid,val)=>{const cur=answers[qid]||[];setAns(qid,cur.includes(val)?cur.filter(v=>v!==val):[...cur,val])};
   const canNext=()=>{if(!curQ||curQ.required===false)return true;const a=answers[curQ.id];if(curQ.type==="multi")return a&&a.length>0;if(curQ.type==="text")return a&&a.trim().length>0;return!!a;};
-  const next=()=>{if(!canNext())return;if(step<questions.length-1){setStep(s=>s+1);window.scrollTo(0,0);}else{onFinish(item,answers,mode,qty);}};
-  const progress=Math.round((step/Math.max(questions.length,1))*100);
+  const getNextIdx=()=>{
+    if(curQ&&(curQ.type==="single"||!curQ.type)){
+      const selOpt=(curQ.options||[]).find(o=>o.label===answers[curQ.id]);
+      if(selOpt&&selOpt.nextQ==="__end__")return questions.length;
+      if(selOpt&&selOpt.nextQ){const ni=questions.findIndex(q=>q.id===selOpt.nextQ);if(ni!==-1)return ni;}
+    }
+    return step+1;
+  };
+  const next=()=>{
+    if(!canNext())return;
+    const ni=getNextIdx();
+    if(ni>=questions.length){onFinish(item,answers,mode,qty);}
+    else{setHistory(h=>[...h,ni]);window.scrollTo(0,0);}
+  };
+  const prev=()=>{if(history.length>1)setHistory(h=>h.slice(0,-1));else onBack();window.scrollTo(0,0);};
+  const progress=Math.round(((history.length-1)/Math.max(questions.length-1,1))*100);
   return(
     <div style={{maxWidth:560,margin:"0 auto",padding:"28px 16px 64px"}}>
-      <button onClick={step===0?onBack:()=>{setStep(s=>s-1);window.scrollTo(0,0)}} className="btn" style={{background:"none",color:C.tm,fontSize:14,marginBottom:16,display:"flex",alignItems:"center",gap:5}}>
+      <button onClick={prev} className="btn" style={{background:"none",color:C.tm,fontSize:14,marginBottom:16,display:"flex",alignItems:"center",gap:5}}>
         ← {step===0?"back to product":"previous"}
       </button>
       <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
         <div style={{flex:1,height:5,background:C.b,borderRadius:50,overflow:"hidden"}}>
           <div style={{width:`${progress}%`,height:"100%",background:C.pd,borderRadius:50,transition:"width .4s ease"}}/>
         </div>
-        <span style={{fontSize:12,color:C.tl,flexShrink:0}}>Step {step+1} of {questions.length}</span>
+        <span style={{fontSize:12,color:C.tl,flexShrink:0}}>Step {history.length} of {questions.length}</span>
       </div>
       <div style={{display:"flex",alignItems:"center",gap:10,background:C.white,borderRadius:12,padding:"10px 14px",boxShadow:C.sh,marginBottom:22,border:`1px solid ${C.b}`}}>
         <div style={{width:44,height:44,borderRadius:9,overflow:"hidden",background:C.pl,flexShrink:0}}>
@@ -632,8 +649,7 @@ function OrderSummaryModal({item,answers,qty=1,onClose,cfg,user,hasSignupDisc,sa
   const send=()=>{
     if(!name.trim()){setNameErr("Please enter your name.");return;}
     setNameErr("");
-    let msg=`Hello! I'd like to order ✦\n\n*${item.name}*${qty>1?` x${qty}`:""}
-Price: RM${(item.price*qty).toFixed(2)}\n`;
+    let msg="Hello! I'd like to order ✦\n\n*"+item.name+"*"+(item._sz?" [Size: "+item._sz+"]":"")+(qty>1?" x"+qty:"")+"\nPrice: RM"+(item.price*qty).toFixed(2)+"\n";
     if(answers&&Object.keys(answers).length>0){msg+=`\n*My Preferences:*\n`;Object.entries(answers).forEach(([,val])=>{const v=Array.isArray(val)?val.join(", "):val;if(v)msg+=`• ${v}\n`;});}
     if(discAmt>0)msg+=`\nDiscount: -RM${discAmt.toFixed(2)}`;
     msg+=`\n*Total: RM${total.toFixed(2)}*\n\nName: ${name}`;
@@ -957,7 +973,7 @@ function AdminPage({ok,onAuth,items,saveItems,forms,saveForms,users,saveUsers,cf
               <div style={{width:54,height:54,borderRadius:10,overflow:"hidden",background:C.pl,flexShrink:0}}><img src={it.images&&it.images[0]} alt={it.name} onError={e=>e.target.style.display="none"} style={{width:"100%",height:"100%",objectFit:"cover"}}/></div>
               <div style={{flex:1,minWidth:100}}>
                 <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:16,color:C.t}}>{it.name}</p>
-                <p style={{fontSize:12,color:C.tm}}>RM {it.price.toFixed(2)} · {it.category||"—"} · Stock: {it.stock}</p>
+                <p style={{fontSize:12,color:C.tm}}>RM {it.price.toFixed(2)} · {it.category||"—"} · Stock: {it.stock}{it.costPrice?<span style={{color:"#C8A000"}}> · Cost: RM{it.costPrice.toFixed(2)} · Profit: RM{(it.price-it.costPrice).toFixed(2)}</span>:null}</p>
                 {att&&<span style={{fontSize:11,background:C.pl,color:C.pd,borderRadius:50,padding:"1px 8px",marginTop:3,display:"inline-block"}}>📋 {att.name}</span>}
               </div>
               <div style={{display:"flex",gap:6,flexShrink:0}}>
@@ -1004,7 +1020,7 @@ function AdminPage({ok,onAuth,items,saveItems,forms,saveForms,users,saveUsers,cf
         <p style={{fontSize:13,color:C.tm,marginBottom:14}}>{users.length} registered customer{users.length!==1?"s":""}</p>
         {users.length===0?(<div style={{textAlign:"center",padding:48,color:C.tl}}><div style={{fontSize:40,marginBottom:10}}>👥</div><p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20,color:C.t}}>No customers yet</p></div>):(
           <div style={{display:"flex",flexDirection:"column",gap:9}}>
-            {users.map(u=><EditableUser key={u.id} u={u} onSave={updated=>{saveUsers(users.map(x=>x.id===u.id?updated:x));toast("Updated ✓");}}/>)}
+            {users.map(u=><EditableUser key={u.id} u={u} onSave={updated=>{saveUsers(users.map(x=>x.id===u.id?updated:x));toast("Updated ✓");}} onDelete={()=>{if(window.confirm("Delete "+u.name+"?"))saveUsers(users.filter(x=>x.id!==u.id));}}/>)}
           </div>
         )}
       </div>)}
@@ -1232,6 +1248,18 @@ function FormBuilder({form,onSave,onClose}){
                         </div>
                         <input value={opt.image||""} onChange={e=>updOpt(q.id,opt.id,"image",e.target.value)} placeholder="Image URL (optional)" style={{...iSt(),fontSize:12,marginBottom:5}}/>
                         <input value={opt.desc||""} onChange={e=>updOpt(q.id,opt.id,"desc",e.target.value)} placeholder="Short description (optional)" style={{...iSt(),fontSize:12}}/>
+                {q.type!=="multi"&&(
+                  <div style={{marginTop:5}}>
+                    <p style={{fontSize:11,color:C.tl,marginBottom:3}}>If selected, jump to:</p>
+                    <select value={opt.nextQ||""} onChange={e=>updOpt(q.id,opt.id,"nextQ",e.target.value)} style={{...iSt(),fontSize:12,cursor:"pointer"}}>
+                      <option value="">— Next question in order —</option>
+                      {questions.filter(oq=>oq.id!==q.id).map(oq=>(
+                        <option key={oq.id} value={oq.id}>{oq.question||"(unnamed)"}</option>
+                      ))}
+                      <option value="__end__">→ Skip to end (finish form)</option>
+                    </select>
+                  </div>
+                )}
                       </div>
                     ))}
                     <button onClick={()=>addOpt(q.id)} className="btn" style={{width:"100%",background:C.white,border:`1px dashed ${C.b}`,borderRadius:9,padding:"7px",fontSize:12,color:C.tm}}>+ Add Option</button>
@@ -1255,10 +1283,10 @@ function FormBuilder({form,onSave,onClose}){
 
 /* ══ ITEM FORM ══ */
 function ItemForm({item,onSave,onClose,forms,cfg}){
-  const[f,setF]=useState({name:item?item.name:"",price:item?item.price:"",originalPrice:item?(item.originalPrice||""):"",images:item&&item.images&&item.images.length?item.images:[""],description:item?item.description:"",category:item?item.category:"",stock:item!=null?item.stock:10,featured:item?item.featured:false,tags:item&&item.tags?item.tags.join(", "):"",formId:item?item.formId||"":""});
+  const[f,setF]=useState({name:item?item.name:"",price:item?item.price:"",originalPrice:item?(item.originalPrice||""):"",images:item&&item.images&&item.images.length?item.images:[""],description:item?item.description:"",category:item?item.category:"",stock:item!=null?item.stock:10,featured:item?item.featured:false,tags:item&&item.tags?item.tags.join(", "):"",formId:item?item.formId||"":"",sizes:item&&item.sizes?item.sizes.join(", "):"",sizeChart:item?item.sizeChart||"":"",supplierUrl:item?item.supplierUrl||"":"",costPrice:item?item.costPrice||"":"",supplierNotes:item?item.supplierNotes||"":""});
   const[err,setErr]=useState("");
   const save=()=>{if(!f.name||!f.price){setErr("Name and price required.");return;}const tags=f.tags?f.tags.split(",").map(t=>t.trim()).filter(Boolean):[];const images=f.images.filter(i=>i.trim());if(!images.length)images.push("");var szArr=f.sizes?f.sizes.split(",").map(function(s){return s.trim();}).filter(Boolean):[];
-    onSave({...(item?{id:item.id}:{}),name:f.name,price:parseFloat(f.price),originalPrice:f.originalPrice?parseFloat(f.originalPrice):null,images,description:f.description,category:f.category,stock:parseInt(f.stock)||0,featured:f.featured,tags,formId:f.formId||null,sizes:szArr,sizeChart:f.sizeChart||""});};
+    onSave({...(item?{id:item.id}:{}),name:f.name,price:parseFloat(f.price),originalPrice:f.originalPrice?parseFloat(f.originalPrice):null,images,description:f.description,category:f.category,stock:parseInt(f.stock)||0,featured:f.featured,tags,formId:f.formId||null,sizes:szArr,sizeChart:f.sizeChart||"",supplierUrl:f.supplierUrl||"",costPrice:f.costPrice?parseFloat(f.costPrice):null,supplierNotes:f.supplierNotes||""});};
   const setImg=(i,v)=>{const imgs=[...f.images];imgs[i]=v;setF({...f,images:imgs})};
   const rmImg=i=>setF({...f,images:f.images.filter((_,j)=>j!==i)});
   return(
@@ -1300,6 +1328,14 @@ function ItemForm({item,onSave,onClose,forms,cfg}){
             </div>
             <div><Lbl c="Description"/><textarea value={f.description} onChange={e=>setF({...f,description:e.target.value})} rows={3} placeholder="What's inside this mystery box…" style={{...iSt(),resize:"vertical",borderRadius:10}}/></div>
             <div><Lbl c="Tags (comma separated)"/><input value={f.tags} onChange={e=>setF({...f,tags:e.target.value})} placeholder="new, bestseller, limited, popular" style={iSt()}/></div>
+            <div style={{background:"#FFF8E8",borderRadius:10,padding:"12px 14px",border:"1px dashed #F5D86A"}}>
+              <p style={{fontSize:12,fontWeight:700,color:"#C8A000",marginBottom:10}}>📦 Dropshipping (optional)</p>
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                <div><Lbl c="Supplier URL"/><input value={f.supplierUrl||""} onChange={e=>setF({...f,supplierUrl:e.target.value})} placeholder="https://... supplier product page" style={iSt()}/></div>
+                <div><Lbl c="Cost Price (RM) — your purchase price"/><input type="number" step=".01" value={f.costPrice||""} onChange={e=>setF({...f,costPrice:e.target.value})} placeholder="0.00" style={iSt()}/></div>
+                <div><Lbl c="Supplier Notes (internal, not shown to customer)"/><input value={f.supplierNotes||""} onChange={e=>setF({...f,supplierNotes:e.target.value})} placeholder="e.g. Ship from warehouse B, 7-10 days" style={iSt()}/></div>
+              </div>
+            </div>
             <div><Lbl c="Sizes (e.g. XS, S, M, L, XL — leave empty if no sizes)"/><input value={f.sizes} onChange={e=>setF({...f,sizes:e.target.value})} placeholder="XS, S, M, L, XL, XXL" style={iSt()}/></div>
             <div><Lbl c="Size Chart Image URL (optional)"/><input value={f.sizeChart} onChange={e=>setF({...f,sizeChart:e.target.value})} placeholder="https://... paste size chart image link" style={iSt()}/></div>
             <div>
